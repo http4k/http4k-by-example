@@ -7,8 +7,3 @@ cache:
   directories:
   - "$HOME/.m2"
   - "$HOME/.gradle"
-deploy:
-  provider: heroku
-  app: http4k-contract-example-app
-  api_key:
-    secure: xiyZeqNk2Jr06fk9KdemV851kVyvsOd7UOeDy4iYZ4j8FTMAvxZrAsbR5lpr1ByoEyvvrQ/ZK1CGFRhZTyAjceLcDjjYhGhUH/Qfx0d3skRlYZ6G1GPFe+fAw/ZlWORYHGpJz2olZ+wPLns8uyFd6lQ+gmYPnBW57aCQqAENqwhcWXwK9PAdrsDDHCv0ROZcB5T2PbXsdV3peBAw5EtzU8y0+Cc6a9taaPEBsczfQcNAaRCP/CF5kCZ2+WrGnT7TMsZpLRYqAkX40zgvCZvWibZeEigI0lC7bxAuuMxFojpkaVaRiMZ+JFeXs3/SHkOlLWIfnaBl/E2yrWazl+5um0FgUCDFe34uj9XRurbLlIulReKZ8+RdCvnpNwCoJwiOxROCTvgPqlZAQX+vTFFWnv0MM8wS4gVy/f3vwodW1NC3JjpIbJeOek9HO6RjxX2NBNlXhRe2qvKIy9VH1wdq6ZJRC7ZMcawL2/JveOa8azLEKlBAomwQ1E/ibmF/h2fMeie3aTPI7gcUWk0c0915KIFIkFYnoOw81nf6aVM/8qPxGVxWxlVULpue0SAWNxbPx5bwSMls0HZdC+yu2gXp5BTX2/b/uuH1wyKSNjG9v4IZbg2GfOBhmo9FFd/BIxgk4j70hEcbH/zeH5xxjfTsz+8p7qtDANaysPPE5w28qDI=

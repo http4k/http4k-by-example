@@ -3,7 +3,7 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.2'
-    ext.http4k_version = '1.9.0'
+    ext.http4k_version = '1.10.0'
 
     repositories {
         mavenCentral()
@@ -28,10 +28,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     compile "org.http4k:http4k-core:$http4k_version"
-    compile "org.http4k:http4k-server-jetty:$http4k_version"
+    compile "org.http4k:http4k-client-apache:$http4k_version"
     compile "org.http4k:http4k-contract:$http4k_version"
-    compile "org.http4k:http4k-template-handlebars:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
+    compile "org.http4k:http4k-server-jetty:$http4k_version"
+    compile "org.http4k:http4k-template-handlebars:$http4k_version"
 }
 
 mainClassName = 'org.http4k.todo.TodoBackendAppKt'
