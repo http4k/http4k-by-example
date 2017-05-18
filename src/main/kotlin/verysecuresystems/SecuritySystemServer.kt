@@ -4,19 +4,24 @@ import org.http4k.client.ApacheClient
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters.SetHostFrom
+import org.http4k.server.Http4kServer
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+import java.time.Clock
 
+/**
+ * Responsible for setting up real HTTP servers and clients to downstream services via HTTP
+ */
 object SecuritySystemServer {
-    fun main(args: Array<String>) {
-        val port = if (args.isNotEmpty()) args[0].toInt() else 5000
+    operator fun invoke(port: Int, userDirectoryUrl: String, entryLoggerUrl: String): Http4kServer {
         val client = ApacheClient()
         val app = SecuritySystem(
-            SetHostFrom(Uri.of("http://localhost:9001")).then(client),
-            SetHostFrom(Uri.of("http://localhost:9002")).then(client)
+            Clock.systemUTC(),
+            ::println,
+            SetHostFrom(Uri.of(userDirectoryUrl)).then(client),
+            SetHostFrom(Uri.of(entryLoggerUrl)).then(client)
         )
-
-        app.asServer(Jetty(port)).start().block()
+        return app.asServer(Jetty(port))
     }
 }
 

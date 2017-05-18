@@ -1,5 +1,7 @@
 package verysecuresystems
 
+typealias Events = (Event) -> Unit
+
 data class Event(val description: String)
 
 data class Id(val value: Int)
