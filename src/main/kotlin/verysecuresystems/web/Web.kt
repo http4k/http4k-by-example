@@ -12,7 +12,7 @@ import verysecuresystems.external.UserDirectory
 object Web {
     fun module(path: BasePath, userDirectory: UserDirectory): Module {
 
-        val templates = HandlebarsTemplates().CachingClasspath("templates")
+        val templates = HandlebarsTemplates().CachingClasspath()
         val webModule = RouteModule(path)
 //            .withRoutes(ManageUsers.routes(userDirectory))
             .withRoutes(ManageUsers.routes(templates, userDirectory))
