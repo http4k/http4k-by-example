@@ -12,4 +12,4 @@ data class User(val id: Id, val name: Username, val email: EmailAddress)
 
 data class UserEntry(val username: String, val goingIn: Boolean, val timestamp: Long)
 
-
+data class Message(val message: String)

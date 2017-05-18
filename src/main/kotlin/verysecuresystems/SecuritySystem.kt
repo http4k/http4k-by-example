@@ -17,8 +17,9 @@ object SecuritySystem {
 
         val userDirectory = UserDirectory(userDirectoryClient)
         val entryLogger = EntryLogger(entryLoggerClient)
+        val inhabitants = Inhabitants()
 
-        val app = Api.module(Root / "api", userDirectory, entryLogger)
+        val app = Api.module(Root / "api", userDirectory, entryLogger, inhabitants)
             .then(Web.module(Root, userDirectory))
             .toHttpHandler()
 
