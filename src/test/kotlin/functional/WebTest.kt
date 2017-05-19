@@ -1,13 +1,15 @@
 package functional
 
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.should.shouldMatch
+import env.TestEnvironment
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.junit.Test
 
 class WebTest {
-    private val env = env.TestEnvironment()
+    private val env = TestEnvironment()
 
     @Test
     fun `homepage`() {

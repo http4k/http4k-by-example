@@ -19,13 +19,13 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
         client(
             Request(POST, "/entry")
                 .with(Contract.Entry.body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
-            Contract.Entry.body)
+            Contract.Entry.response)
 
     fun exit(username: Username): UserEntry =
         client(
             Request(POST, "/exit")
                 .with(Contract.Exit.body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
-            Contract.Exit.body)
+            Contract.Exit.response)
 
 
     fun list(): List<UserEntry> = client(Request(POST, "/exit"), Contract.LogList.response)
