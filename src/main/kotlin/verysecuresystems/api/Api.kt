@@ -20,9 +20,9 @@ object Api {
 
     fun module(path: BasePath, userDirectory: UserDirectory, entryLogger: EntryLogger, inhabitants: Inhabitants): Module =
         RouteModule(path, SimpleJson(Jackson), corsFilter)
+            .securedBy(apiKey)
             .withRoute(KnockKnock.route(inhabitants, userDirectory, entryLogger))
             .withRoute(WhoIsThere.route(inhabitants, userDirectory))
             .withRoute(ByeBye.route(inhabitants, entryLogger))
-            .securedBy(apiKey)
 }
 

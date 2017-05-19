@@ -30,20 +30,13 @@ class TestEnvironment {
 
 fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {
     val query = user?.let { "username=" + it } ?: ""
-    val request = Request(POST, "/api/knock?" + query)
-    request.header("key", secret)
-    return app(request)
+    return app(Request(POST, "/api/knock?" + query).header("key", secret))
 }
 
 fun TestEnvironment.exitBuilding(user: String?, secret: String): Response {
     val query = user?.let { "username=" + it } ?: ""
-    val request = Request(POST, "/api/bye?" + query)
-    request.header("key", secret)
-    return app(request)
+    return app(Request(POST, "/api/bye?" + query).header("key", secret))
 }
 
-fun TestEnvironment.checkInhabitants(secret: String): Response {
-    val request = Request(GET, "/api/whoIsThere")
-    request.header("key", secret)
-    return app(request)
-}
+fun TestEnvironment.checkInhabitants(secret: String): Response =
+    app(Request(GET, "/api/whoIsThere").header("key", secret))
