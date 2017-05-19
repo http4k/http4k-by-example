@@ -1,5 +1,5 @@
 package cdc
 
-import org.http4k.client.OkHttp
+import env.FakeEntryLogger
 
-class FakeEntryLoggerTest : EntryLoggerContract(OkHttp())
+class FakeEntryLoggerTest : EntryLoggerContract(FakeEntryLogger().app)

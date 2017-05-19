@@ -7,6 +7,8 @@ import org.http4k.core.Method.DELETE
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
+import org.http4k.core.Status.Companion.ACCEPTED
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
@@ -32,7 +34,7 @@ class UserDirectory(private val client: HttpHandler) {
             Contract.Create.response)
 
     fun delete(id: Id): Unit = client(Request(DELETE, "/user/${id.value}")).let {
-        if (it.status != OK) {
+        if (it.status != ACCEPTED) {
             throw RemoteSystemProblem("user directory", it.status)
         }
     }
@@ -40,7 +42,9 @@ class UserDirectory(private val client: HttpHandler) {
     fun list(): List<User> = client(Request(GET, "/user"), Contract.UserList.response)
 
     fun lookup(username: Username): User? = client(Request(GET, "/user/${username.value}")).let {
-        if (it.status != OK) {
+        if (it.status == NOT_FOUND) {
+            return null
+        } else if (it.status != OK) {
             throw RemoteSystemProblem("user directory", it.status)
         } else {
             Contract.Lookup.response(it)
@@ -65,7 +69,7 @@ class UserDirectory(private val client: HttpHandler) {
 
             object UserList {
                 val route = Route().at(GET) / "user"
-                val response = Body.auto<List<User>>().toLens()
+                val response = Body.auto<Array<User>>().map(Array<User>::toList, List<User>::toTypedArray).toLens()
             }
 
             object Lookup {

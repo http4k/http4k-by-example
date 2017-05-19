@@ -1,10 +1,10 @@
 package cdc
 
-import org.http4k.client.OkHttp
+import env.FakeUserDirectory
 import verysecuresystems.EmailAddress
 import verysecuresystems.Username
 
-class FakeUserDirectoryTest : UserDirectoryContract(OkHttp()) {
-    override val username = Username("Elon Musk")
+class FakeUserDirectoryTest : UserDirectoryContract(FakeUserDirectory().app) {
+    override val username = Username("ElonMusk")
     override val email = EmailAddress("elon@tesla.com")
 }
