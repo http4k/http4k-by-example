@@ -7,7 +7,7 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Status.Companion.TEMPORARY_REDIRECT
+import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.lens.FormField
 import org.http4k.lens.FormValidator
@@ -49,7 +49,7 @@ object ManageUsers {
             val webForm = form(it)
             if (webForm.errors.isEmpty()) {
                 userDirectory.create(username(webForm), email(webForm))
-                Response(TEMPORARY_REDIRECT).header("location", ".")
+                Response(SEE_OTHER).header("location", ".")
             } else {
                 Response(OK).body(renderer(ManageUsersView(userDirectory.list(), webForm)))
             }
@@ -62,7 +62,7 @@ object ManageUsers {
 
         return Route().at(POST) / "users" / "delete" bind {
             userDirectory.delete(id(form(it)))
-            Response(TEMPORARY_REDIRECT).header("location", ".")
+            Response(SEE_OTHER).header("location", ".")
         }
     }
 }
