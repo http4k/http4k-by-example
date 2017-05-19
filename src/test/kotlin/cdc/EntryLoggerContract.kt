@@ -14,8 +14,7 @@ import java.time.ZoneId
 /**
  * This represents the contract that both the real and fake EntryLogger servers will adhere to.
  */
-abstract class EntryLoggerContract {
-    abstract val handler: HttpHandler
+abstract class EntryLoggerContract(handler: HttpHandler) {
 
     private val time = Instant.now()
     val entryLogger = EntryLogger(handler, Clock.fixed(time, ZoneId.systemDefault()))

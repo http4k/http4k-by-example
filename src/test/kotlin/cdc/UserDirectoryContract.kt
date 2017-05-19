@@ -13,8 +13,7 @@ import verysecuresystems.external.UserDirectory
 /**
  * This represents the contract that both the real and fake EntryLogger servers will adhere to.
  */
-abstract class UserDirectoryContract {
-    abstract val handler: HttpHandler
+abstract class UserDirectoryContract(handler: HttpHandler) {
 
     val userDirectory = UserDirectory(handler)
 
@@ -57,5 +56,3 @@ abstract class UserDirectoryContract {
 
     }
 }
-
-
