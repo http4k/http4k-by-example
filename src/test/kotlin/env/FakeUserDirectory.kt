@@ -17,7 +17,7 @@ class FakeUserDirectory {
 
     private val users = mutableMapOf<Id, User>()
 
-    fun contains(newUser: User) = users[newUser.id] == newUser
+    fun contains(newUser: User) = users.put(newUser.id, newUser)
 
     fun reset() = users.clear()
 
