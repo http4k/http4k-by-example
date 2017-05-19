@@ -21,13 +21,13 @@ class FakeEntryLogger {
         .withRoute(
             Entry.route bind {
                 val userEntry = body(it)
-                entries.plus(userEntry)
+                entries.add(userEntry)
                 Response(CREATED).with(Entry.response of userEntry)
             }
         )
         .withRoute(Exit.route bind {
             val userEntry = Entry.body(it)
-            entries.remove(userEntry)
+            entries.add(userEntry)
             Response(ACCEPTED).with(Entry.response of userEntry)
         })
         .withRoute(

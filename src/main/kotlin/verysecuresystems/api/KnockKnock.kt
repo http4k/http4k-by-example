@@ -7,7 +7,7 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method.POST
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
-import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.CONFLICT
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
@@ -31,7 +31,7 @@ object KnockKnock {
                     entryLogger.enter(user.name)
                     Response(ACCEPTED).with(message of Message("Access granted"))
                 } else {
-                    Response(BAD_REQUEST).with(message of Message("User is already inside building"))
+                    Response(CONFLICT).with(message of Message("User is already inside building"))
                 }
             } ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
         }
@@ -40,7 +40,7 @@ object KnockKnock {
             .query(username)
             .returning("Access granted" to ACCEPTED)
             .returning("Unknown user" to NOT_FOUND)
-            .returning("User is already inside building" to BAD_REQUEST)
+            .returning("User is already inside building" to CONFLICT)
             .returning("Incorrect key" to UNAUTHORIZED)
             .at(POST) / "knock" bind userEntry
     }
