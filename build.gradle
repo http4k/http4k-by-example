@@ -7,15 +7,19 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.0.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
-apply plugin: 'application'
+apply plugin: 'cobertura'
+apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = 1.8
 
@@ -23,6 +27,9 @@ repositories {
     jcenter()
     mavenCentral()
 }
+
+cobertura.coverageFormats = ['html', 'xml']
+cobertura.coverageSourceDirs = ['src/main/kotlin']
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
@@ -39,7 +46,3 @@ dependencies {
     testCompile "com.natpryce:hamkrest:1.3.0.0"
 
 }
-
-mainClassName = 'org.http4k.todo.TodoBackendAppKt'
-
-task stage(dependsOn: ['installDist'])
