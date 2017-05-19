@@ -22,8 +22,8 @@ class TestEnvironment {
     val app = SecuritySystem(
         clock,
         { events.add(it) },
-        userDirectory.app,
-        entryLogger.app
+        "http://userDirectory" to userDirectory.app,
+        "http://entryLogger" to entryLogger.app
     )}
 
 fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {
