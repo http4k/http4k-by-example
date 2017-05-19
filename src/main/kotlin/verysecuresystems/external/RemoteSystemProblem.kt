@@ -3,6 +3,7 @@ package verysecuresystems.external
 import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Status
+import org.http4k.core.Status.Companion.BAD_GATEWAY
 import org.http4k.lens.BodyLens
 import org.http4k.lens.LensFailure
 
@@ -14,7 +15,7 @@ operator fun <T> HttpHandler.invoke(request: Request, bodyLens: BodyLens<T>): T 
             try {
                 bodyLens(it)
             } catch(e: LensFailure) {
-                throw RemoteSystemProblem("entry logger", org.http4k.core.Status.Companion.BAD_GATEWAY)
+                throw RemoteSystemProblem("entry logger", BAD_GATEWAY)
             }
         }
     }
