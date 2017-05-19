@@ -22,7 +22,7 @@ object SecuritySystem {
     operator fun invoke(clock: Clock, events: Events, userDirectoryClient: HttpHandler, entryLoggerClient: HttpHandler): HttpHandler {
 
         val userDirectory = UserDirectory(userDirectoryClient)
-        val entryLogger = EntryLogger(entryLoggerClient)
+        val entryLogger = EntryLogger(entryLoggerClient, clock)
         val inhabitants = Inhabitants()
 
         val app = Api.module(Root / "api", userDirectory, entryLogger, inhabitants)
