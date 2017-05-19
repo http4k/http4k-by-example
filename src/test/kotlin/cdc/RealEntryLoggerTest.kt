@@ -1,6 +1,9 @@
 package cdc
 
 import org.http4k.client.OkHttp
+import org.http4k.core.Uri
+import org.http4k.core.then
+import org.http4k.filter.ClientFilters.SetHostFrom
 import org.junit.Ignore
 
 /**
@@ -8,4 +11,6 @@ import org.junit.Ignore
  * test data.
  */
 @Ignore // this would not be ignored in reality
-class RealEntryLoggerTest : EntryLoggerContract(OkHttp())
+class RealEntryLoggerTest : EntryLoggerContract(
+    SetHostFrom(Uri.of("http://entrylogger.com")).then(OkHttp())
+)
