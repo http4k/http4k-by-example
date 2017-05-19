@@ -42,7 +42,6 @@ class FakeUserDirectory {
             Lookup.route bind {
                 username ->
                 {
-                    println(users.values)
                     users.values
                         .filter { it.name == username }
                         .firstOrNull()
