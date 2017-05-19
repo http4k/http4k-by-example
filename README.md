@@ -1,7 +1,7 @@
 # http4k-contract sample application 
 
 <a href="https://travis-ci.org/http4k/http4k-contract-example-app" target="_top"><img src="https://travis-ci.org/http4k/http4k-contract-example-app.svg?branch=master"/></a>&nbsp;&nbsp;&nbsp;
-<a href='https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master'><img src='https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master' alt='Coverage Status' /></a>
+[![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master)
 
 #### about
 This is a complete Kotlin example application which uses the majority of the features of the contract module of the [http4k](http://http4k.org) library:
