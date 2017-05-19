@@ -25,15 +25,16 @@ object KnockKnock {
 
     fun route(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ServerRoute {
         val userEntry: HttpHandler = {
-            val user = userDirectory.lookup(username(it))
-            user?.let {
-                if (inhabitants.add(user.name)) {
-                    entryLogger.enter(user.name)
-                    Response(ACCEPTED).with(message of Message("Access granted"))
-                } else {
-                    Response(CONFLICT).with(message of Message("User is already inside building"))
+            userDirectory.lookup(username(it))
+                ?.let {
+                    if (inhabitants.add(it.name)) {
+                        entryLogger.enter(it.name)
+                        Response(ACCEPTED).with(message of Message("Access granted"))
+                    } else {
+                        Response(CONFLICT).with(message of Message("User is already inside building"))
+                    }
                 }
-            } ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
+                ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
         }
 
         return Route("User enters the building")
