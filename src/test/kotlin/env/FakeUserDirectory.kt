@@ -14,6 +14,7 @@ import verysecuresystems.external.UserDirectory.Companion.Contract.Create
 import verysecuresystems.external.UserDirectory.Companion.Contract.Delete
 import verysecuresystems.external.UserDirectory.Companion.Contract.Lookup
 import verysecuresystems.external.UserDirectory.Companion.Contract.UserList
+import java.util.*
 
 class FakeUserDirectory {
 
@@ -25,7 +26,7 @@ class FakeUserDirectory {
         .withRoute(
             Create.route bind {
                 val form = Create.form(it)
-                val newUser = User(Id(users.size), Create.username(form), Create.email(form))
+                val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
                 users.put(newUser.id, newUser)
                 Response(CREATED).with(Create.response of newUser)
             })
