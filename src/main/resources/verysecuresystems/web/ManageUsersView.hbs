@@ -7,9 +7,9 @@ Known users are:
 <table>
     <tbody>
     {{#users}}
-        <tr><td>{{name}}</td><td>{{email}}</td><td>
+        <tr><td>{{name.value}}</td><td>{{email.value}}</td><td>
             <form method="POST" action="/users/delete">
-                <input type="hidden" name="id" value="{{id}}"/>
+                <input type="hidden" name="id" value="{{id.value}}"/>
                 <button>delete</button>
             </form>
         </td></tr>

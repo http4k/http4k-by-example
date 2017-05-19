@@ -17,8 +17,6 @@ class TestEnvironment {
 
     val userDirectory = FakeUserDirectory()
     val entryLogger = FakeEntryLogger()
-//    val userDirectoryHttp = OverridableHttpService[Response](userDirectory)
-//    val entryLoggerHttp = OverridableHttpService[Response](entryLogger)
 
     val events = mutableListOf<Event>()
 
