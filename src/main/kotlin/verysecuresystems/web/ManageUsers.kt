@@ -40,7 +40,7 @@ object ManageUsers {
     private fun create(renderer: TemplateRenderer, userDirectory: UserDirectory): ServerRoute {
         val username = FormField.map(::Username, Username::value).required("username")
         val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
-        val form = Body.webForm(FormValidator.Feedback, username, email)
+        val form = Body.webForm(FormValidator.Feedback, username, email).toLens()
 
         return Route().at(POST) / "users" / "create" bind {
             val webForm = form(it)
@@ -55,7 +55,7 @@ object ManageUsers {
 
     private fun delete(userDirectory: UserDirectory): ServerRoute {
         val id = FormField.int().map(::Id, Id::value).required("id")
-        val form = Body.webForm(FormValidator.Feedback, id)
+        val form = Body.webForm(FormValidator.Feedback, id).toLens()
 
         return Route().at(POST) / "users" / "delete" bind {
             userDirectory.delete(id(form(it)))

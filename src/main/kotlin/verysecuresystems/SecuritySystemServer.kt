@@ -1,6 +1,6 @@
 package verysecuresystems
 
-import org.http4k.client.ApacheClient
+import org.http4k.client.OkHttp
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters.SetHostFrom
@@ -14,7 +14,7 @@ import java.time.Clock
  */
 object SecuritySystemServer {
     operator fun invoke(port: Int, userDirectoryUrl: String, entryLoggerUrl: String): Http4kServer {
-        val client = ApacheClient()
+        val client = OkHttp()
         val app = SecuritySystem(
             Clock.systemUTC(),
             ::println,

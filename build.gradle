@@ -3,7 +3,7 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     ext.kotlin_version = '1.1.2'
-    ext.http4k_version = '1.10.0'
+    ext.http4k_version = '1.14.0'
 
     repositories {
         mavenCentral()
@@ -28,7 +28,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
     compile "org.http4k:http4k-core:$http4k_version"
-    compile "org.http4k:http4k-client-apache:$http4k_version"
+    compile "org.http4k:http4k-client-okhttp:$http4k_version"
     compile "org.http4k:http4k-contract:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
     compile "org.http4k:http4k-server-jetty:$http4k_version"

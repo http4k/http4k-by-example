@@ -14,11 +14,11 @@ import verysecuresystems.User
 import verysecuresystems.external.UserDirectory
 
 object WhoIsThere {
-    private val users = Body.auto<List<User>>().required()
+    private val users = Body.auto<List<User>>().toLens()
 
     fun route(inhabitants: Inhabitants, userDirectory: UserDirectory): ServerRoute {
         val listUsers: HttpHandler = {
-            Response(OK).with(users to inhabitants.mapNotNull(userDirectory::lookup))
+            Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup))
         }
 
         return Route("List current users in the building")

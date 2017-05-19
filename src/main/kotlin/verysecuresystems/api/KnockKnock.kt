@@ -21,7 +21,7 @@ import verysecuresystems.external.UserDirectory
 
 object KnockKnock {
     private val username = Query.map(::Username).required("username")
-    private val message = Body.auto<Message>().required()
+    private val message = Body.auto<Message>().toLens()
 
     fun route(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ServerRoute {
         val userEntry: HttpHandler = {
@@ -29,11 +29,11 @@ object KnockKnock {
             user?.let {
                 if (inhabitants.add(user.name)) {
                     entryLogger.enter(user.name)
-                    Response(ACCEPTED).with(message to Message("Access granted"))
+                    Response(ACCEPTED).with(message of Message("Access granted"))
                 } else {
-                    Response(BAD_REQUEST).with(message to Message("User is already inside building"))
+                    Response(BAD_REQUEST).with(message of Message("User is already inside building"))
                 }
-            } ?: Response(NOT_FOUND).with(message to Message("Unknown user"))
+            } ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
         }
 
         return Route("User enters the building")

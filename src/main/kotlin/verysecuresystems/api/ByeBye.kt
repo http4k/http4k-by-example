@@ -17,7 +17,7 @@ import verysecuresystems.external.EntryLogger
 
 object ByeBye {
     private val username = Query.map(::Username).required("username")
-    private val message = Body.auto<Message>().required()
+    private val message = Body.auto<Message>().toLens()
 
     fun route(inhabitants: Inhabitants, entryLogger: EntryLogger): ServerRoute {
 
@@ -25,8 +25,8 @@ object ByeBye {
             val exiting = username(it)
             if (inhabitants.remove(exiting)) {
                 entryLogger.exit(exiting)
-                Response(Status.ACCEPTED).with(message to Message("processing"))
-            } else Response(Status.BAD_REQUEST).with(message to Message("User is not inside building"))
+                Response(Status.ACCEPTED).with(message of Message("processing"))
+            } else Response(Status.BAD_REQUEST).with(message of Message("User is not inside building"))
         }
 
         return Route("User exits the building")
