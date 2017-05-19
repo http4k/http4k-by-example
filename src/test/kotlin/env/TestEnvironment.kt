@@ -4,7 +4,8 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
+import org.http4k.filter.DebuggingFilters.PrintRequestAndResponse
 import verysecuresystems.Event
 import verysecuresystems.SecuritySystem
 import java.time.Clock
@@ -20,12 +21,12 @@ class TestEnvironment {
 
     val events = mutableListOf<Event>()
 
-    val app = SecuritySystem(
+    val app = PrintRequestAndResponse().then(SecuritySystem(
         clock,
         { events.add(it) },
-        { Response(OK) },
-        { Response(OK) }
-    )
+        PrintRequestAndResponse().then(userDirectory.app),
+        PrintRequestAndResponse().then(entryLogger.app)
+    ))
 }
 
 fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {

@@ -3,9 +3,7 @@ package verysecuresystems
 import org.http4k.contract.Root
 import org.http4k.core.HttpHandler
 import org.http4k.core.then
-import org.http4k.filter.CorsPolicy.Companion.UnsafeGlobalPermissive
 import org.http4k.filter.ServerFilters.CatchAll
-import org.http4k.filter.ServerFilters.Cors
 import verysecuresystems.api.Api
 import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
@@ -32,7 +30,6 @@ object SecuritySystem {
 
         return Auditor(clock, events)
             .then(CatchAll())
-            .then(Cors(UnsafeGlobalPermissive))
             .then(app)
     }
 }

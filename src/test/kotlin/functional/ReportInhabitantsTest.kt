@@ -19,7 +19,7 @@ import verysecuresystems.Username
 class ReportInhabitantsTest {
 
     private val env = TestEnvironment()
-    private val inhabitants = Body.auto<List<User>>().toLens()
+    private val inhabitants = Body.auto<Array<User>>().map(Array<User>::toList).toLens()
 
     @Test
     fun `who is there endpoint is protected with a secret key`() {
@@ -36,6 +36,8 @@ class ReportInhabitantsTest {
     @Test
     fun `when a user enters the building`() {
         val user = User(Id(1), Username("Bob"), EmailAddress("bob@bob.com"))
+
+        env.userDirectory.contains(user)
 
         env.enterBuilding("Bob", "realSecret")
         inhabitants(env.checkInhabitants("realSecret")) shouldMatch equalTo(listOf(user))
