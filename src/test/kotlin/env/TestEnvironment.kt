@@ -1,3 +1,5 @@
+package env
+
 import org.http4k.core.Response
 import org.http4k.core.Status
 import verysecuresystems.Event
@@ -21,7 +23,7 @@ class TestEnvironment {
     val app = SecuritySystem(
         clock,
         { events.add(it) },
-        { Response(Status.OK) },
-        { Response(Status.OK) }
+        { Response.Companion(Status.Companion.OK) },
+        { Response.Companion(Status.Companion.OK) }
     )
 }

@@ -33,6 +33,11 @@ dependencies {
     compile "org.http4k:http4k-format-jackson:$http4k_version"
     compile "org.http4k:http4k-server-jetty:$http4k_version"
     compile "org.http4k:http4k-template-handlebars:$http4k_version"
+
+    testCompile "junit:junit:4.11"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testCompile "com.natpryce:hamkrest:1.3.0.0"
+
 }
 
 mainClassName = 'org.http4k.todo.TodoBackendAppKt'
