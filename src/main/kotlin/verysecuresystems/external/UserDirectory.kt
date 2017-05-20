@@ -6,7 +6,6 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
-import org.http4k.core.Request
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
@@ -26,30 +25,33 @@ import verysecuresystems.Username
 class UserDirectory(private val client: HttpHandler) {
     fun create(name: Username, inEmail: EmailAddress): User =
         client(
-            Request(POST, "/user")
+            Contract.Create.route.newRequest()
                 .with(Contract.Create.form of
                     WebForm().with(
                         Contract.Create.email of inEmail,
                         Contract.Create.username of name)),
             Contract.Create.response)
 
-    fun delete(id: Id): Unit = client(Request(DELETE, "/user/${id.value}")).let {
-        if (it.status != ACCEPTED) {
-            throw RemoteSystemProblem("user directory", it.status)
+    fun delete(id: Id): Unit =
+        client(Contract.Delete.route.newRequest().with(Contract.Delete.id of id)).let {
+            if (it.status != ACCEPTED) {
+                throw RemoteSystemProblem("user directory", it.status)
+            }
         }
-    }
 
-    fun list(): List<User> = client(Request(GET, "/user"), Contract.UserList.response)
+    fun list(): List<User> = client(Contract.UserList.route.newRequest(), Contract.UserList.response)
 
-    fun lookup(username: Username): User? = client(Request(GET, "/user/${username.value}")).let {
-        if (it.status == NOT_FOUND) {
-            return null
-        } else if (it.status != OK) {
-            throw RemoteSystemProblem("user directory", it.status)
-        } else {
-            Contract.Lookup.response(it)
+    fun lookup(username: Username): User? =
+        client(Contract.Lookup.route.newRequest()
+            .with(Contract.Lookup.username of username)).let {
+            if (it.status == NOT_FOUND) {
+                return null
+            } else if (it.status != OK) {
+                throw RemoteSystemProblem("user directory", it.status)
+            } else {
+                Contract.Lookup.response(it)
+            }
         }
-    }
 
     companion object {
         object Contract {
@@ -62,7 +64,7 @@ class UserDirectory(private val client: HttpHandler) {
             }
 
             object Delete {
-                val id = Path.int().map(::Id).of("id")
+                val id = Path.int().map(::Id, Id::value).of("id")
                 val route = Route().at(DELETE) / "user" / id
                 val response = Body.auto<User>().toLens()
             }
@@ -73,7 +75,7 @@ class UserDirectory(private val client: HttpHandler) {
             }
 
             object Lookup {
-                val username = Path.map(::Username).of("username")
+                val username = Path.map(::Username, Username::value).of("username")
                 val route = Route().at(GET) / "user" / username
                 val response = Body.auto<User>().toLens()
             }
