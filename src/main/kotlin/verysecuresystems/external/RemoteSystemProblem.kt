@@ -7,13 +7,13 @@ import org.http4k.core.Status.Companion.BAD_GATEWAY
 import org.http4k.lens.BodyLens
 import org.http4k.lens.LensFailure
 
-fun <T> HttpHandler.perform(request: Request, bodyLens: BodyLens<T>): T = this(request)
+fun <T> HttpHandler.perform(request: Request, responseLens: BodyLens<T>): T = this(request)
     .let {
         if (it.status.code > 399) {
             throw RemoteSystemProblem(request.uri.toString(), it.status)
         } else {
             try {
-                bodyLens(it)
+                responseLens(it)
             } catch(e: LensFailure) {
                 throw RemoteSystemProblem(request.uri.toString(), BAD_GATEWAY)
             }
