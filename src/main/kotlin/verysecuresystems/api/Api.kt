@@ -5,8 +5,8 @@ import org.http4k.contract.BasePath
 import org.http4k.contract.Module
 import org.http4k.contract.RouteModule
 import org.http4k.contract.SimpleJson
-import org.http4k.filter.CorsPolicy
-import org.http4k.filter.ServerFilters
+import org.http4k.filter.CorsPolicy.Companion.UnsafeGlobalPermissive
+import org.http4k.filter.ServerFilters.Cors
 import org.http4k.format.Jackson
 import org.http4k.lens.Header
 import verysecuresystems.Inhabitants
@@ -14,7 +14,7 @@ import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
 
 object Api {
-    private val corsFilter = ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
+    private val corsFilter = Cors(UnsafeGlobalPermissive)
 
     private val apiKey = ApiKey(Header.required("key"), { key: String -> key == "realSecret" })
 
