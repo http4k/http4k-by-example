@@ -24,7 +24,7 @@ import verysecuresystems.Username
 
 class UserDirectory(private val client: HttpHandler) {
     fun create(name: Username, inEmail: EmailAddress): User =
-        client(
+        client.perform(
             Create.route.newRequest()
                 .with(Create.form of
                     WebForm().with(
@@ -39,7 +39,7 @@ class UserDirectory(private val client: HttpHandler) {
             }
         }
 
-    fun list(): List<User> = client(UserList.route.newRequest(), UserList.response)
+    fun list(): List<User> = client.perform(UserList.route.newRequest(), UserList.response)
 
     fun lookup(username: Username): User? =
         client(Lookup.route.newRequest()

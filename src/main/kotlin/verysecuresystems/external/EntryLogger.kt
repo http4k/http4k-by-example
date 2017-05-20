@@ -15,19 +15,19 @@ import java.time.Clock
 class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
     fun enter(username: Username): UserEntry =
-        client(
+        client.perform(
             Entry.route.newRequest()
                 .with(Entry.body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
             Entry.response)
 
     fun exit(username: Username): UserEntry =
-        client(
+        client.perform(
             Exit.route.newRequest()
                 .with(Exit.body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
             Exit.response)
 
 
-    fun list(): List<UserEntry> = client(LogList.route.newRequest(), LogList.response)
+    fun list(): List<UserEntry> = client.perform(LogList.route.newRequest(), LogList.response)
 
     companion object {
 

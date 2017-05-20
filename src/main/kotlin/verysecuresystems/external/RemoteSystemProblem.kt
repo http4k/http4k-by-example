@@ -7,7 +7,7 @@ import org.http4k.core.Status.Companion.BAD_GATEWAY
 import org.http4k.lens.BodyLens
 import org.http4k.lens.LensFailure
 
-operator fun <T> HttpHandler.invoke(request: Request, bodyLens: BodyLens<T>): T = this(request)
+fun <T> HttpHandler.perform(request: Request, bodyLens: BodyLens<T>): T = this(request)
     .let {
         if (it.status.code > 399) {
             throw RemoteSystemProblem("entry logger", it.status)
