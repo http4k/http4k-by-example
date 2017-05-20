@@ -5,7 +5,6 @@ import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
-import org.http4k.core.Request
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
@@ -28,7 +27,7 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
             Exit.response)
 
 
-    fun list(): List<UserEntry> = client(Request(POST, "/exit"), LogList.response)
+    fun list(): List<UserEntry> = client(LogList.route.newRequest(), LogList.response)
 
     companion object {
 
