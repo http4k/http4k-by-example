@@ -25,60 +25,58 @@ import verysecuresystems.Username
 class UserDirectory(private val client: HttpHandler) {
     fun create(name: Username, inEmail: EmailAddress): User =
         client(
-            Contract.Create.route.newRequest()
-                .with(Contract.Create.form of
+            Create.route.newRequest()
+                .with(Create.form of
                     WebForm().with(
-                        Contract.Create.email of inEmail,
-                        Contract.Create.username of name)),
-            Contract.Create.response)
+                        Create.email of inEmail,
+                        Create.username of name)),
+            Create.response)
 
     fun delete(id: Id): Unit =
-        client(Contract.Delete.route.newRequest().with(Contract.Delete.id of id)).let {
+        client(Delete.route.newRequest().with(Delete.id of id)).let {
             if (it.status != ACCEPTED) {
                 throw RemoteSystemProblem("user directory", it.status)
             }
         }
 
-    fun list(): List<User> = client(Contract.UserList.route.newRequest(), Contract.UserList.response)
+    fun list(): List<User> = client(UserList.route.newRequest(), UserList.response)
 
     fun lookup(username: Username): User? =
-        client(Contract.Lookup.route.newRequest()
-            .with(Contract.Lookup.username of username)).let {
+        client(Lookup.route.newRequest()
+            .with(Lookup.username of username)).let {
             if (it.status == NOT_FOUND) {
                 return null
             } else if (it.status != OK) {
                 throw RemoteSystemProblem("user directory", it.status)
             } else {
-                Contract.Lookup.response(it)
+                Lookup.response(it)
             }
         }
 
     companion object {
-        object Contract {
-            object Create {
-                val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
-                val username = FormField.map(::Username, Username::value).required("username")
-                val form = Body.webForm(Strict, email, username).toLens()
-                val route = Route().body(form).at(POST) / "user"
-                val response = Body.auto<User>().toLens()
-            }
+        object Create {
+            val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
+            val username = FormField.map(::Username, Username::value).required("username")
+            val form = Body.webForm(Strict, email, username).toLens()
+            val route = Route().body(form).at(POST) / "user"
+            val response = Body.auto<User>().toLens()
+        }
 
-            object Delete {
-                val id = Path.int().map(::Id, Id::value).of("id")
-                val route = Route().at(DELETE) / "user" / id
-                val response = Body.auto<User>().toLens()
-            }
+        object Delete {
+            val id = Path.int().map(::Id, Id::value).of("id")
+            val route = Route().at(DELETE) / "user" / id
+            val response = Body.auto<User>().toLens()
+        }
 
-            object UserList {
-                val route = Route().at(GET) / "user"
-                val response = Body.auto<Array<User>>().map(Array<User>::toList, List<User>::toTypedArray).toLens()
-            }
+        object UserList {
+            val route = Route().at(GET) / "user"
+            val response = Body.auto<Array<User>>().map(Array<User>::toList, List<User>::toTypedArray).toLens()
+        }
 
-            object Lookup {
-                val username = Path.map(::Username, Username::value).of("username")
-                val route = Route().at(GET) / "user" / username
-                val response = Body.auto<User>().toLens()
-            }
+        object Lookup {
+            val username = Path.map(::Username, Username::value).of("username")
+            val route = Route().at(GET) / "user" / username
+            val response = Body.auto<User>().toLens()
         }
 
     }

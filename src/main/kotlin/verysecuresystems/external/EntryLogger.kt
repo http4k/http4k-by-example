@@ -17,39 +17,37 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
     fun enter(username: Username): UserEntry =
         client(
-            Contract.Entry.route.newRequest()
-                .with(Contract.Entry.body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
-            Contract.Entry.response)
+            Entry.route.newRequest()
+                .with(Entry.body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
+            Entry.response)
 
     fun exit(username: Username): UserEntry =
         client(
-            Contract.Exit.route.newRequest()
-                .with(Contract.Exit.body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
-            Contract.Exit.response)
+            Exit.route.newRequest()
+                .with(Exit.body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
+            Exit.response)
 
 
-    fun list(): List<UserEntry> = client(Request(POST, "/exit"), Contract.LogList.response)
+    fun list(): List<UserEntry> = client(Request(POST, "/exit"), LogList.response)
 
     companion object {
 
-        object Contract {
-            object Entry {
-                val body = Body.auto<UserEntry>().toLens()
-                val route = Route().body(body).at(POST) / "entry"
-                val response = Body.auto<UserEntry>().toLens()
-            }
+        object Entry {
+            val body = Body.auto<UserEntry>().toLens()
+            val route = Route().body(body).at(POST) / "entry"
+            val response = Body.auto<UserEntry>().toLens()
+        }
 
-            object Exit {
-                val body = Body.auto<UserEntry>().toLens()
-                val route = Route().body(body).at(POST) / "exit"
-                val response = Body.auto<UserEntry>().toLens()
-            }
+        object Exit {
+            val body = Body.auto<UserEntry>().toLens()
+            val route = Route().body(body).at(POST) / "exit"
+            val response = Body.auto<UserEntry>().toLens()
+        }
 
-            object LogList {
-                val body = Body.auto<List<UserEntry>>().toLens()
-                val route = Route().at(GET) / "list"
-                val response = Body.auto<List<UserEntry>>().toLens()
-            }
+        object LogList {
+            val body = Body.auto<List<UserEntry>>().toLens()
+            val route = Route().at(GET) / "list"
+            val response = Body.auto<List<UserEntry>>().toLens()
         }
 
     }

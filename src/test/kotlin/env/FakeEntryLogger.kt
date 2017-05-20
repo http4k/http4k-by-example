@@ -8,10 +8,10 @@ import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.with
 import verysecuresystems.UserEntry
-import verysecuresystems.external.EntryLogger.Companion.Contract.Entry
-import verysecuresystems.external.EntryLogger.Companion.Contract.Entry.body
-import verysecuresystems.external.EntryLogger.Companion.Contract.Exit
-import verysecuresystems.external.EntryLogger.Companion.Contract.LogList
+import verysecuresystems.external.EntryLogger.Companion.Entry
+import verysecuresystems.external.EntryLogger.Companion.Entry.body
+import verysecuresystems.external.EntryLogger.Companion.Exit
+import verysecuresystems.external.EntryLogger.Companion.LogList
 
 class FakeEntryLogger {
 

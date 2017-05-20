@@ -10,10 +10,11 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import verysecuresystems.Id
 import verysecuresystems.User
-import verysecuresystems.external.UserDirectory.Companion.Contract.Create
-import verysecuresystems.external.UserDirectory.Companion.Contract.Delete
-import verysecuresystems.external.UserDirectory.Companion.Contract.Lookup
-import verysecuresystems.external.UserDirectory.Companion.Contract.UserList
+import verysecuresystems.external.UserDirectory
+import verysecuresystems.external.UserDirectory.Companion.Create
+import verysecuresystems.external.UserDirectory.Companion.Delete
+import verysecuresystems.external.UserDirectory.Companion.Lookup
+import verysecuresystems.external.UserDirectory.Companion.UserList
 import java.util.*
 
 class FakeUserDirectory {
@@ -24,7 +25,7 @@ class FakeUserDirectory {
 
     val app = RouteModule(Root)
         .withRoute(
-            Create.route bind {
+            UserDirectory.Companion.Create.route bind {
                 val form = Create.form(it)
                 val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
                 users.put(newUser.id, newUser)
