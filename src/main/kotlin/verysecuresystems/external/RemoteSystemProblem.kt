@@ -10,12 +10,12 @@ import org.http4k.lens.LensFailure
 fun <T> HttpHandler.perform(request: Request, bodyLens: BodyLens<T>): T = this(request)
     .let {
         if (it.status.code > 399) {
-            throw RemoteSystemProblem("entry logger", it.status)
+            throw RemoteSystemProblem(request.uri.toString(), it.status)
         } else {
             try {
                 bodyLens(it)
             } catch(e: LensFailure) {
-                throw RemoteSystemProblem("entry logger", BAD_GATEWAY)
+                throw RemoteSystemProblem(request.uri.toString(), BAD_GATEWAY)
             }
         }
     }
