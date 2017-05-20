@@ -9,8 +9,11 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
+import verysecuresystems.EmailAddress
+import verysecuresystems.Id
 import verysecuresystems.Inhabitants
 import verysecuresystems.User
+import verysecuresystems.Username
 import verysecuresystems.external.UserDirectory
 
 object WhoIsThere {
@@ -22,7 +25,8 @@ object WhoIsThere {
         }
 
         return Route("List current users in the building")
-//            .returning(Ok(encode(Seq(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))))))
+            .returning("Inhabitant list" to Response(OK)
+                .with(users of listOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com")))))
             .at(GET) / "whoIsThere" bind listUsers
     }
 }
