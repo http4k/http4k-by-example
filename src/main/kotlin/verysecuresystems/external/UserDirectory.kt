@@ -39,7 +39,7 @@ class UserDirectory(private val client: HttpHandler) {
             }
         }
 
-    fun list(): List<User> = client.perform(UserList.route.newRequest(), UserList.response)
+    fun list(): List<User> = client.perform(UserList.route.newRequest(), UserList.response).asList()
 
     fun lookup(username: Username): User? =
         client(Lookup.route.newRequest()
@@ -70,7 +70,7 @@ class UserDirectory(private val client: HttpHandler) {
 
         object UserList {
             val route = Route().at(GET) / "user"
-            val response = Body.auto<Array<User>>().map(Array<User>::toList, List<User>::toTypedArray).toLens()
+            val response = Body.auto<Array<User>>().toLens()
         }
 
         object Lookup {

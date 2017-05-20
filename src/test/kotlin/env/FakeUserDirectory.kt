@@ -53,7 +53,7 @@ class FakeUserDirectory {
             })
         .withRoute(
             UserList.route bind {
-                Response(OK).with(UserList.response of users.values.toList())
+                Response(OK).with(UserList.response of users.values.toTypedArray())
             })
         .toHttpHandler()
 }

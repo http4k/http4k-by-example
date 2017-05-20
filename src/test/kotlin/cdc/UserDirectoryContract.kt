@@ -44,9 +44,7 @@ abstract class UserDirectoryContract(handler: HttpHandler) {
     @Test
     fun `can list users`() {
         val created = userDirectory.create(username, email)
-        val list = userDirectory.list()
-        list.size shouldMatch equalTo(1)
-        list[0] shouldMatch equalTo(created)
+        userDirectory.list() shouldMatch equalTo(listOf(created))
     }
 
     @Test
