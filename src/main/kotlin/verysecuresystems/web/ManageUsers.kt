@@ -13,6 +13,7 @@ import org.http4k.lens.FormField
 import org.http4k.lens.FormValidator
 import org.http4k.lens.WebForm
 import org.http4k.lens.int
+import org.http4k.lens.nonEmptyString
 import org.http4k.lens.webForm
 import org.http4k.template.TemplateRenderer
 import org.http4k.template.ViewModel
@@ -41,8 +42,8 @@ object ManageUsers {
         }
 
     private fun create(renderer: TemplateRenderer, userDirectory: UserDirectory): ServerRoute {
-        val username = FormField.map(::Username, Username::value).required("username")
-        val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
+        val username = FormField.nonEmptyString().map(::Username, Username::value).required("username")
+        val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
         val form = Body.webForm(FormValidator.Feedback, username, email).toLens()
 
         return Route().at(POST) / "users" / "create" bind SetHtmlContentType.then {

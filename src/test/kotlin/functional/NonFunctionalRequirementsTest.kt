@@ -7,6 +7,7 @@ import env.TestEnvironment
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
+import org.http4k.format.Jackson
 import org.junit.Test
 
 class NonFunctionalRequirementsTest {
@@ -33,6 +34,14 @@ class NonFunctionalRequirementsTest {
         response.status shouldMatch equalTo(OK)
         response.bodyString() shouldMatch containsSubstring("font-family: \"Droid Sans\"")
     }
+
+    @Test
+    fun `provides API documentation in swagger 2dot0 format`() {
+        val response = env.app(Request(GET, "/api/api-docs"))
+        response.status shouldMatch equalTo(OK)
+        Jackson.parse(response.bodyString())["swagger"].textValue() shouldMatch equalTo("2.0")
+    }
+
 //
 //    it("has a sitemap") {
 //        val response = env.responseTo(Request("/sitemap.xml"))
@@ -43,10 +52,4 @@ class NonFunctionalRequirementsTest {
 //        ((siteMap \\ "urlset" \\ "url") (1) \\ "loc").text shouldBe "http://my.security.system"
 //    }
 //
-//    it("provides API documentation in swagger 2.0 format") {
-//        val response = env.responseTo(Request("/security/api-docs"))
-//        response.status shouldBe Ok
-//
-//        root.swagger.string.getOption(JsonFormat.parse(response.content)) shouldBe Option("2.0")
-//    }
 }

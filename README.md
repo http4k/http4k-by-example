@@ -8,9 +8,10 @@ This is a complete Kotlin example application which uses the majority of the fea
 
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
-- HTTP response building, including sample JSON library support (Circe) and auto-case class instance marshalling
+- HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
+- Swagger 2.0 documentation and JSON schema generation from example model objects
 - Automatic invalid request handling
-- Endpoint security
+- Endpoint security via an API-key header - the key is "realSecret"
 - Templating system (Handlebars)
 - Serving of static resources
 
@@ -23,7 +24,7 @@ code looking as awesome as possible! :).
 1. Clone this repo
 2. Run `RunnableEnvironment` from an IDE. This will start the application on port 9000 
 which has been configured to use a fake versions of the remote dependencies (on ports 10000 and 11000)
-3. Just point your browser at <a href="http://localhost:9999/">http://localhost:9000/</a>
+3. Just point your browser at <a href="http://localhost:9000/">http://localhost:9000/</a>
 
 <hr/>
 <hr/>
