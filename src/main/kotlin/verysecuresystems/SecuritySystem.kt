@@ -33,8 +33,8 @@ object SecuritySystem {
         val app = routes(
             "/api" by Api.router(userDirectory, entryLogger, inhabitants),
             "/internal" by Diagnostic.router(clock),
-            "/" by static(ResourceLoader.Classpath("public")),
-            "/" by Web.router(userDirectory)
+            "/" by Web.router(userDirectory),
+            "/" by static(ResourceLoader.Classpath("public"))
         )
 
         return Auditor(clock, events)
