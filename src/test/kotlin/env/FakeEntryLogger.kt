@@ -1,12 +1,11 @@
 package env
 
-import org.http4k.contract.Root
-import org.http4k.contract.RouteModule
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.with
+import org.http4k.routing.contract
 import verysecuresystems.UserEntry
 import verysecuresystems.external.EntryLogger.Companion.Entry
 import verysecuresystems.external.EntryLogger.Companion.Entry.body
@@ -17,7 +16,7 @@ class FakeEntryLogger {
 
     val entries = mutableListOf<UserEntry>()
 
-    val app = RouteModule(Root)
+    val app = contract()
         .withRoute(
             Entry.route bind {
                 val userEntry = body(it)
@@ -34,5 +33,4 @@ class FakeEntryLogger {
             LogList.route bind {
                 Response(Status.OK).with(LogList.response of entries)
             })
-        .toHttpHandler()
 }
