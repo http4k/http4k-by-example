@@ -1,7 +1,5 @@
 package verysecuresystems.api
 
-import org.http4k.contract.Route
-import org.http4k.contract.ServerRoute
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.POST
@@ -13,6 +11,11 @@ import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Query
+import org.http4k.routing.RouteMeta
+import org.http4k.routing.ServerRoute
+import org.http4k.routing.handler
+import org.http4k.routing.meta
+import org.http4k.routing.query
 import verysecuresystems.Inhabitants
 import verysecuresystems.Message
 import verysecuresystems.Username
@@ -37,13 +40,17 @@ object KnockKnock {
                 ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
         }
 
-        return Route("User enters the building")
-            .query(username)
-            .returning("Access granted" to ACCEPTED)
-            .returning("Unknown user" to NOT_FOUND)
-            .returning("User is already inside building" to CONFLICT)
-            .returning("Incorrect key" to UNAUTHORIZED)
-            .at(POST) / "knock" bind userEntry
+        return (
+            "/knock"
+                query username
+                to POST
+                handler userEntry
+                meta RouteMeta("User enters the building")
+                .returning("Access granted" to ACCEPTED)
+                .returning("Unknown user" to NOT_FOUND)
+                .returning("User is already inside building" to CONFLICT)
+                .returning("Incorrect key" to UNAUTHORIZED)
+            )
     }
 }
 

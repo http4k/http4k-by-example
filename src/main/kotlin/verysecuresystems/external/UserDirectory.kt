@@ -1,6 +1,5 @@
 package verysecuresystems.external
 
-import org.http4k.contract.Route
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -17,6 +16,9 @@ import org.http4k.lens.Path
 import org.http4k.lens.WebForm
 import org.http4k.lens.int
 import org.http4k.lens.webForm
+import org.http4k.routing.body
+import org.http4k.routing.div
+import org.http4k.routing.newRequest
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User
@@ -39,7 +41,10 @@ class UserDirectory(private val client: HttpHandler) {
             }
         }
 
-    fun list(): List<User> = client.perform(UserList.route.newRequest(), UserList.response).asList()
+    fun list(): List<User> {
+        val request = UserList.route.newRequest()
+        return client.perform(request, UserList.response).asList()
+    }
 
     fun lookup(username: Username): User? =
         client(Lookup.route.newRequest()
@@ -58,24 +63,24 @@ class UserDirectory(private val client: HttpHandler) {
             val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
             val username = FormField.map(::Username, Username::value).required("username")
             val form = Body.webForm(Strict, email, username).toLens()
-            val route = Route().body(form).at(POST) / "user"
+            val route = "/user" body form to POST
             val response = Body.auto<User>().toLens()
         }
 
         object Delete {
             val id = Path.int().map(::Id, Id::value).of("id")
-            val route = Route().at(DELETE) / "user" / id
+            val route = "/user" / id to DELETE
             val response = Body.auto<User>().toLens()
         }
 
         object UserList {
-            val route = Route().at(GET) / "user"
+            val route = "/user" to GET
             val response = Body.auto<Array<User>>().toLens()
         }
 
         object Lookup {
             val username = Path.map(::Username, Username::value).of("username")
-            val route = Route().at(GET) / "user" / username
+            val route = "/user" / username to GET
             val response = Body.auto<User>().toLens()
         }
 

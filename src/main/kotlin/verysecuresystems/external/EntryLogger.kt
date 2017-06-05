@@ -1,12 +1,13 @@
 package verysecuresystems.external
 
-import org.http4k.contract.Route
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
+import org.http4k.routing.body
+import org.http4k.routing.newRequest
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
 import java.time.Clock
@@ -33,19 +34,19 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
         object Entry {
             val body = Body.auto<UserEntry>().toLens()
-            val route = Route().body(body).at(POST) / "entry"
+            val route = "/entry" body body to POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object Exit {
             val body = Body.auto<UserEntry>().toLens()
-            val route = Route().body(body).at(POST) / "exit"
+            val route = "/exit" body body to POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object LogList {
             val body = Body.auto<List<UserEntry>>().toLens()
-            val route = Route().at(GET) / "list"
+            val route = "/list" to GET
             val response = Body.auto<List<UserEntry>>().toLens()
         }
 

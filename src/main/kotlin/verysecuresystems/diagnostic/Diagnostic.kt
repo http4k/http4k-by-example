@@ -7,7 +7,7 @@ import org.http4k.routing.contract
 import java.time.Clock
 
 object Diagnostic {
-    fun router(clock: Clock): RoutingHttpHandler = contract(SimpleJson(Jackson))
-        .withRoute(Ping.route())
-        .withRoute(Uptime.route(clock))
+    fun router(clock: Clock): RoutingHttpHandler = contract(SimpleJson(Jackson),
+        Ping.route(),
+        Uptime.route(clock))
 }

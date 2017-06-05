@@ -18,9 +18,10 @@ object Api {
     fun router(userDirectory: UserDirectory, entryLogger: EntryLogger, inhabitants: Inhabitants): RoutingHttpHandler =
         ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
             .then(contract(Swagger(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson),
-                "/api-docs", ApiKey(Header.required("key"), { key: String -> key == "realSecret" }))
-                .withRoute(KnockKnock.route(inhabitants, userDirectory, entryLogger))
-                .withRoute(WhoIsThere.route(inhabitants, userDirectory))
-                .withRoute(ByeBye.route(inhabitants, entryLogger)))
+                "/api-docs", ApiKey(Header.required("key"), { key: String -> key == "realSecret" }),
+                KnockKnock.route(inhabitants, userDirectory, entryLogger),
+                WhoIsThere.route(inhabitants, userDirectory),
+                ByeBye.route(inhabitants, entryLogger)
+            ))
 }
 
