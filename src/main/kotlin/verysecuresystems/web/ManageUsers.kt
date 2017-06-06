@@ -46,7 +46,7 @@ object ManageUsers {
         val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
         val form = Body.webForm(FormValidator.Feedback, username, email).toLens()
 
-        return "/users/post" to POST handler SetHtmlContentType.then {
+        return "/users/create" to POST handler SetHtmlContentType.then {
             val webForm = form(it)
             if (webForm.errors.isEmpty()) {
                 userDirectory.create(username(webForm), email(webForm))
