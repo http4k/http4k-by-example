@@ -1,5 +1,7 @@
 package verysecuresystems.web
 
+import org.http4k.contract.ContractRoute
+import org.http4k.contract.bind
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -13,8 +15,6 @@ import org.http4k.lens.WebForm
 import org.http4k.lens.int
 import org.http4k.lens.nonEmptyString
 import org.http4k.lens.webForm
-import org.http4k.routing.ServerRoute
-import org.http4k.routing.handler
 import org.http4k.template.TemplateRenderer
 import org.http4k.template.ViewModel
 import verysecuresystems.EmailAddress
@@ -29,24 +29,24 @@ data class ManageUsersView(val users: List<User>, val form: WebForm) : ViewModel
 
 object ManageUsers {
 
-    fun routes(renderer: TemplateRenderer, userDirectory: UserDirectory): List<ServerRoute> = listOf(
+    fun routes(renderer: TemplateRenderer, userDirectory: UserDirectory): List<ContractRoute> = listOf(
         view(renderer, userDirectory),
         create(renderer, userDirectory),
         delete(userDirectory)
     )
 
     private fun view(renderer: TemplateRenderer, userDirectory: UserDirectory) =
-        "/users" to GET handler SetHtmlContentType.then {
+        "/users" to GET bind SetHtmlContentType.then {
             Response(OK)
                 .body(renderer(ManageUsersView(userDirectory.list(), WebForm())))
         }
 
-    private fun create(renderer: TemplateRenderer, userDirectory: UserDirectory): ServerRoute {
+    private fun create(renderer: TemplateRenderer, userDirectory: UserDirectory): ContractRoute {
         val username = FormField.nonEmptyString().map(::Username, Username::value).required("username")
         val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
         val form = Body.webForm(FormValidator.Feedback, username, email).toLens()
 
-        return "/users/create" to POST handler SetHtmlContentType.then {
+        return "/users/create" to POST bind SetHtmlContentType.then {
             val webForm = form(it)
             if (webForm.errors.isEmpty()) {
                 userDirectory.create(username(webForm), email(webForm))
@@ -57,10 +57,10 @@ object ManageUsers {
         }
     }
 
-    private fun delete(userDirectory: UserDirectory): ServerRoute {
+    private fun delete(userDirectory: UserDirectory): ContractRoute {
         val id = FormField.int().map(::Id, Id::value).required("id")
         val form = Body.webForm(FormValidator.Feedback, id).toLens()
-        return "/users/delete" to POST handler  {
+        return "/users/delete" to POST bind  {
             userDirectory.delete(id(form(it)))
             Response(SEE_OTHER).header("location", ".")
         }

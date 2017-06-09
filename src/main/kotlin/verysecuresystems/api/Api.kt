@@ -3,13 +3,13 @@ package verysecuresystems.api
 import org.http4k.contract.ApiInfo
 import org.http4k.contract.ApiKey
 import org.http4k.contract.Swagger
+import org.http4k.contract.contract
 import org.http4k.core.then
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.ServerFilters
 import org.http4k.format.Jackson
 import org.http4k.lens.Header
 import org.http4k.routing.RoutingHttpHandler
-import org.http4k.routing.contract
 import verysecuresystems.Inhabitants
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory

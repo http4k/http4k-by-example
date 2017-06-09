@@ -1,5 +1,9 @@
 package verysecuresystems.api
 
+import org.http4k.contract.ContractRoute
+import org.http4k.contract.RouteMeta
+import org.http4k.contract.bind
+import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
@@ -7,10 +11,6 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
-import org.http4k.routing.RouteMeta
-import org.http4k.routing.ServerRoute
-import org.http4k.routing.handler
-import org.http4k.routing.meta
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.Inhabitants
@@ -21,7 +21,7 @@ import verysecuresystems.external.UserDirectory
 object WhoIsThere {
     private val users = Body.auto<List<User>>().toLens()
 
-    fun route(inhabitants: Inhabitants, userDirectory: UserDirectory): ServerRoute {
+    fun route(inhabitants: Inhabitants, userDirectory: UserDirectory): ContractRoute {
         val listUsers: HttpHandler = {
             Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup))
         }
@@ -29,7 +29,7 @@ object WhoIsThere {
         return (
             "/whoIsThere"
                 to Method.GET
-                handler listUsers
+                bind listUsers
                 meta RouteMeta("List current users in the building")
                 .returning("Inhabitant list" to
                     Response(OK)

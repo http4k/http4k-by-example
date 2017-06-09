@@ -1,5 +1,8 @@
 package verysecuresystems.external
 
+import org.http4k.contract.body
+import org.http4k.contract.div
+import org.http4k.contract.newRequest
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -16,9 +19,6 @@ import org.http4k.lens.Path
 import org.http4k.lens.WebForm
 import org.http4k.lens.int
 import org.http4k.lens.webForm
-import org.http4k.routing.body
-import org.http4k.routing.div
-import org.http4k.routing.newRequest
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User

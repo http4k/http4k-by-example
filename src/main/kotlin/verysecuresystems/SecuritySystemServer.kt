@@ -16,5 +16,3 @@ object SecuritySystemServer {
             .asServer(Jetty(port))
     }
 }
-
-

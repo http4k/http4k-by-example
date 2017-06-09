@@ -6,7 +6,7 @@ import org.http4k.core.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader
-import org.http4k.routing.by
+import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
 import verysecuresystems.api.Api
@@ -31,10 +31,10 @@ object SecuritySystem {
         val inhabitants = Inhabitants()
 
         val app = routes(
-            "/api" by Api.router(userDirectory, entryLogger, inhabitants),
-            "/internal" by Diagnostic.router(clock),
-            "/" by Web.router(userDirectory),
-            "/" by static(ResourceLoader.Classpath("public"))
+            "/api" bind  Api.router(userDirectory, entryLogger, inhabitants),
+            "/internal" bind Diagnostic.router(clock),
+            "/" bind Web.router(userDirectory),
+            "/" bind static(ResourceLoader.Classpath("public"))
         )
 
         return Auditor(clock, events)

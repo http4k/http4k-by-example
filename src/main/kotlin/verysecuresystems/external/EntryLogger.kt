@@ -1,13 +1,13 @@
 package verysecuresystems.external
 
+import org.http4k.contract.body
+import org.http4k.contract.newRequest
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
-import org.http4k.routing.body
-import org.http4k.routing.newRequest
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
 import java.time.Clock

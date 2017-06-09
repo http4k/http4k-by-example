@@ -1,11 +1,11 @@
 package verysecuresystems.web
 
+import org.http4k.contract.contract
 import org.http4k.core.ContentType
 import org.http4k.core.Filter
 import org.http4k.core.with
 import org.http4k.lens.Header
 import org.http4k.routing.RoutingHttpHandler
-import org.http4k.routing.contract
 import org.http4k.template.HandlebarsTemplates
 import verysecuresystems.external.UserDirectory
 

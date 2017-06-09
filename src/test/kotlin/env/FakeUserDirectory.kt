@@ -1,13 +1,13 @@
 package env
 
+import org.http4k.contract.bind
+import org.http4k.contract.contract
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
-import org.http4k.routing.contract
-import org.http4k.routing.handler
 import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.external.UserDirectory
@@ -24,13 +24,13 @@ class FakeUserDirectory {
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
     val app = contract(
-        UserDirectory.Companion.Create.route handler {
+        UserDirectory.Companion.Create.route bind {
             val form = Create.form(it)
             val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
             users.put(newUser.id, newUser)
             Response(CREATED).with(Create.response of newUser)
         },
-        Delete.route handler {
+        Delete.route bind {
             id ->
             {
                 users.remove(id)?.let {
@@ -38,7 +38,7 @@ class FakeUserDirectory {
                 } ?: Response(NOT_FOUND)
             }
         },
-        Lookup.route handler {
+        Lookup.route bind {
             username ->
             {
                 users.values
@@ -48,7 +48,7 @@ class FakeUserDirectory {
                     ?: Response(NOT_FOUND)
             }
         },
-        UserList.route handler {
+        UserList.route bind {
             Response(OK).with(UserList.response of users.values.toTypedArray())
         })
 }
