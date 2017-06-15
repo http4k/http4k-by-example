@@ -19,11 +19,11 @@ import verysecuresystems.Username
 import verysecuresystems.external.UserDirectory
 
 object WhoIsThere {
-    private val users = Body.auto<List<User>>().toLens()
+    private val users = Body.auto<Array<User>>().toLens()
 
     fun route(inhabitants: Inhabitants, userDirectory: UserDirectory): ContractRoute {
         val listUsers: HttpHandler = {
-            Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup))
+            Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup).toTypedArray())
         }
 
         return (
@@ -33,7 +33,7 @@ object WhoIsThere {
                 meta RouteMeta("List current users in the building")
                 .returning("Inhabitant list" to
                     Response(OK)
-                        .with(users of listOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com")))))
+                        .with(users of arrayOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com")))))
             )
     }
 }
