@@ -10,6 +10,7 @@ import org.http4k.core.Body
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.format.Jackson.auto
+import org.http4k.hamkrest.hasStatus
 import org.junit.Test
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
@@ -29,7 +30,7 @@ class ReportInhabitantsTest {
     @Test
     fun `initially there is no-one inside`() {
         val checkInhabitants = env.checkInhabitants("realSecret")
-        checkInhabitants.status shouldMatch equalTo(OK)
+        checkInhabitants shouldMatch hasStatus(OK)
         inhabitants(checkInhabitants) shouldMatch equalTo(listOf())
     }
 
