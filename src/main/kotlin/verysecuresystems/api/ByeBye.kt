@@ -2,7 +2,7 @@ package verysecuresystems.api
 
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.RouteMeta
-import org.http4k.contract.bind
+import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.contract.query
 import org.http4k.core.Body
@@ -37,8 +37,8 @@ object ByeBye {
         return (
             "/bye"
                 query username
-                to POST
-                bind userExit
+                bindContract  POST
+                to userExit
                 meta RouteMeta("User exits the building")
                 .returning("Exit granted" to ACCEPTED)
                 .returning("User is not inside building" to NOT_FOUND)

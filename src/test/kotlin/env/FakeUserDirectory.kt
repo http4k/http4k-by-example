@@ -1,6 +1,5 @@
 package env
 
-import org.http4k.contract.bind
 import org.http4k.contract.contract
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
@@ -24,13 +23,13 @@ class FakeUserDirectory {
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
     val app = contract(
-        UserDirectory.Companion.Create.route bind {
+        UserDirectory.Companion.Create.route to {
             val form = Create.form(it)
             val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
             users.put(newUser.id, newUser)
             Response(CREATED).with(Create.response of newUser)
         },
-        Delete.route bind {
+        Delete.route to {
             id ->
             {
                 users.remove(id)?.let {
@@ -38,17 +37,15 @@ class FakeUserDirectory {
                 } ?: Response(NOT_FOUND)
             }
         },
-        Lookup.route bind {
+        Lookup.route to {
             username ->
             {
-                users.values
-                    .filter { it.name == username }
-                    .firstOrNull()
+                users.values.firstOrNull { it.name == username }
                     ?.let { Response(OK).with(Lookup.response of it) }
                     ?: Response(NOT_FOUND)
             }
         },
-        UserList.route bind {
+        UserList.route to {
             Response(OK).with(UserList.response of users.values.toTypedArray())
         })
 }

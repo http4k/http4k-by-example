@@ -28,7 +28,9 @@ class TestEnvironment {
 
 fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {
     val query = user?.let { "username=" + it } ?: ""
-    return app(Request(POST, "/api/knock?" + query).header("key", secret))
+    val app1 = app(Request(POST, "/api/knock?" + query).header("key", secret))
+    println(app1)
+    return app1
 }
 
 fun TestEnvironment.exitBuilding(user: String?, secret: String): Response {

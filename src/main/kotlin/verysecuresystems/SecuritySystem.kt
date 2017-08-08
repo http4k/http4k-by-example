@@ -39,6 +39,7 @@ object SecuritySystem {
 
         return Auditor(clock, events)
             .then(ServerFilters.CatchAll())
+            .then(ServerFilters.CatchLensFailure)
             .then(app)
     }
 

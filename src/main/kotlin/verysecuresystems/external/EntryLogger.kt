@@ -1,7 +1,7 @@
 package verysecuresystems.external
 
+import org.http4k.contract.bindContract
 import org.http4k.contract.body
-import org.http4k.contract.newRequest
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
@@ -34,19 +34,19 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
         object Entry {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/entry" body body to POST
+            val route = "/entry" body body bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object Exit {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/exit" body body to POST
+            val route = "/exit" body body bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object LogList {
             val body = Body.auto<List<UserEntry>>().toLens()
-            val route = "/list" to GET
+            val route = "/list" bindContract GET
             val response = Body.auto<List<UserEntry>>().toLens()
         }
 

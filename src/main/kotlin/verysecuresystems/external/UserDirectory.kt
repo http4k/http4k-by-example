@@ -1,8 +1,8 @@
 package verysecuresystems.external
 
+import org.http4k.contract.bindContract
 import org.http4k.contract.body
 import org.http4k.contract.div
-import org.http4k.contract.newRequest
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -63,24 +63,24 @@ class UserDirectory(private val client: HttpHandler) {
             val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
             val username = FormField.map(::Username, Username::value).required("username")
             val form = Body.webForm(Strict, email, username).toLens()
-            val route = "/user" body form to POST
+            val route = "/user" body form bindContract  POST
             val response = Body.auto<User>().toLens()
         }
 
         object Delete {
             val id = Path.int().map(::Id, Id::value).of("id")
-            val route = "/user" / id to DELETE
+            val route = "/user" / id bindContract DELETE
             val response = Body.auto<User>().toLens()
         }
 
         object UserList {
-            val route = "/user" to GET
+            val route = "/user" bindContract GET
             val response = Body.auto<Array<User>>().toLens()
         }
 
         object Lookup {
             val username = Path.map(::Username, Username::value).of("username")
-            val route = "/user" / username to GET
+            val route = "/user" / username bindContract GET
             val response = Body.auto<User>().toLens()
         }
 

@@ -2,7 +2,7 @@ package verysecuresystems.api
 
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.RouteMeta
-import org.http4k.contract.bind
+import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.contract.query
 import org.http4k.core.Body
@@ -43,8 +43,8 @@ object KnockKnock {
         return (
             "/knock"
                 query username
-                to POST
-                bind userEntry
+                bindContract POST
+                to userEntry
                 meta RouteMeta("User enters the building")
                 .returning("Access granted" to ACCEPTED)
                 .returning("Unknown user" to NOT_FOUND)

@@ -1,6 +1,5 @@
 package env
 
-import org.http4k.contract.bind
 import org.http4k.contract.contract
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -19,14 +18,14 @@ class FakeEntryLogger {
     val entries = mutableListOf<UserEntry>()
 
     val app = contract(
-        Entry.route bind {
+        Entry.route to {
             req: Request ->
             val userEntry = body(req)
             entries.add(userEntry)
             Response(CREATED).with(Entry.response of userEntry)
         }
         ,
-        EntryLogger.Companion.Exit.route bind
+        EntryLogger.Companion.Exit.route to
             {
                 req: Request ->
                 val userEntry = Entry.body(req)
@@ -34,7 +33,7 @@ class FakeEntryLogger {
                 Response(ACCEPTED).with(Entry.response of userEntry)
             },
 
-        LogList.route bind
+        LogList.route to
             {
                 Response(Status.OK).with(LogList.response of entries)
             })
