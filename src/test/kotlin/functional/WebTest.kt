@@ -16,12 +16,12 @@ class WebTest {
     @Test
     fun `homepage`() {
         val response = env.app(Request(GET, ""))
-        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html"))
+        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8"))
     }
 
     @Test
     fun `manage users`() {
         val response = env.app(Request(GET, "/users"))
-        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html"))
+        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8"))
     }
 }

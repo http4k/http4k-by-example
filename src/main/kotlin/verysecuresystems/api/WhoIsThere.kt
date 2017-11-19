@@ -1,7 +1,6 @@
 package verysecuresystems.api
 
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.RouteMeta
 import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.core.Body
@@ -27,13 +26,15 @@ object WhoIsThere {
         }
 
         return (
-            "/whoIsThere"
-                bindContract Method.GET
-                to listUsers
-                meta RouteMeta("List current users in the building")
-                .returning("Inhabitant list" to
+            "/whoIsThere" meta {
+                summary = "List current users in the building"
+                returning("Inhabitant list" to
                     Response(OK)
                         .with(users of arrayOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com")))))
+
+            }
+                bindContract Method.GET
+                to listUsers
             )
     }
 }

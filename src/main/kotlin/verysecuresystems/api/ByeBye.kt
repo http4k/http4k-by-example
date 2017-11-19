@@ -1,17 +1,15 @@
 package verysecuresystems.api
 
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.RouteMeta
 import org.http4k.contract.bindContract
 import org.http4k.contract.meta
-import org.http4k.contract.query
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.POST
 import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
-import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Query
@@ -35,14 +33,16 @@ object ByeBye {
         }
 
         return (
-            "/bye"
-                query username
-                bindContract  POST
+            "/bye" meta {
+                summary = "User exits the building"
+                queries += username
+                returning("Exit granted" to ACCEPTED)
+                returning("User is not inside building" to NOT_FOUND)
+                returning("Incorrect key" to Status.UNAUTHORIZED)
+
+            }
+                bindContract POST
                 to userExit
-                meta RouteMeta("User exits the building")
-                .returning("Exit granted" to ACCEPTED)
-                .returning("User is not inside building" to NOT_FOUND)
-                .returning("Incorrect key" to UNAUTHORIZED)
             )
     }
 }

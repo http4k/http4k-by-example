@@ -1,7 +1,7 @@
 package verysecuresystems.web
 
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.bind
+import org.http4k.contract.bindContract
 import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -10,7 +10,7 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.lens.FormField
-import org.http4k.lens.FormValidator
+import org.http4k.lens.Validator
 import org.http4k.lens.WebForm
 import org.http4k.lens.int
 import org.http4k.lens.nonEmptyString
@@ -36,7 +36,7 @@ object ManageUsers {
     )
 
     private fun view(renderer: TemplateRenderer, userDirectory: UserDirectory) =
-        "/users" to GET bind SetHtmlContentType.then {
+        "/users" bindContract GET to SetHtmlContentType.then {
             Response(OK)
                 .body(renderer(ManageUsersView(userDirectory.list(), WebForm())))
         }
@@ -44,9 +44,9 @@ object ManageUsers {
     private fun create(renderer: TemplateRenderer, userDirectory: UserDirectory): ContractRoute {
         val username = FormField.nonEmptyString().map(::Username, Username::value).required("username")
         val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
-        val form = Body.webForm(FormValidator.Feedback, username, email).toLens()
+        val form = Body.webForm(Validator.Feedback, username, email).toLens()
 
-        return "/users/create" to POST bind SetHtmlContentType.then {
+        return "/users/create" bindContract POST to SetHtmlContentType.then {
             val webForm = form(it)
             if (webForm.errors.isEmpty()) {
                 userDirectory.create(username(webForm), email(webForm))
@@ -59,8 +59,8 @@ object ManageUsers {
 
     private fun delete(userDirectory: UserDirectory): ContractRoute {
         val id = FormField.int().map(::Id, Id::value).required("id")
-        val form = Body.webForm(FormValidator.Feedback, id).toLens()
-        return "/users/delete" to POST bind  {
+        val form = Body.webForm(Validator.Feedback, id).toLens()
+        return "/users/delete" bindContract POST to {
             userDirectory.delete(id(form(it)))
             Response(SEE_OTHER).header("location", ".")
         }
