@@ -9,15 +9,18 @@ import org.http4k.lens.LensFailure
 
 fun <T> HttpHandler.perform(request: Request, responseLens: BodyLens<T>): T = this(request)
     .let {
+
         if (it.status.code > 399) {
             throw RemoteSystemProblem(request.uri.toString(), it.status)
-        } else {
-            try {
-                responseLens(it)
-            } catch(e: LensFailure) {
-                throw RemoteSystemProblem(request.uri.toString(), BAD_GATEWAY)
-            }
         }
+
+        try {
+            responseLens(it)
+
+        } catch(e: LensFailure) {
+            throw RemoteSystemProblem(request.uri.toString(), BAD_GATEWAY)
+        }
+
     }
 
 data class RemoteSystemProblem(val name: String, val status: Status) : Exception("$name returned $status")
