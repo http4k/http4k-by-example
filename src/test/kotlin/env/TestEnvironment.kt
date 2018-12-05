@@ -4,6 +4,9 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.http4k.core.with
+import org.http4k.lens.Header
+import org.http4k.lens.Query
 import verysecuresystems.Event
 import verysecuresystems.SecuritySystem
 import java.time.Clock
@@ -20,23 +23,25 @@ class TestEnvironment {
     val events = mutableListOf<Event>()
 
     val app = SecuritySystem(
-        clock,
-        { events.add(it) },
-        "http://userDirectory" to userDirectory.app,
-        "http://entryLogger" to entryLogger.app
-    )}
+            clock,
+            { events.add(it) },
+            "http://userDirectory" to userDirectory.app,
+            "http://entryLogger" to entryLogger.app
+    )
+}
+
+private val username = Query.optional("username")
+private val key = Header.required("key")
 
 fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {
-    val query = user?.let { "username=" + it } ?: ""
-    val app1 = app(Request(POST, "/api/knock?" + query).header("key", secret))
+    val app1 = app(Request(POST, "/api/knock").with(username of user, key of secret))
     println(app1)
     return app1
 }
 
 fun TestEnvironment.exitBuilding(user: String?, secret: String): Response {
-    val query = user?.let { "username=" + it } ?: ""
-    return app(Request(POST, "/api/bye?" + query).header("key", secret))
+    return app(Request(POST, "/api/bye").with(username of user, key of secret))
 }
 
 fun TestEnvironment.checkInhabitants(secret: String): Response =
-    app(Request(GET, "/api/whoIsThere").header("key", secret))
+        app(Request(GET, "/api/whoIsThere").with(key of secret))

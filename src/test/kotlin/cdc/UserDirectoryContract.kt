@@ -15,7 +15,7 @@ import verysecuresystems.external.UserDirectory
  */
 abstract class UserDirectoryContract(handler: HttpHandler) {
 
-    val userDirectory = UserDirectory(handler)
+    private val userDirectory = UserDirectory(handler)
 
     abstract val username: Username
     abstract val email: EmailAddress

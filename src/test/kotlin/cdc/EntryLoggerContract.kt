@@ -17,7 +17,7 @@ import java.time.ZoneId
 abstract class EntryLoggerContract(handler: HttpHandler) {
 
     private val time = Instant.now()
-    val entryLogger = EntryLogger(handler, Clock.fixed(time, ZoneId.systemDefault()))
+    private val entryLogger = EntryLogger(handler, Clock.fixed(time, ZoneId.systemDefault()))
 
     @Test
     fun `can log a user entry and it is listed`() {
