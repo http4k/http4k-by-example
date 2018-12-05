@@ -26,7 +26,7 @@ class FakeUserDirectory {
         UserDirectory.Companion.Create.route to {
             val form = Create.form(it)
             val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
-            users.put(newUser.id, newUser)
+            users[newUser.id] = newUser
             Response(CREATED).with(Create.response of newUser)
         },
         Delete.route to {
