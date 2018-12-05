@@ -34,13 +34,13 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
         object Entry {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/entry" meta { body = body } bindContract POST
+            val route = "/entry" meta { receiving(Entry.body to UserEntry("user", true, 1234)) } bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object Exit {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/exit" meta { body = body } bindContract POST
+            val route = "/exit" meta { receiving(Exit.body to UserEntry("user", true, 1234)) } bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 

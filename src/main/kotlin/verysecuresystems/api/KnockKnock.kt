@@ -38,18 +38,14 @@ object KnockKnock {
                 ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
         }
 
-        return (
-            "/knock" meta {
+        return "/knock" meta {
                 queries += username
                 summary = "User enters the building"
                 returning("Access granted" to ACCEPTED)
                 returning("Unknown user" to NOT_FOUND)
                 returning("User is already inside building" to CONFLICT)
                 returning("Incorrect key" to UNAUTHORIZED)
-            }
-                bindContract POST
-                to userEntry
-            )
+            } bindContract POST to userEntry
     }
 }
 
