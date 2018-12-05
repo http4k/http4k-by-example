@@ -6,7 +6,6 @@ import com.natpryce.hamkrest.should.shouldMatch
 import org.http4k.core.HttpHandler
 import org.junit.Test
 import verysecuresystems.EmailAddress
-import verysecuresystems.User
 import verysecuresystems.Username
 import verysecuresystems.external.UserDirectory
 
@@ -19,8 +18,6 @@ abstract class UserDirectoryContract(handler: HttpHandler) {
 
     abstract val username: Username
     abstract val email: EmailAddress
-
-    var user: User? = null
 
     @Test
     fun `is empty initially`() {
@@ -53,6 +50,5 @@ abstract class UserDirectoryContract(handler: HttpHandler) {
         userDirectory.delete(created.id)
         userDirectory.lookup(username) shouldMatch absent()
         userDirectory.list() shouldMatch equalTo(listOf())
-
     }
 }
