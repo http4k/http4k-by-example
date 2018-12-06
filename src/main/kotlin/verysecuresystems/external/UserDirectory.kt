@@ -5,20 +5,14 @@ import org.http4k.contract.div
 import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method.DELETE
-import org.http4k.core.Method.GET
-import org.http4k.core.Method.POST
+import org.http4k.core.Method.*
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
-import org.http4k.lens.FormField
-import org.http4k.lens.Path
+import org.http4k.lens.*
 import org.http4k.lens.Validator.Strict
-import org.http4k.lens.WebForm
-import org.http4k.lens.int
-import org.http4k.lens.webForm
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User
@@ -63,7 +57,7 @@ class UserDirectory(private val client: HttpHandler) {
             val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
             val username = FormField.map(::Username, Username::value).required("username")
             val form = Body.webForm(Strict, email, username).toLens()
-            val route = "/user" meta { body = form } bindContract POST
+            val route = "/user" meta { receiving(form) } bindContract POST
             val response = Body.auto<User>().toLens()
         }
 
