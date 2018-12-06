@@ -19,38 +19,36 @@ import verysecuresystems.User
 import verysecuresystems.Username
 
 class UserDirectory(private val client: HttpHandler) {
-    fun create(name: Username, inEmail: EmailAddress): User =
+    fun create(name: Username, inEmail: EmailAddress) = with(Create) {
         client.perform(
-            Create.route.newRequest()
-                .with(Create.form of
-                    WebForm().with(
-                        Create.email of inEmail,
-                        Create.username of name)),
-            Create.response)
-
-    fun delete(id: Id): Unit =
-        client(Delete.route.newRequest().with(Delete.id of id)).let {
-            if (it.status != ACCEPTED) {
-                throw RemoteSystemProblem("user directory", it.status)
-            }
-        }
-
-    fun list(): List<User> {
-        val request = UserList.route.newRequest()
-        return client.perform(request, UserList.response).asList()
+                route.newRequest()
+                        .with(form of WebForm()
+                                .with(email of inEmail, username of name)),
+                response)
     }
 
-    fun lookup(username: Username): User? =
-        client(Lookup.route.newRequest()
-            .with(Lookup.username of username)).let {
-            if (it.status == NOT_FOUND) {
-                return null
-            } else if (it.status != OK) {
-                throw RemoteSystemProblem("user directory", it.status)
-            } else {
-                Lookup.response(it)
-            }
+    fun delete(idToDelete: Id) = with(Delete) {
+        client(route.newRequest().with(id of idToDelete)).let {
+            if (it.status != ACCEPTED) throw RemoteSystemProblem("user directory", it.status)
         }
+    }
+
+    fun list(): List<User> = with(UserList) {
+        val request = route.newRequest()
+        client.perform(request, response).asList()
+    }
+
+    fun lookup(search: Username): User? = with(Lookup) {
+        client(route.newRequest()
+                .with(username of search))
+                .let {
+                    when {
+                        it.status == NOT_FOUND -> return null
+                        it.status != OK -> throw RemoteSystemProblem("user directory", it.status)
+                        else -> response(it)
+                    }
+                }
+    }
 
     companion object {
         object Create {

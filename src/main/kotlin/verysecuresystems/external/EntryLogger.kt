@@ -15,32 +15,32 @@ import java.time.Clock
 
 class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
 
-    fun enter(username: Username): UserEntry =
+    fun enter(username: Username) = with(Entry) {
         client.perform(
-            Entry.route.newRequest()
-                .with(Entry.body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
-            Entry.response)
+                route.newRequest()
+                        .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
+                response)
+    }
 
-    fun exit(username: Username): UserEntry =
+    fun exit(username: Username) = with(Exit) {
         client.perform(
-            Exit.route.newRequest()
-                .with(Exit.body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
-            Exit.response)
-
+                route.newRequest()
+                        .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
+                response)
+    }
 
     fun list(): List<UserEntry> = client.perform(LogList.route.newRequest(), LogList.response)
 
     companion object {
-
         object Entry {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/entry" meta { receiving(Entry.body to UserEntry("user", true, 1234)) } bindContract POST
+            val route = "/entry" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
         object Exit {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/exit" meta { receiving(Exit.body to UserEntry("user", true, 1234)) } bindContract POST
+            val route = "/exit" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
             val response = Body.auto<UserEntry>().toLens()
         }
 
@@ -49,7 +49,6 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
             val route = "/list" bindContract GET
             val response = Body.auto<List<UserEntry>>().toLens()
         }
-
     }
 
 }

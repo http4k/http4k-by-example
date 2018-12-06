@@ -22,15 +22,12 @@ class FakeEntryLogger {
                 val userEntry = body(req)
                 entries += userEntry
                 Response(CREATED).with(Entry.response of userEntry)
-            }
-            ,
+            },
             Exit.route to { req: Request ->
                 val userEntry = Exit.body(req)
                 entries += userEntry
                 Response(ACCEPTED).with(Entry.response of userEntry)
-            }
-            ,
-
+            },
             LogList.route to {
                 Response(Status.OK).with(LogList.response of entries)
             }
