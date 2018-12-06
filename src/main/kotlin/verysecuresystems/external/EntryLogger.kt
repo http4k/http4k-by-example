@@ -29,7 +29,7 @@ class EntryLogger(private val client: HttpHandler, private val clock: Clock) {
                 response)
     }
 
-    fun list(): List<UserEntry> = client.perform(LogList.route.newRequest(), LogList.response)
+    fun list() = with(LogList) { client.perform(route.newRequest(), response) }
 
     companion object {
         object Entry {
