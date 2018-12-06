@@ -75,6 +75,5 @@ class UserDirectory(private val client: HttpHandler) {
             val route = "/user" / username bindContract GET
             val response = Body.auto<User>().toLens()
         }
-
     }
 }
