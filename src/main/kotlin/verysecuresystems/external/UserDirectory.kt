@@ -11,7 +11,6 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Uri
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.FormField
@@ -29,25 +28,25 @@ class UserDirectory(private val http: HttpHandler) {
 
     fun create(name: Username, inEmail: EmailAddress) = with(Create) {
         http.perform(
-            route.newRequest(Uri.of(""))
+            route.newRequest()
                 .with(form of WebForm()
                     .with(email of inEmail, username of name)),
             response)
     }
 
     fun delete(idToDelete: Id) = with(Delete) {
-        http(route.newRequest(Uri.of("")).with(id of idToDelete)).let {
+        http(route.newRequest().with(id of idToDelete)).let {
             if (it.status != ACCEPTED) throw RemoteSystemProblem("user directory", it.status)
         }
     }
 
     fun list(): List<User> = with(UserList) {
-        val request = route.newRequest(Uri.of(""))
+        val request = route.newRequest()
         http.perform(request, response).asList()
     }
 
     fun lookup(search: Username): User? = with(Lookup) {
-        http(route.newRequest(Uri.of(""))
+        http(route.newRequest()
             .with(username of search))
             .let {
                 when {

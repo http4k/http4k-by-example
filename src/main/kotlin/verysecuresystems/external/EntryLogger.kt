@@ -6,7 +6,6 @@ import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
-import org.http4k.core.Uri
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
@@ -18,19 +17,19 @@ class EntryLogger(private val http: HttpHandler, private val clock: Clock) {
 
     fun enter(username: Username) = with(Entry) {
         http.perform(
-                route.newRequest(Uri.of(""))
+                route.newRequest()
                         .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
                 response)
     }
 
     fun exit(username: Username) = with(Exit) {
         http.perform(
-                route.newRequest(Uri.of(""))
+                route.newRequest()
                         .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
                 response)
     }
 
-    fun list() = with(LogList) { http.perform(route.newRequest(Uri.of("")), response) }
+    fun list() = with(LogList) { http.perform(route.newRequest(), response) }
 
     companion object {
         object Entry {
