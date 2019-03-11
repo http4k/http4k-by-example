@@ -6,30 +6,37 @@ import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
+import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
+import verysecuresystems.util.RequireSuccess
 import java.time.Clock
 
 
-class EntryLogger(private val http: HttpHandler, private val clock: Clock) {
+class EntryLogger(http: HttpHandler, private val clock: Clock) {
+
+    private val http = RequireSuccess.then(http)
 
     fun enter(username: Username) = with(Entry) {
-        http.perform(
-                route.newRequest()
-                        .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli())),
-                response)
+        response(
+            http(route.newRequest()
+                .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli()))
+            )
+        )
     }
 
     fun exit(username: Username) = with(Exit) {
-        http.perform(
+        response(
+            http(
                 route.newRequest()
-                        .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli())),
-                response)
+                    .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli()))
+            )
+        )
     }
 
-    fun list() = with(LogList) { http.perform(route.newRequest(), response) }
+    fun list() = with(LogList) { response(http(route.newRequest())) }
 
     companion object {
         object Entry {

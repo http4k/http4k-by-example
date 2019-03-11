@@ -1,17 +1,14 @@
 package verysecuresystems.diagnostic
 
+import org.http4k.core.Events
 import org.http4k.core.Filter
-import verysecuresystems.Event
-import verysecuresystems.Events
+import verysecuresystems.IncomingEvent
 import java.time.Clock
 
 object Auditor {
-    operator fun invoke(clock: Clock, events: Events): Filter = Filter {
-        next ->
+    operator fun invoke(clock: Clock, events: Events) = Filter { next ->
         {
-            val response = next(it)
-            events(Event("${clock.instant()}: uri=${it.method}:${it.uri} status=${response.status.code}"))
-            response
+            next(it).apply { events(IncomingEvent(clock.instant(), it.uri, status)) }
         }
     }
 }

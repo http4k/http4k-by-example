@@ -1,5 +1,6 @@
 package verysecuresystems
 
+import org.http4k.core.Events
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
@@ -14,6 +15,7 @@ import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
+import verysecuresystems.util.ConvertDownstreamErrors
 import verysecuresystems.web.Web
 import java.time.Clock
 
@@ -31,7 +33,7 @@ object SecuritySystem {
         val inhabitants = Inhabitants()
 
         val app = routes(
-            "/api" bind  Api.router(userDirectory, entryLogger, inhabitants),
+            "/api" bind Api.router(userDirectory, entryLogger, inhabitants),
             "/internal" bind Diagnostic.router(clock),
             "/" bind Web.router(userDirectory),
             "/" bind static(ResourceLoader.Classpath("public"))
@@ -40,8 +42,11 @@ object SecuritySystem {
         return Auditor(clock, events)
             .then(ServerFilters.CatchAll())
             .then(ServerFilters.CatchLensFailure)
+            .then(ConvertDownstreamErrors)
             .then(app)
     }
 
     private fun Pair<Uri, HttpHandler>.toAutoSetHost() = ClientFilters.SetHostFrom(first).then(second)
 }
+
+

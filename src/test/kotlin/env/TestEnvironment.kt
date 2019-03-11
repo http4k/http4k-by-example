@@ -1,5 +1,6 @@
 package env
 
+import org.http4k.core.Event
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
@@ -8,7 +9,6 @@ import org.http4k.core.Uri
 import org.http4k.core.with
 import org.http4k.lens.Header
 import org.http4k.lens.Query
-import verysecuresystems.Event
 import verysecuresystems.SecuritySystem
 import java.time.Clock
 import java.time.Instant
@@ -24,10 +24,10 @@ class TestEnvironment {
     val events = mutableListOf<Event>()
 
     val app = SecuritySystem(
-            clock,
-            { events.add(it) },
-            Uri.of("http://userDirectory") to userDirectory,
-            Uri.of("http://entryLogger") to entryLogger
+        clock,
+        { events.add(it) },
+        Uri.of("http://userDirectory") to userDirectory,
+        Uri.of("http://entryLogger") to entryLogger
     )
 }
 
@@ -45,4 +45,4 @@ fun TestEnvironment.exitBuilding(user: String?, secret: String): Response {
 }
 
 fun TestEnvironment.checkInhabitants(secret: String): Response =
-        app(Request(GET, "/api/whoIsThere").with(key of secret))
+    app(Request(GET, "/api/whoIsThere").with(key of secret))

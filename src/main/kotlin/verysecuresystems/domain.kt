@@ -1,8 +1,14 @@
 package verysecuresystems
 
-typealias Events = (Event) -> Unit
+import org.http4k.core.Event
+import org.http4k.core.EventCategory
+import org.http4k.core.Status
+import org.http4k.core.Uri
+import java.time.Instant
 
-data class Event(val description: String)
+data class IncomingEvent(val time: Instant, val uri: Uri, val status: Status) : Event {
+    override val category = EventCategory("incoming")
+}
 
 data class Id(val value: Int)
 

@@ -11,6 +11,7 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.FormField
@@ -23,15 +24,20 @@ import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.Username
+import verysecuresystems.util.RemoteSystemProblem
+import verysecuresystems.util.RequireSuccess
 
-class UserDirectory(private val http: HttpHandler) {
+class UserDirectory(http: HttpHandler) {
+
+    private val http = RequireSuccess.then(http)
 
     fun create(name: Username, inEmail: EmailAddress) = with(Create) {
-        http.perform(
-            route.newRequest()
+        response(
+            http(route.newRequest()
                 .with(form of WebForm()
-                    .with(email of inEmail, username of name)),
-            response)
+                    .with(email of inEmail, username of name))
+            )
+        )
     }
 
     fun delete(idToDelete: Id) = with(Delete) {
@@ -41,8 +47,7 @@ class UserDirectory(private val http: HttpHandler) {
     }
 
     fun list(): List<User> = with(UserList) {
-        val request = route.newRequest()
-        http.perform(request, response).asList()
+        response(http(route.newRequest())).asList()
     }
 
     fun lookup(search: Username): User? = with(Lookup) {
