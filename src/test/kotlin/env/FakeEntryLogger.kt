@@ -17,19 +17,19 @@ class FakeEntryLogger {
 
     val entries = mutableListOf<UserEntry>()
 
-    val app = contract(
-            Entry.route to { req: Request ->
-                val userEntry = body(req)
-                entries += userEntry
-                Response(CREATED).with(Entry.response of userEntry)
-            },
-            Exit.route to { req: Request ->
-                val userEntry = Exit.body(req)
-                entries += userEntry
-                Response(ACCEPTED).with(Entry.response of userEntry)
-            },
-            LogList.route to {
-                Response(Status.OK).with(LogList.response of entries)
-            }
-    )
+    val app = contract {
+        routes += Entry.route to { req: Request ->
+            val userEntry = body(req)
+            entries += userEntry
+            Response(CREATED).with(Entry.response of userEntry)
+        }
+        routes += Exit.route to { req: Request ->
+            val userEntry = Exit.body(req)
+            entries += userEntry
+            Response(ACCEPTED).with(Entry.response of userEntry)
+        }
+        routes += LogList.route to {
+            Response(Status.OK).with(LogList.response of entries)
+        }
+    }
 }

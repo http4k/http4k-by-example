@@ -1,10 +1,10 @@
 package cdc
 
 import com.natpryce.hamkrest.absent
+import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.should.shouldMatch
 import org.http4k.core.HttpHandler
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import verysecuresystems.EmailAddress
 import verysecuresystems.Username
 import verysecuresystems.external.UserDirectory
@@ -21,34 +21,34 @@ abstract class UserDirectoryContract(handler: HttpHandler) {
 
     @Test
     fun `is empty initially`() {
-        userDirectory.lookup(username) shouldMatch absent()
-        userDirectory.list() shouldMatch equalTo(listOf())
+        assertThat(userDirectory.lookup(username), absent())
+        assertThat(userDirectory.list(), equalTo(listOf()))
     }
 
     @Test
     fun `can create a user`() {
         val created = userDirectory.create(username, email)
-        created.name shouldMatch equalTo(username)
-        created.email shouldMatch equalTo(email)
+        assertThat(created.name, equalTo(username))
+        assertThat(created.email, equalTo(email))
     }
 
     @Test
     fun `can lookup a user by username`() {
         val created = userDirectory.create(username, email)
-        userDirectory.lookup(username) shouldMatch equalTo(created)
+        assertThat(userDirectory.lookup(username), equalTo(created))
     }
 
     @Test
     fun `can list users`() {
         val created = userDirectory.create(username, email)
-        userDirectory.list() shouldMatch equalTo(listOf(created))
+        assertThat(userDirectory.list(), equalTo(listOf(created)))
     }
 
     @Test
     fun `can delete user`() {
         val created = userDirectory.create(username, email)
         userDirectory.delete(created.id)
-        userDirectory.lookup(username) shouldMatch absent()
-        userDirectory.list() shouldMatch equalTo(listOf())
+        assertThat(userDirectory.lookup(username), absent())
+        assertThat(userDirectory.list(), equalTo(listOf()))
     }
 }

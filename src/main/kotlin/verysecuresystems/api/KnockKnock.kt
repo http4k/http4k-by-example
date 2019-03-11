@@ -1,7 +1,6 @@
 package verysecuresystems.api
 
 import org.http4k.contract.ContractRoute
-import org.http4k.contract.bindContract
 import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
@@ -39,13 +38,13 @@ object KnockKnock {
         }
 
         return "/knock" meta {
-                queries += username
-                summary = "User enters the building"
-                returning("Access granted" to ACCEPTED)
-                returning("Unknown user" to NOT_FOUND)
-                returning("User is already inside building" to CONFLICT)
-                returning("Incorrect key" to UNAUTHORIZED)
-            } bindContract POST to userEntry
+            queries += username
+            summary = "User enters the building"
+            returning(ACCEPTED to "Access granted")
+            returning(NOT_FOUND to "Unknown user")
+            returning(CONFLICT to "User is already inside building")
+            returning(UNAUTHORIZED to "Incorrect key")
+        } bindContract POST to userEntry
     }
 }
 

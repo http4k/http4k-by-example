@@ -1,9 +1,9 @@
 package cdc
 
+import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.should.shouldMatch
 import org.http4k.core.HttpHandler
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
 import verysecuresystems.external.EntryLogger
@@ -21,8 +21,8 @@ abstract class EntryLoggerContract(handler: HttpHandler) {
 
     @Test
     fun `can log a user entry and it is listed`() {
-        entryLogger.enter(Username("bob")) shouldMatch equalTo(UserEntry("bob", true, time.toEpochMilli()))
-        entryLogger.exit(Username("bob")) shouldMatch equalTo(UserEntry("bob", false, time.toEpochMilli()))
+        assertThat(entryLogger.enter(Username("bob")), equalTo(UserEntry("bob", true, time.toEpochMilli())))
+        assertThat(entryLogger.exit(Username("bob")), equalTo(UserEntry("bob", false, time.toEpochMilli())))
     }
 }
 

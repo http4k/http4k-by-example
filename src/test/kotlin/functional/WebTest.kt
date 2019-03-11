@@ -8,13 +8,13 @@ import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class WebTest {
     private val env = TestEnvironment()
 
     @Test
-    fun `homepage`() {
+    fun homepage() {
         val response = env.app(Request(GET, ""))
         response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8"))
     }

@@ -24,8 +24,8 @@ import java.time.Clock
 object SecuritySystem {
 
     operator fun invoke(clock: Clock, events: Events,
-                        userDirectoryClient: Pair<String, HttpHandler>,
-                        entryLoggerClient: Pair<String, HttpHandler>): HttpHandler {
+                        userDirectoryClient: Pair<Uri, HttpHandler>,
+                        entryLoggerClient: Pair<Uri, HttpHandler>): HttpHandler {
         val userDirectory = UserDirectory(userDirectoryClient.toAutoSetHost())
         val entryLogger = EntryLogger(entryLoggerClient.toAutoSetHost(), clock)
         val inhabitants = Inhabitants()
@@ -43,5 +43,5 @@ object SecuritySystem {
             .then(app)
     }
 
-    private fun Pair<String, HttpHandler>.toAutoSetHost() = ClientFilters.SetHostFrom(Uri.of(this.first)).then(this.second)
+    private fun Pair<Uri, HttpHandler>.toAutoSetHost() = ClientFilters.SetHostFrom(first).then(second)
 }

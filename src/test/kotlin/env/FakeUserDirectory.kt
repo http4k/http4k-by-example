@@ -13,7 +13,7 @@ import verysecuresystems.external.UserDirectory.Companion.Create
 import verysecuresystems.external.UserDirectory.Companion.Delete
 import verysecuresystems.external.UserDirectory.Companion.Lookup
 import verysecuresystems.external.UserDirectory.Companion.UserList
-import java.util.*
+import java.util.Random
 
 class FakeUserDirectory {
 
@@ -21,28 +21,30 @@ class FakeUserDirectory {
 
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
-    val app = contract(
-            Create.route to {
-                val form = Create.form(it)
-                val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
-                users[newUser.id] = newUser
-                Response(CREATED).with(Create.response of newUser)
-            },
-            Delete.route to { id ->
-                {
-                    users.remove(id)?.let {
-                        Response(ACCEPTED).with(Delete.response of it)
-                    } ?: Response(NOT_FOUND)
-                }
-            },
-            Lookup.route to { username ->
-                {
-                    users.values.firstOrNull { it.name == username }
-                            ?.let { Response(OK).with(Lookup.response of it) }
-                            ?: Response(NOT_FOUND)
-                }
-            },
-            UserList.route to {
-                Response(OK).with(UserList.response of users.values.toTypedArray())
-            })
+    val app = contract {
+        routes += Create.route to {
+            val form = Create.form(it)
+            val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
+            users[newUser.id] = newUser
+            Response(CREATED).with(Create.response of newUser)
+        }
+        routes += Delete.route to { id ->
+            {
+                users.remove(id)?.let {
+                    Response(ACCEPTED).with(Delete.response of it)
+                } ?: Response(NOT_FOUND)
+            }
+        }
+        routes += Lookup.route to { username ->
+            {
+                users.values.firstOrNull { it.name == username }
+                    ?.let { Response(OK).with(Lookup.response of it) }
+                    ?: Response(NOT_FOUND)
+            }
+        }
+        routes += UserList.route to {
+            Response(OK).with(UserList.response of users.values.toTypedArray())
+        }
+    }
+
 }

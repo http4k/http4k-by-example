@@ -11,7 +11,7 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.format.Jackson.auto
 import org.http4k.hamkrest.hasStatus
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User

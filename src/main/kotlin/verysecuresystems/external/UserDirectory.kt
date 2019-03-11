@@ -5,49 +5,57 @@ import org.http4k.contract.div
 import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method.*
+import org.http4k.core.Method.DELETE
+import org.http4k.core.Method.GET
+import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Uri
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
-import org.http4k.lens.*
+import org.http4k.lens.FormField
+import org.http4k.lens.Path
 import org.http4k.lens.Validator.Strict
+import org.http4k.lens.WebForm
+import org.http4k.lens.int
+import org.http4k.lens.webForm
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.Username
 
-class UserDirectory(private val client: HttpHandler) {
+class UserDirectory(private val http: HttpHandler) {
+
     fun create(name: Username, inEmail: EmailAddress) = with(Create) {
-        client.perform(
-                route.newRequest()
-                        .with(form of WebForm()
-                                .with(email of inEmail, username of name)),
-                response)
+        http.perform(
+            route.newRequest(Uri.of(""))
+                .with(form of WebForm()
+                    .with(email of inEmail, username of name)),
+            response)
     }
 
     fun delete(idToDelete: Id) = with(Delete) {
-        client(route.newRequest().with(id of idToDelete)).let {
+        http(route.newRequest(Uri.of("")).with(id of idToDelete)).let {
             if (it.status != ACCEPTED) throw RemoteSystemProblem("user directory", it.status)
         }
     }
 
     fun list(): List<User> = with(UserList) {
-        val request = route.newRequest()
-        client.perform(request, response).asList()
+        val request = route.newRequest(Uri.of(""))
+        http.perform(request, response).asList()
     }
 
     fun lookup(search: Username): User? = with(Lookup) {
-        client(route.newRequest()
-                .with(username of search))
-                .let {
-                    when {
-                        it.status == NOT_FOUND -> return null
-                        it.status != OK -> throw RemoteSystemProblem("user directory", it.status)
-                        else -> response(it)
-                    }
+        http(route.newRequest(Uri.of(""))
+            .with(username of search))
+            .let {
+                when {
+                    it.status == NOT_FOUND -> return null
+                    it.status != OK -> throw RemoteSystemProblem("user directory", it.status)
+                    else -> response(it)
                 }
+            }
     }
 
     companion object {

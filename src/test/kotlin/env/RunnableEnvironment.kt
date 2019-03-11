@@ -1,10 +1,15 @@
 package env
 
+import org.http4k.core.Uri
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import verysecuresystems.*
+import verysecuresystems.EmailAddress
+import verysecuresystems.Id
+import verysecuresystems.SecuritySystemServer
+import verysecuresystems.User
+import verysecuresystems.Username
 
-fun main(args: Array<String>) {
+fun main() {
     val serverPort = 9000
     val userDirectoryPort = 10000
     val entryLoggerPort = 11000
@@ -19,7 +24,7 @@ fun main(args: Array<String>) {
     FakeEntryLogger().app.asServer(Jetty(entryLoggerPort)).start()
 
     SecuritySystemServer(serverPort,
-        "http://localhost:$userDirectoryPort",
-        "http://localhost:$entryLoggerPort")
+        Uri.of("http://localhost:$userDirectoryPort"),
+        Uri.of("http://localhost:$entryLoggerPort"))
         .start().block()
 }

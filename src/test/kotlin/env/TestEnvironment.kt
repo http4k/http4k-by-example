@@ -4,6 +4,7 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.http4k.core.Uri
 import org.http4k.core.with
 import org.http4k.lens.Header
 import org.http4k.lens.Query
@@ -25,8 +26,8 @@ class TestEnvironment {
     val app = SecuritySystem(
             clock,
             { events.add(it) },
-            "http://userDirectory" to userDirectory.app,
-            "http://entryLogger" to entryLogger.app
+            Uri.of("http://userDirectory") to userDirectory.app,
+            Uri.of("http://entryLogger") to entryLogger.app
     )
 }
 
