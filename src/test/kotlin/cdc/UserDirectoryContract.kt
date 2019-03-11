@@ -12,43 +12,44 @@ import verysecuresystems.external.UserDirectory
 /**
  * This represents the contract that both the real and fake EntryLogger servers will adhere to.
  */
-abstract class UserDirectoryContract(handler: HttpHandler) {
+interface UserDirectoryContract {
+    val http: HttpHandler
+    val username: Username
+    val email: EmailAddress
 
-    private val userDirectory = UserDirectory(handler)
+    fun userDirectory() = UserDirectory(http)
 
-    abstract val username: Username
-    abstract val email: EmailAddress
 
     @Test
     fun `is empty initially`() {
-        assertThat(userDirectory.lookup(username), absent())
-        assertThat(userDirectory.list(), equalTo(listOf()))
+        assertThat(userDirectory().lookup(username), absent())
+        assertThat(userDirectory().list(), equalTo(listOf()))
     }
 
     @Test
     fun `can create a user`() {
-        val created = userDirectory.create(username, email)
+        val created = userDirectory().create(username, email)
         assertThat(created.name, equalTo(username))
         assertThat(created.email, equalTo(email))
     }
 
     @Test
     fun `can lookup a user by username`() {
-        val created = userDirectory.create(username, email)
-        assertThat(userDirectory.lookup(username), equalTo(created))
+        val created = userDirectory().create(username, email)
+        assertThat(userDirectory().lookup(username), equalTo(created))
     }
 
     @Test
     fun `can list users`() {
-        val created = userDirectory.create(username, email)
-        assertThat(userDirectory.list(), equalTo(listOf(created)))
+        val created = userDirectory().create(username, email)
+        assertThat(userDirectory().list(), equalTo(listOf(created)))
     }
 
     @Test
     fun `can delete user`() {
-        val created = userDirectory.create(username, email)
-        userDirectory.delete(created.id)
-        assertThat(userDirectory.lookup(username), absent())
-        assertThat(userDirectory.list(), equalTo(listOf()))
+        val created = userDirectory().create(username, email)
+        userDirectory().delete(created.id)
+        assertThat(userDirectory().lookup(username), absent())
+        assertThat(userDirectory().list(), equalTo(listOf()))
     }
 }

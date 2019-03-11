@@ -2,4 +2,6 @@ package cdc
 
 import env.FakeEntryLogger
 
-class FakeEntryLoggerTest : EntryLoggerContract(FakeEntryLogger().app)
+class FakeEntryLoggerTest : EntryLoggerContract {
+    override val http = FakeEntryLogger()
+}

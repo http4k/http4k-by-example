@@ -1,7 +1,7 @@
 package functional
 
+import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.should.shouldMatch
 import env.TestEnvironment
 import env.enterBuilding
 import env.exitBuilding
@@ -23,28 +23,28 @@ class ExitingBuildingTest {
 
     @Test
     fun `rejects missing username in exit endpoint`() {
-        env.exitBuilding(null, "realSecret") shouldMatch hasStatus(BAD_REQUEST)
+        assertThat(env.exitBuilding(null, "realSecret"), hasStatus(BAD_REQUEST))
     }
 
     @Test
     fun `exit endpoint is protected with a secret key`() {
-        env.exitBuilding("Bob", "fakeSecret") shouldMatch hasStatus(UNAUTHORIZED)
+        assertThat(env.exitBuilding("Bob", "fakeSecret"), hasStatus(UNAUTHORIZED))
     }
 
     @Test
     fun `allows known user to exit and logs entry and exit`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        env.enterBuilding("Bob", "realSecret") shouldMatch hasStatus(ACCEPTED)
-        env.exitBuilding("Bob", "realSecret") shouldMatch hasStatus(ACCEPTED)
-        env.entryLogger.entries shouldMatch equalTo(listOf(
+        assertThat(env.enterBuilding("Bob", "realSecret"), hasStatus(ACCEPTED))
+        assertThat(env.exitBuilding("Bob", "realSecret"), hasStatus(ACCEPTED))
+        assertThat(env.entryLogger.entries, equalTo(listOf(
             UserEntry("Bob", true, env.clock.millis()),
             UserEntry("Bob", false, env.clock.millis())
-        ))
+        )))
     }
 
     @Test
     fun `does not allow exit when not in building`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        env.exitBuilding("Bob", "realSecret") shouldMatch hasStatus(NOT_FOUND)
+        assertThat(env.exitBuilding("Bob", "realSecret"), hasStatus(NOT_FOUND))
     }
 }

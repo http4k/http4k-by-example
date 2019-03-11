@@ -1,7 +1,7 @@
 package functional
 
+import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.should.shouldMatch
 import env.TestEnvironment
 import env.checkInhabitants
 import env.enterBuilding
@@ -24,14 +24,14 @@ class ReportInhabitantsTest {
 
     @Test
     fun `who is there endpoint is protected with a secret key`() {
-        env.checkInhabitants("fakeSecret").status shouldMatch equalTo(UNAUTHORIZED)
+        assertThat(env.checkInhabitants("fakeSecret").status, equalTo(UNAUTHORIZED))
     }
 
     @Test
     fun `initially there is no-one inside`() {
         val checkInhabitants = env.checkInhabitants("realSecret")
-        checkInhabitants shouldMatch hasStatus(OK)
-        inhabitants(checkInhabitants) shouldMatch equalTo(listOf())
+        assertThat(checkInhabitants, hasStatus(OK))
+        assertThat(inhabitants(checkInhabitants), equalTo(listOf()))
     }
 
     @Test
@@ -41,9 +41,9 @@ class ReportInhabitantsTest {
         env.userDirectory.contains(user)
 
         env.enterBuilding("Bob", "realSecret")
-        inhabitants(env.checkInhabitants("realSecret")) shouldMatch equalTo(listOf(user))
+        assertThat(inhabitants(env.checkInhabitants("realSecret")), equalTo(listOf(user)))
 
         env.exitBuilding("Bob", "realSecret")
-        inhabitants(env.checkInhabitants("realSecret")) shouldMatch equalTo(listOf())
+        assertThat(inhabitants(env.checkInhabitants("realSecret")), equalTo(listOf()))
     }
 }

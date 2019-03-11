@@ -1,7 +1,7 @@
 package functional
 
 import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.should.shouldMatch
+import com.natpryce.hamkrest.assertion.assertThat
 import env.TestEnvironment
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
@@ -16,12 +16,12 @@ class WebTest {
     @Test
     fun homepage() {
         val response = env.app(Request(GET, ""))
-        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8"))
+        assertThat(response, hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8")))
     }
 
     @Test
     fun `manage users`() {
         val response = env.app(Request(GET, "/users"))
-        response shouldMatch hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8"))
+        assertThat(response, hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8")))
     }
 }

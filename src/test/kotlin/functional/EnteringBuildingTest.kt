@@ -1,7 +1,7 @@
 package functional
 
+import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.should.shouldMatch
 import env.TestEnvironment
 import env.enterBuilding
 import org.http4k.core.Status.Companion.ACCEPTED
@@ -23,31 +23,31 @@ class EnteringBuildingTest {
 
     @Test
     fun `unknown user is not allowed into building`() {
-        env.enterBuilding("Rita", "realSecret") shouldMatch hasStatus(NOT_FOUND)
+        assertThat(env.enterBuilding("Rita", "realSecret"), hasStatus(NOT_FOUND))
     }
 
     @Test
     fun `rejects missing username in entry endpoint`() {
-        env.enterBuilding(null, "realSecret") shouldMatch hasStatus(BAD_REQUEST)
+        assertThat(env.enterBuilding(null, "realSecret"), hasStatus(BAD_REQUEST))
     }
 
     @Test
     fun `entry endpoint is protected with a secret key`() {
-        env.enterBuilding("Bob", "fakeSecret") shouldMatch hasStatus(UNAUTHORIZED)
+        assertThat(env.enterBuilding("Bob", "fakeSecret"), hasStatus(UNAUTHORIZED))
     }
 
     @Test
     fun `allows known user in and logs entry`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        env.enterBuilding("Bob", "realSecret") shouldMatch hasStatus(ACCEPTED)
-        env.entryLogger.entries shouldMatch equalTo(listOf(UserEntry("Bob", true, env.clock.millis())))
+        assertThat(env.enterBuilding("Bob", "realSecret"), hasStatus(ACCEPTED))
+        assertThat(env.entryLogger.entries, equalTo(listOf(UserEntry("Bob", true, env.clock.millis()))))
     }
 
     @Test
     fun `does not allow double entry`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        env.enterBuilding("Bob", "realSecret") shouldMatch hasStatus(ACCEPTED)
-        env.enterBuilding("Bob", "realSecret") shouldMatch hasStatus(CONFLICT)
+        assertThat(env.enterBuilding("Bob", "realSecret"), hasStatus(ACCEPTED))
+        assertThat(env.enterBuilding("Bob", "realSecret"), hasStatus(CONFLICT))
     }
 }
 

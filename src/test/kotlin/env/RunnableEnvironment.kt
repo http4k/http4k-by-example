@@ -20,8 +20,8 @@ fun main() {
         contains(User(Id(2), Username("Sue"), EmailAddress("sue@bob.com")))
     }
 
-    userDirectory.app.asServer(Jetty(userDirectoryPort)).start()
-    FakeEntryLogger().app.asServer(Jetty(entryLoggerPort)).start()
+    userDirectory.asServer(Jetty(userDirectoryPort)).start()
+    FakeEntryLogger().asServer(Jetty(entryLoggerPort)).start()
 
     SecuritySystemServer(serverPort,
         Uri.of("http://localhost:$userDirectoryPort"),

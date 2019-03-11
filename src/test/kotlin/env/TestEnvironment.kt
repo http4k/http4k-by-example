@@ -26,8 +26,8 @@ class TestEnvironment {
     val app = SecuritySystem(
             clock,
             { events.add(it) },
-            Uri.of("http://userDirectory") to userDirectory.app,
-            Uri.of("http://entryLogger") to entryLogger.app
+            Uri.of("http://userDirectory") to userDirectory,
+            Uri.of("http://entryLogger") to entryLogger
     )
 }
 

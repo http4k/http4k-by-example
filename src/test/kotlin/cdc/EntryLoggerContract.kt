@@ -9,20 +9,23 @@ import verysecuresystems.Username
 import verysecuresystems.external.EntryLogger
 import java.time.Clock
 import java.time.Instant
+import java.time.Instant.EPOCH
 import java.time.ZoneId
 
 /**
  * This represents the contract that both the real and fake EntryLogger servers will adhere to.
  */
-abstract class EntryLoggerContract(handler: HttpHandler) {
+interface EntryLoggerContract {
 
-    private val time = Instant.now()
-    private val entryLogger = EntryLogger(handler, Clock.fixed(time, ZoneId.systemDefault()))
+    val http: HttpHandler
+    val time: Instant get() = EPOCH
+
+    private fun entryLogger() = EntryLogger(http, Clock.fixed(time, ZoneId.systemDefault()))
 
     @Test
     fun `can log a user entry and it is listed`() {
-        assertThat(entryLogger.enter(Username("bob")), equalTo(UserEntry("bob", true, time.toEpochMilli())))
-        assertThat(entryLogger.exit(Username("bob")), equalTo(UserEntry("bob", false, time.toEpochMilli())))
+        assertThat(entryLogger().enter(Username("bob")), equalTo(UserEntry("bob", true, time.toEpochMilli())))
+        assertThat(entryLogger().exit(Username("bob")), equalTo(UserEntry("bob", false, time.toEpochMilli())))
     }
 }
 

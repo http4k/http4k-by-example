@@ -3,7 +3,7 @@ package cdc
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri
 import org.http4k.core.then
-import org.http4k.filter.ClientFilters.SetHostFrom
+import org.http4k.filter.ClientFilters
 import org.junit.jupiter.api.Disabled
 
 /**
@@ -11,6 +11,6 @@ import org.junit.jupiter.api.Disabled
  * test data.
  */
 @Disabled // this would not be ignored in reality
-class RealEntryLoggerTest : EntryLoggerContract(
-    SetHostFrom(Uri.of("http://entrylogger.com")).then(OkHttp())
-)
+class RealEntryLoggerTest : EntryLoggerContract {
+    override val http = ClientFilters.SetHostFrom(Uri.of("http://entrylogger.com")).then(OkHttp())
+}

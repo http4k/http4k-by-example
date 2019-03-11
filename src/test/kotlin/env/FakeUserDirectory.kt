@@ -1,6 +1,8 @@
 package env
 
 import org.http4k.contract.contract
+import org.http4k.core.HttpHandler
+import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
@@ -15,13 +17,13 @@ import verysecuresystems.external.UserDirectory.Companion.Lookup
 import verysecuresystems.external.UserDirectory.Companion.UserList
 import java.util.Random
 
-class FakeUserDirectory {
+class FakeUserDirectory : HttpHandler {
 
     private val users = mutableMapOf<Id, User>()
 
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
-    val app = contract {
+    private val app = contract {
         routes += Create.route to {
             val form = Create.form(it)
             val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
@@ -47,4 +49,5 @@ class FakeUserDirectory {
         }
     }
 
+    override fun invoke(p1: Request) = app(p1)
 }
