@@ -32,34 +32,29 @@ class UserDirectory(http: HttpHandler) {
     private val http = RequireSuccess.then(http)
 
     fun create(name: Username, inEmail: EmailAddress) = with(Create) {
-        response(
-            http(route.newRequest()
-                .with(form of WebForm()
-                    .with(email of inEmail, username of name))
-            )
+        user(
+            http(endpoint.newRequest().with(form of WebForm().with(email of inEmail, username of name)))
         )
     }
 
     fun delete(idToDelete: Id) = with(Delete) {
-        http(route.newRequest().with(id of idToDelete)).let {
-            if (it.status != ACCEPTED) throw RemoteSystemProblem("user directory", it.status)
+        with(http(endpoint.newRequest().with(id of idToDelete))) {
+            if (status != ACCEPTED) throw RemoteSystemProblem("user directory", status)
         }
     }
 
     fun list(): List<User> = with(UserList) {
-        response(http(route.newRequest())).asList()
+        users(http(route.newRequest())).asList()
     }
 
-    fun lookup(search: Username): User? = with(Lookup) {
-        http(route.newRequest()
-            .with(username of search))
-            .let {
-                when {
-                    it.status == NOT_FOUND -> return null
-                    it.status != OK -> throw RemoteSystemProblem("user directory", it.status)
-                    else -> response(it)
-                }
+    fun lookup(endpoint: Username): User? = with(Lookup) {
+        with(http(route.newRequest().with(username of endpoint))) {
+            when (status) {
+                NOT_FOUND -> return null
+                OK -> user(this)
+                else -> throw RemoteSystemProblem("user directory", status)
             }
+        }
     }
 
     companion object {
@@ -67,25 +62,25 @@ class UserDirectory(http: HttpHandler) {
             val email = FormField.map(::EmailAddress, EmailAddress::value).required("email")
             val username = FormField.map(::Username, Username::value).required("username")
             val form = Body.webForm(Strict, email, username).toLens()
-            val route = "/user" meta { receiving(form) } bindContract POST
-            val response = Body.auto<User>().toLens()
+            val endpoint = "/user" meta { receiving(form) } bindContract POST
+            val user = Body.auto<User>().toLens()
         }
 
         object Delete {
             val id = Path.int().map(::Id, Id::value).of("id")
-            val route = "/user" / id bindContract DELETE
+            val endpoint = "/user" / id bindContract DELETE
             val response = Body.auto<User>().toLens()
         }
 
         object UserList {
             val route = "/user" bindContract GET
-            val response = Body.auto<Array<User>>().toLens()
+            val users = Body.auto<Array<User>>().toLens()
         }
 
         object Lookup {
             val username = Path.map(::Username, Username::value).of("username")
             val route = "/user" / username bindContract GET
-            val response = Body.auto<User>().toLens()
+            val user = Body.auto<User>().toLens()
         }
     }
 }

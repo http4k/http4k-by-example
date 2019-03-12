@@ -20,7 +20,7 @@ class EntryLogger(http: HttpHandler, private val clock: Clock) {
     private val http = RequireSuccess.then(http)
 
     fun enter(username: Username) = with(Entry) {
-        response(
+        userEntry(
             http(route.newRequest()
                 .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli()))
             )
@@ -28,34 +28,33 @@ class EntryLogger(http: HttpHandler, private val clock: Clock) {
     }
 
     fun exit(username: Username) = with(Exit) {
-        response(
+        userEntry(
             http(
-                route.newRequest()
+                endpoint.newRequest()
                     .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli()))
             )
         )
     }
 
-    fun list() = with(LogList) { response(http(route.newRequest())) }
+    fun list() = with(LogList) { userEntries(http(endpoint.newRequest())) }
 
     companion object {
         object Entry {
             val body = Body.auto<UserEntry>().toLens()
             val route = "/entry" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
-            val response = Body.auto<UserEntry>().toLens()
+            val userEntry = Body.auto<UserEntry>().toLens()
         }
 
         object Exit {
             val body = Body.auto<UserEntry>().toLens()
-            val route = "/exit" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
-            val response = Body.auto<UserEntry>().toLens()
+            val endpoint = "/exit" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
+            val userEntry = Body.auto<UserEntry>().toLens()
         }
 
         object LogList {
             val body = Body.auto<List<UserEntry>>().toLens()
-            val route = "/list" bindContract GET
-            val response = Body.auto<List<UserEntry>>().toLens()
+            val endpoint = "/list" bindContract GET
+            val userEntries = Body.auto<List<UserEntry>>().toLens()
         }
     }
-
 }

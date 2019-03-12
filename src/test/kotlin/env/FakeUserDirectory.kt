@@ -24,13 +24,13 @@ class FakeUserDirectory : HttpHandler {
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
     private val app = contract {
-        routes += Create.route to {
+        routes += Create.endpoint to {
             val form = Create.form(it)
             val newUser = User(Id(Random().nextInt()), Create.username(form), Create.email(form))
             users[newUser.id] = newUser
-            Response(CREATED).with(Create.response of newUser)
+            Response(CREATED).with(Create.user of newUser)
         }
-        routes += Delete.route to { id ->
+        routes += Delete.endpoint to { id ->
             {
                 users.remove(id)?.let {
                     Response(ACCEPTED).with(Delete.response of it)
@@ -40,12 +40,12 @@ class FakeUserDirectory : HttpHandler {
         routes += Lookup.route to { username ->
             {
                 users.values.firstOrNull { it.name == username }
-                    ?.let { Response(OK).with(Lookup.response of it) }
+                    ?.let { Response(OK).with(Lookup.user of it) }
                     ?: Response(NOT_FOUND)
             }
         }
         routes += UserList.route to {
-            Response(OK).with(UserList.response of users.values.toTypedArray())
+            Response(OK).with(UserList.users of users.values.toTypedArray())
         }
     }
 

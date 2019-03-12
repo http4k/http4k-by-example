@@ -22,15 +22,15 @@ class FakeEntryLogger : HttpHandler {
         routes += Entry.route to { req: Request ->
             val userEntry = body(req)
             entries += userEntry
-            Response(CREATED).with(Entry.response of userEntry)
+            Response(CREATED).with(Entry.userEntry of userEntry)
         }
-        routes += Exit.route to { req: Request ->
+        routes += Exit.endpoint to { req: Request ->
             val userEntry = Exit.body(req)
             entries += userEntry
-            Response(ACCEPTED).with(Entry.response of userEntry)
+            Response(ACCEPTED).with(Entry.userEntry of userEntry)
         }
-        routes += LogList.route to {
-            Response(Status.OK).with(LogList.response of entries)
+        routes += LogList.endpoint to {
+            Response(Status.OK).with(LogList.userEntries of entries)
         }
     }
 
