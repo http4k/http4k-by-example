@@ -4,8 +4,9 @@
 [![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master)
 
 #### about
-This is a complete Kotlin example application which uses the majority of the features of the contract module of the [http4k](http://http4k.org) library:
+Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building apps:
 
+- Composable routing in both standard and contract (Swagger) forms
 - HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
@@ -13,6 +14,8 @@ This is a complete Kotlin example application which uses the majority of the fea
 - Automatic invalid request handling
 - Endpoint security via an API-key header - the key is "realSecret"
 - Templating system (Handlebars)
+- Typesafe Form handling with validation and error feedback.
+- Configuration via typesafe configuration
 - Serving of static resources
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
