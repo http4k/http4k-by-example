@@ -1,11 +1,12 @@
 package verysecuresystems.web
 
-import org.http4k.contract.contract
 import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.core.Filter
 import org.http4k.core.with
 import org.http4k.lens.Header.CONTENT_TYPE
 import org.http4k.routing.RoutingHttpHandler
+import org.http4k.routing.bind
+import org.http4k.routing.routes
 import org.http4k.template.HandlebarsTemplates
 import verysecuresystems.external.UserDirectory
 
@@ -16,8 +17,13 @@ val SetHtmlContentType = Filter { next ->
 object Web {
     operator fun invoke(userDirectory: UserDirectory): RoutingHttpHandler {
         val templates = HandlebarsTemplates().CachingClasspath()
-        return contract {
-            routes += ManageUsers.routes(templates, userDirectory).plus(ShowIndex.route(templates))
-        }
+        return routes(
+            "/users" bind routes(
+                DeleteUser(userDirectory),
+                CreateUser(templates, userDirectory),
+                ListUsers(templates, userDirectory)
+            ),
+            ShowIndex(templates)
+        )
     }
 }

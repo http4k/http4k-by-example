@@ -2,9 +2,7 @@ package verysecuresystems
 
 import org.http4k.core.Events
 import org.http4k.core.HttpHandler
-import org.http4k.core.Uri
 import org.http4k.core.then
-import org.http4k.filter.ClientFilters
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
@@ -35,7 +33,7 @@ object SecuritySystem {
         val app = routes(
             "/api" bind Api(userDirectory, entryLogger, inhabitants),
             "/internal" bind Diagnostic(clock),
-            "/" bind Web(userDirectory),
+            Web(userDirectory),
             "/" bind static(Classpath("public"))
         )
 
@@ -45,8 +43,6 @@ object SecuritySystem {
             .then(ServerFilters.HandleUpstreamRequestFailed())
             .then(app)
     }
-
-    private fun Pair<Uri, HttpHandler>.toAutoSetHost() = ClientFilters.SetHostFrom(first).then(second)
 }
 
 
