@@ -23,7 +23,7 @@ object KnockKnock {
     private val username = Query.map(::Username).required("username")
     private val message = Body.auto<Message>().toLens()
 
-    fun route(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ContractRoute {
+    operator fun invoke(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ContractRoute {
         val userEntry: HttpHandler = {
             userDirectory.lookup(username(it))
                 ?.let {

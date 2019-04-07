@@ -34,15 +34,11 @@ class TestEnvironment {
 private val username = Query.optional("username")
 private val key = Header.required("key")
 
-fun TestEnvironment.enterBuilding(user: String?, secret: String): Response {
-    val app1 = app(Request(POST, "/api/knock").with(username of user, key of secret))
-    println(app1)
-    return app1
-}
+fun TestEnvironment.enterBuilding(user: String?, secret: String): Response =
+    app(Request(POST, "/api/knock").with(username of user, key of secret))
 
-fun TestEnvironment.exitBuilding(user: String?, secret: String): Response {
-    return app(Request(POST, "/api/bye").with(username of user, key of secret))
-}
+fun TestEnvironment.exitBuilding(user: String?, secret: String): Response =
+    app(Request(POST, "/api/bye").with(username of user, key of secret))
 
 fun TestEnvironment.checkInhabitants(secret: String): Response =
     app(Request(GET, "/api/whoIsThere").with(key of secret))

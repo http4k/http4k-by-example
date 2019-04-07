@@ -8,7 +8,7 @@ import org.http4k.routing.bind
 import java.time.Clock
 
 object Uptime {
-    fun route(clock: Clock): RoutingHttpHandler {
+    operator fun invoke(clock: Clock): RoutingHttpHandler {
         val startTime = clock.instant().toEpochMilli()
         return "/uptime" bind GET to {
             Response(OK).body("uptime is: ${(clock.instant().toEpochMilli() - startTime) / 1000}s")

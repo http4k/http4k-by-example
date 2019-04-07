@@ -21,7 +21,7 @@ object ByeBye {
     private val username = Query.map(::Username).required("username")
     private val message = Body.auto<Message>().toLens()
 
-    fun route(inhabitants: Inhabitants, entryLogger: EntryLogger): ContractRoute {
+    operator fun invoke(inhabitants: Inhabitants, entryLogger: EntryLogger): ContractRoute {
 
         val userExit: HttpHandler = {
             val exiting = username(it)
