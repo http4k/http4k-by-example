@@ -5,5 +5,5 @@ import org.http4k.routing.routes
 import java.time.Clock
 
 object Diagnostic {
-    fun router(clock: Clock): RoutingHttpHandler = routes(Ping(), Uptime(clock))
+    operator fun invoke(clock: Clock): RoutingHttpHandler = routes(Ping(), Uptime(clock))
 }

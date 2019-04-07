@@ -33,9 +33,9 @@ object SecuritySystem {
         val inhabitants = Inhabitants()
 
         val app = routes(
-            "/api" bind Api.router(userDirectory, entryLogger, inhabitants),
-            "/internal" bind Diagnostic.router(clock),
-            "/" bind Web.router(userDirectory),
+            "/api" bind Api(userDirectory, entryLogger, inhabitants),
+            "/internal" bind Diagnostic(clock),
+            "/" bind Web(userDirectory),
             "/" bind static(ResourceLoader.Classpath("public"))
         )
 

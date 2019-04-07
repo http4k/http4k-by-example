@@ -14,7 +14,7 @@ val SetHtmlContentType = Filter { next ->
 }
 
 object Web {
-    fun router(userDirectory: UserDirectory): RoutingHttpHandler {
+    operator fun invoke(userDirectory: UserDirectory): RoutingHttpHandler {
         val templates = HandlebarsTemplates().CachingClasspath()
         return contract {
             routes += ManageUsers.routes(templates, userDirectory).plus(ShowIndex.route(templates))
