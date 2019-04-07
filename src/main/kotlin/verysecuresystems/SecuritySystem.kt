@@ -22,7 +22,6 @@ import java.time.Clock
  * inject non-HTTP versions of the downstream dependencies so we can run tests without starting up real HTTP servers.
  */
 object SecuritySystem {
-
     operator fun invoke(clock: Clock, events: Events,
                         userDirectoryHttp: HttpHandler,
                         entryLoggerHttp: HttpHandler): HttpHandler {
@@ -31,8 +30,8 @@ object SecuritySystem {
         val inhabitants = Inhabitants()
 
         val app = routes(
-            "/api" bind Api(userDirectory, entryLogger, inhabitants),
-            "/internal" bind Diagnostic(clock),
+            Api(userDirectory, entryLogger, inhabitants),
+            Diagnostic(clock),
             Web(userDirectory),
             "/" bind static(Classpath("public"))
         )

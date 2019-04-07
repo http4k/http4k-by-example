@@ -1,16 +1,19 @@
 package env
 
+import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Uri
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.SecuritySystemServer
+import verysecuresystems.Settings.ENTRY_LOGGER_URL
+import verysecuresystems.Settings.PORT
+import verysecuresystems.Settings.USER_DIRECTORY_URL
 import verysecuresystems.User
 import verysecuresystems.Username
 
 fun main() {
-    val serverPort = 9000
     val userDirectoryPort = 10000
     val entryLoggerPort = 11000
 
@@ -23,8 +26,9 @@ fun main() {
     userDirectory.asServer(Undertow(userDirectoryPort)).start()
     FakeEntryLogger().asServer(Undertow(entryLoggerPort)).start()
 
-    SecuritySystemServer(serverPort,
-        Uri.of("http://localhost:$userDirectoryPort"),
-        Uri.of("http://localhost:$entryLoggerPort"))
-        .start().block()
+    val env = Environment.defaults(PORT of 9000,
+        USER_DIRECTORY_URL of Uri.of("http://localhost:$userDirectoryPort"),
+        ENTRY_LOGGER_URL of Uri.of("http://localhost:$entryLoggerPort")
+    )
+    SecuritySystemServer(env).start().block()
 }

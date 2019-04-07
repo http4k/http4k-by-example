@@ -1,20 +1,31 @@
 package verysecuresystems
 
 import org.http4k.client.OkHttp
-import org.http4k.core.Uri
+import org.http4k.cloudnative.env.Environment
+import org.http4k.cloudnative.env.EnvironmentKey
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters.SetHostFrom
+import org.http4k.lens.int
+import org.http4k.lens.uri
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
+import verysecuresystems.Settings.ENTRY_LOGGER_URL
+import verysecuresystems.Settings.PORT
+import verysecuresystems.Settings.USER_DIRECTORY_URL
 import java.time.Clock
 
 /**
  * Responsible for setting up real HTTP servers and clients to downstream services via HTTP
  */
 object SecuritySystemServer {
-    operator fun invoke(port: Int, userDirectoryUrl: Uri, entryLoggerUrl: Uri) =
-        SecuritySystem(Clock.systemUTC(), ::println,
-            SetHostFrom(userDirectoryUrl).then(OkHttp()),
-            SetHostFrom(entryLoggerUrl).then(OkHttp())
-        ).asServer(Undertow(port))
+    operator fun invoke(env: Environment) = SecuritySystem(Clock.systemUTC(), ::println,
+        SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
+        SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
+    ).asServer(Undertow(PORT(env)))
+}
+
+object Settings {
+    val PORT = EnvironmentKey.int().required("PORT")
+    val USER_DIRECTORY_URL = EnvironmentKey.uri().required("USER_DIRECTORY_URL")
+    val ENTRY_LOGGER_URL = EnvironmentKey.uri().required("ENTRY_LOGGER_URL")
 }

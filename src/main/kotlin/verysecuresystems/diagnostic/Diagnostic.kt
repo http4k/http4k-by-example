@@ -9,7 +9,7 @@ import org.http4k.routing.routes
 import java.time.Clock
 
 object Diagnostic {
-    operator fun invoke(clock: Clock) = routes(
+    operator fun invoke(clock: Clock) = "/internal" bind routes(
         Ping(),
         Uptime(clock),
         "/" bind GET to {

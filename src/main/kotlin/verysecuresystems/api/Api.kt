@@ -10,13 +10,14 @@ import org.http4k.filter.ServerFilters
 import org.http4k.format.Jackson
 import org.http4k.lens.Header
 import org.http4k.routing.RoutingHttpHandler
+import org.http4k.routing.bind
 import verysecuresystems.Inhabitants
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
 
 object Api {
     operator fun invoke(userDirectory: UserDirectory, entryLogger: EntryLogger, inhabitants: Inhabitants): RoutingHttpHandler =
-        ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
+        "/api" bind ServerFilters.Cors(CorsPolicy.UnsafeGlobalPermissive)
             .then(contract {
                 renderer = OpenApi(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
                 descriptionPath = "/api-docs"
