@@ -1,7 +1,7 @@
 package env
 
 import org.http4k.core.Uri
-import org.http4k.server.Jetty
+import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
@@ -20,8 +20,8 @@ fun main() {
         contains(User(Id(2), Username("Sue"), EmailAddress("sue@bob.com")))
     }
 
-    userDirectory.asServer(Jetty(userDirectoryPort)).start()
-    FakeEntryLogger().asServer(Jetty(entryLoggerPort)).start()
+    userDirectory.asServer(Undertow(userDirectoryPort)).start()
+    FakeEntryLogger().asServer(Undertow(entryLoggerPort)).start()
 
     SecuritySystemServer(serverPort,
         Uri.of("http://localhost:$userDirectoryPort"),

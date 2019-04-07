@@ -5,6 +5,7 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
+import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader
 import org.http4k.routing.bind
@@ -15,7 +16,6 @@ import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
-import verysecuresystems.util.ConvertDownstreamErrors
 import verysecuresystems.web.Web
 import java.time.Clock
 
@@ -42,7 +42,7 @@ object SecuritySystem {
         return Auditor(clock, events)
             .then(ServerFilters.CatchAll())
             .then(ServerFilters.CatchLensFailure)
-            .then(ConvertDownstreamErrors)
+            .then(ServerFilters.HandleUpstreamRequestFailed())
             .then(app)
     }
 

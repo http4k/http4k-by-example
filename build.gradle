@@ -39,7 +39,8 @@ dependencies {
     compile "org.http4k:http4k-client-okhttp:$http4k_version"
     compile "org.http4k:http4k-contract:$http4k_version"
     compile "org.http4k:http4k-format-jackson:$http4k_version"
-    compile "org.http4k:http4k-server-jetty:$http4k_version"
+    compile "org.http4k:http4k-cloudnative:$http4k_version"
+    compile "org.http4k:http4k-server-undertow:$http4k_version"
     compile "org.http4k:http4k-template-handlebars:$http4k_version"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:$junit_version"

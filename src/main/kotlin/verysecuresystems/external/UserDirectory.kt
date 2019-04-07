@@ -1,5 +1,6 @@
 package verysecuresystems.external
 
+import org.http4k.cloudnative.UpstreamRequestFailed
 import org.http4k.contract.bindContract
 import org.http4k.contract.div
 import org.http4k.contract.meta
@@ -13,6 +14,8 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.core.with
+import org.http4k.filter.ClientFilters
+import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.FormField
 import org.http4k.lens.Path
@@ -24,12 +27,10 @@ import verysecuresystems.EmailAddress
 import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.Username
-import verysecuresystems.util.RemoteSystemProblem
-import verysecuresystems.util.RequireSuccess
 
 class UserDirectory(http: HttpHandler) {
 
-    private val http = RequireSuccess.then(http)
+    private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
     fun create(name: Username, inEmail: EmailAddress) = with(Create) {
         user(
@@ -39,7 +40,7 @@ class UserDirectory(http: HttpHandler) {
 
     fun delete(idToDelete: Id) = with(Delete) {
         with(http(endpoint.newRequest().with(id of idToDelete))) {
-            if (status != ACCEPTED) throw RemoteSystemProblem("user directory", status)
+            if (status != ACCEPTED) throw UpstreamRequestFailed(status, "user directory")
         }
     }
 
@@ -52,7 +53,7 @@ class UserDirectory(http: HttpHandler) {
             when (status) {
                 NOT_FOUND -> return null
                 OK -> user(this)
-                else -> throw RemoteSystemProblem("user directory", status)
+                else -> throw UpstreamRequestFailed(status, "user directory")
             }
         }
     }

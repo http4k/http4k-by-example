@@ -8,16 +8,17 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.then
 import org.http4k.core.with
+import org.http4k.filter.ClientFilters
+import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
-import verysecuresystems.util.RequireSuccess
 import java.time.Clock
 
 
 class EntryLogger(http: HttpHandler, private val clock: Clock) {
 
-    private val http = RequireSuccess.then(http)
+    private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
     fun enter(username: Username) = with(Entry) {
         userEntry(
