@@ -7,7 +7,7 @@ import org.http4k.core.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
-import org.http4k.routing.ResourceLoader
+import org.http4k.routing.ResourceLoader.Companion.Classpath
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
@@ -26,17 +26,17 @@ import java.time.Clock
 object SecuritySystem {
 
     operator fun invoke(clock: Clock, events: Events,
-                        userDirectoryClient: Pair<Uri, HttpHandler>,
-                        entryLoggerClient: Pair<Uri, HttpHandler>): HttpHandler {
-        val userDirectory = UserDirectory(userDirectoryClient.toAutoSetHost())
-        val entryLogger = EntryLogger(entryLoggerClient.toAutoSetHost(), clock)
+                        userDirectoryHttp: HttpHandler,
+                        entryLoggerHttp: HttpHandler): HttpHandler {
+        val userDirectory = UserDirectory(userDirectoryHttp)
+        val entryLogger = EntryLogger(entryLoggerHttp, clock)
         val inhabitants = Inhabitants()
 
         val app = routes(
             "/api" bind Api(userDirectory, entryLogger, inhabitants),
             "/internal" bind Diagnostic(clock),
             "/" bind Web(userDirectory),
-            "/" bind static(ResourceLoader.Classpath("public"))
+            "/" bind static(Classpath("public"))
         )
 
         return Auditor(clock, events)
