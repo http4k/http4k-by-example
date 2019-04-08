@@ -1,11 +1,10 @@
 package verysecuresystems.external
 
-import org.http4k.contract.bindContract
-import org.http4k.contract.meta
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
+import org.http4k.core.Request
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.ClientFilters
@@ -20,42 +19,24 @@ class EntryLogger(http: HttpHandler, private val clock: Clock) {
 
     private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
-    fun enter(username: Username) = with(Entry) {
+    private val body = Body.auto<UserEntry>().toLens()
+    private val userEntry = Body.auto<UserEntry>().toLens()
+    private val userEntries = Body.auto<List<UserEntry>>().toLens()
+
+    fun enter(username: Username) =
         userEntry(
-            http(route.newRequest()
+            http(Request(POST, "/entry")
                 .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli()))
             )
         )
-    }
 
-    fun exit(username: Username) = with(Exit) {
+    fun exit(username: Username) =
         userEntry(
             http(
-                endpoint.newRequest()
+                Request(POST, "/exit")
                     .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli()))
             )
         )
-    }
 
-    fun list() = with(LogList) { userEntries(http(endpoint.newRequest())) }
-
-    companion object {
-        object Entry {
-            val body = Body.auto<UserEntry>().toLens()
-            val route = "/entry" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
-            val userEntry = Body.auto<UserEntry>().toLens()
-        }
-
-        object Exit {
-            val body = Body.auto<UserEntry>().toLens()
-            val endpoint = "/exit" meta { receiving(body to UserEntry("user", true, 1234)) } bindContract POST
-            val userEntry = Body.auto<UserEntry>().toLens()
-        }
-
-        object LogList {
-            val body = Body.auto<List<UserEntry>>().toLens()
-            val endpoint = "/list" bindContract GET
-            val userEntries = Body.auto<List<UserEntry>>().toLens()
-        }
-    }
+    fun list() = userEntries(http(Request(GET, "/list")))
 }

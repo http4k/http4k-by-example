@@ -1,36 +1,39 @@
 package env
 
+import org.http4k.contract.bindContract
 import org.http4k.contract.contract
+import org.http4k.core.Body
 import org.http4k.core.HttpHandler
+import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.with
+import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
-import verysecuresystems.external.EntryLogger.Companion.Entry
-import verysecuresystems.external.EntryLogger.Companion.Entry.body
-import verysecuresystems.external.EntryLogger.Companion.Exit
-import verysecuresystems.external.EntryLogger.Companion.LogList
 
 class FakeEntryLogger : HttpHandler {
+
+    private val userEntry = Body.auto<UserEntry>().toLens()
+    private val userEntries = Body.auto<List<UserEntry>>().toLens()
 
     val entries = mutableListOf<UserEntry>()
 
     private val app = contract {
-        routes += Entry.route to { req: Request ->
-            val userEntry = body(req)
-            entries += userEntry
-            Response(CREATED).with(Entry.userEntry of userEntry)
+        routes += "/entry" bindContract Method.POST to { req: Request ->
+            val entry = userEntry(req)
+            entries += entry
+            Response(CREATED).with(userEntry of entry)
         }
-        routes += Exit.endpoint to { req: Request ->
-            val userEntry = Exit.body(req)
-            entries += userEntry
-            Response(ACCEPTED).with(Entry.userEntry of userEntry)
+        routes += "/exit" bindContract Method.POST to { req: Request ->
+            val entry = userEntry(req)
+            entries += entry
+            Response(ACCEPTED).with(userEntry of entry)
         }
-        routes += LogList.endpoint to {
-            Response(Status.OK).with(LogList.userEntries of entries)
+        routes += "/list" bindContract Method.GET to {
+            Response(Status.OK).with(userEntries of entries)
         }
     }
 
