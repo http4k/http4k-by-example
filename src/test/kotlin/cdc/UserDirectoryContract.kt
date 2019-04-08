@@ -19,7 +19,6 @@ interface UserDirectoryContract {
 
     fun userDirectory() = UserDirectory(http)
 
-
     @Test
     fun `is empty initially`() {
         assertThat(userDirectory().lookup(username), absent())
