@@ -20,10 +20,10 @@ import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
 
 object KnockKnock {
-    private val username = Query.map(::Username).required("username")
-    private val message = Body.auto<Message>().toLens()
-
     operator fun invoke(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ContractRoute {
+        val username = Query.map(::Username).required("username")
+        val message = Body.auto<Message>().toLens()
+
         val userEntry: HttpHandler = {
             userDirectory.lookup(username(it))
                 ?.let {

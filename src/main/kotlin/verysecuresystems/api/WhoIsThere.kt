@@ -17,9 +17,9 @@ import verysecuresystems.Username
 import verysecuresystems.external.UserDirectory
 
 object WhoIsThere {
-    private val users = Body.auto<Array<User>>().toLens()
-
     operator fun invoke(inhabitants: Inhabitants, userDirectory: UserDirectory): ContractRoute {
+        val users = Body.auto<Array<User>>().toLens()
+
         val listUsers: HttpHandler = {
             Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup).toTypedArray())
         }

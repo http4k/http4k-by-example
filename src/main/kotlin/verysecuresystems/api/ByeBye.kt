@@ -18,10 +18,9 @@ import verysecuresystems.Username
 import verysecuresystems.external.EntryLogger
 
 object ByeBye {
-    private val username = Query.map(::Username).required("username")
-    private val message = Body.auto<Message>().toLens()
-
-    operator fun invoke(inhabitants: Inhabitants, entryLogger: EntryLogger): ContractRoute {
+   operator fun invoke(inhabitants: Inhabitants, entryLogger: EntryLogger): ContractRoute {
+        val username = Query.map(::Username).required("username")
+        val message = Body.auto<Message>().toLens()
 
         val userExit: HttpHandler = {
             val exiting = username(it)

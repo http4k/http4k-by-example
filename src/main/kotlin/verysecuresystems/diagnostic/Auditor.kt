@@ -10,12 +10,19 @@ import java.time.Clock
  * This auditor is responsible for logging the performance of inbound calls to the system.
  */
 object Auditor {
+
+    /**
+     * Audit incoming HTTP interactions
+     */
     fun Incoming(clock: Clock, events: Events) = Filter { next ->
         {
             next(it).apply { events(IncomingEvent(clock.instant(), it.uri, status)) }
         }
     }
 
+    /**
+     * Audit outgoing HTTP interactions
+     */
     fun Outgoing(clock: Clock, events: Events) = Filter { next ->
         {
             next(it).apply { events(OutgoingEvent(clock.instant(), it.uri, status)) }
