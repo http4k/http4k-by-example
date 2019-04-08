@@ -10,6 +10,10 @@ data class IncomingEvent(val time: Instant, val uri: Uri, val status: Status) : 
     override val category = EventCategory("incoming")
 }
 
+data class OutgoingEvent(val time: Instant, val uri: Uri, val status: Status) : Event {
+    override val category = EventCategory("outgoing")
+}
+
 data class Id(val value: Int)
 
 data class Username(val value: String)

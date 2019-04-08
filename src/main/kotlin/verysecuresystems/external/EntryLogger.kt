@@ -14,29 +14,32 @@ import verysecuresystems.UserEntry
 import verysecuresystems.Username
 import java.time.Clock
 
-
+/**
+ * Business abstraction for the external EntryLogger service. Uses JSON-automarshalling via
+ * Jackson to convert objects to Kotlin data-class instances
+ */
 class EntryLogger(http: HttpHandler, private val clock: Clock) {
 
+    // this filter will handle and rethrow non-successful HTTP responses
     private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
-    private val body = Body.auto<UserEntry>().toLens()
     private val userEntry = Body.auto<UserEntry>().toLens()
     private val userEntries = Body.auto<List<UserEntry>>().toLens()
 
-    fun enter(username: Username) =
+    fun enter(username: Username): UserEntry =
         userEntry(
             http(Request(POST, "/entry")
-                .with(body of UserEntry(username.value, true, clock.instant().toEpochMilli()))
+                .with(userEntry of UserEntry(username.value, true, clock.instant().toEpochMilli()))
             )
         )
 
-    fun exit(username: Username) =
+    fun exit(username: Username): UserEntry =
         userEntry(
             http(
                 Request(POST, "/exit")
-                    .with(body of UserEntry(username.value, false, clock.instant().toEpochMilli()))
+                    .with(userEntry of UserEntry(username.value, false, clock.instant().toEpochMilli()))
             )
         )
 
-    fun list() = userEntries(http(Request(GET, "/list")))
+    fun list(): List<UserEntry> = userEntries(http(Request(GET, "/list")))
 }

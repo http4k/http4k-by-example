@@ -14,9 +14,13 @@ val SetHtmlContentType = Filter { next ->
     { next(it).with(CONTENT_TYPE of TEXT_HTML) }
 }
 
+/**
+ * Defines the web content layer of the app.
+ */
 object Web {
     operator fun invoke(userDirectory: UserDirectory): RoutingHttpHandler {
         val templates = HandlebarsTemplates().CachingClasspath()
+
         return routes(
             "/users" bind routes(
                 DeleteUser(userDirectory),

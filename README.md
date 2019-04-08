@@ -6,8 +6,10 @@
 #### about
 Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building apps:
 
-- Composable routing in both standard and contract (Swagger) forms
-- HTTP request routing with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
+
+- Composable routing in both standard and contract (Swagger) forms with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
+
+
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
 - Swagger 2.0 documentation and JSON schema generation from example model objects
@@ -16,7 +18,9 @@ Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot 
 - Templating system (Handlebars)
 - Typesafe Form handling with validation and error feedback.
 - Configuration via typesafe configuration
+- Event stream implementation
 - Serving of static resources
+
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
 to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of

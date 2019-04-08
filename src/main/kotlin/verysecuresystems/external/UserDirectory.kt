@@ -23,14 +23,19 @@ import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.Username
 
+/**
+ * Business abstraction for the external UserDirectory service. Uses JSON-automarshalling via
+ * Jackson to convert objects to Kotlin data-class instances
+ */
 class UserDirectory(http: HttpHandler) {
 
+    // this filter will handle and rethrow non-successful HTTP responses
     private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
     private val users = Body.auto<Array<User>>().toLens()
     private val user = Body.auto<User>().toLens()
 
-    fun create(name: Username, inEmail: EmailAddress) =
+    fun create(name: Username, inEmail: EmailAddress): User =
         user(
             http(Request(POST, "/user")
                 .with(CONTENT_TYPE of APPLICATION_FORM_URLENCODED)
