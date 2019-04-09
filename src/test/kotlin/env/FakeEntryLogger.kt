@@ -1,5 +1,6 @@
 package env
 
+import org.http4k.chaos.withChaosEngine
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
@@ -49,7 +50,7 @@ class FakeEntryLogger : HttpHandler {
         "/list" bind GET to list(),
         "/entry" bind POST to entry(),
         "/exit" bind POST to exit()
-    )
+    ).withChaosEngine()
 
     override fun invoke(p1: Request) = app(p1)
 }

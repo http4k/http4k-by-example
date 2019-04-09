@@ -7,16 +7,18 @@ import org.http4k.core.then
 import org.http4k.routing.bind
 import org.http4k.template.TemplateRenderer
 import org.http4k.template.ViewModel
+import java.time.Clock
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 data class Index(val time: String, val browser: String) : ViewModel
 
 object ShowIndex {
-    operator fun invoke(renderer: TemplateRenderer) =
+    operator fun invoke(clock: Clock, renderer: TemplateRenderer) =
         "/" bind GET to SetHtmlContentType.then {
             Response(OK).body(
                 renderer(
-                    Index(LocalDateTime.now().toString(), it.header("User-Agent") ?: "unknown"))
+                    Index(LocalDateTime.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), it.header("User-Agent") ?: "unknown"))
             )
         }
 }

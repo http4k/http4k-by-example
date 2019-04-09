@@ -1,21 +1,16 @@
-package functional
+package diagnostic
 
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.containsSubstring
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.has
 import env.TestEnvironment
-import org.http4k.core.Body
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
-import org.http4k.format.Jackson
 import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
 
-class NonFunctionalRequirementsTest {
+class DiagnosticTest {
 
     private val env = TestEnvironment()
 
@@ -31,19 +26,6 @@ class NonFunctionalRequirementsTest {
         assertThat(response, hasStatus(OK).and(hasBody("uptime is: 0s")))
     }
 
-    @Test
-    fun `serves static content`() {
-        val response = env.app(Request(GET, "/style.css"))
-        assertThat(response, hasStatus(OK).and(
-            hasBody(has("content", Body::toString, containsSubstring("font-family: \"Droid Sans\"")))))
-    }
-
-    @Test
-    fun `provides API documentation in swagger 2dot0 format`() {
-        val response = env.app(Request(GET, "/api/api-docs"))
-        assertThat(response, hasStatus(OK))
-        assertThat(Jackson.parse(response.bodyString())["swagger"].textValue(), equalTo("2.0"))
-    }
 
 //
 //    it("has a sitemap") {

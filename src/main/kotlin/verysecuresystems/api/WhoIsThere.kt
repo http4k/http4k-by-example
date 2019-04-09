@@ -11,17 +11,16 @@ import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
-import verysecuresystems.Inhabitants
 import verysecuresystems.User
 import verysecuresystems.Username
-import verysecuresystems.external.UserDirectory
 
 object WhoIsThere {
-    operator fun invoke(inhabitants: Inhabitants, userDirectory: UserDirectory): ContractRoute {
+    operator fun invoke(inhabitants: Iterable<Username>,
+                        lookup: (Username) -> User?): ContractRoute {
         val users = Body.auto<Array<User>>().toLens()
 
         val listUsers: HttpHandler = {
-            Response(OK).with(users of inhabitants.mapNotNull(userDirectory::lookup).toTypedArray())
+            Response(OK).with(users of inhabitants.mapNotNull(lookup).toTypedArray())
         }
 
         return "/whoIsThere" meta {

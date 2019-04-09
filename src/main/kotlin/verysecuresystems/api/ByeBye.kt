@@ -12,20 +12,20 @@ import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Query
-import verysecuresystems.Inhabitants
 import verysecuresystems.Message
+import verysecuresystems.UserEntry
 import verysecuresystems.Username
-import verysecuresystems.external.EntryLogger
 
 object ByeBye {
-   operator fun invoke(inhabitants: Inhabitants, entryLogger: EntryLogger): ContractRoute {
+   operator fun invoke(removeUser: (Username) -> Boolean,
+                       entryLogger: (Username) -> UserEntry): ContractRoute {
         val username = Query.map(::Username).required("username")
         val message = Body.auto<Message>().toLens()
 
         val userExit: HttpHandler = {
             val exiting = username(it)
-            if (inhabitants.remove(exiting)) {
-                entryLogger.exit(exiting)
+            if (removeUser(exiting)) {
+                entryLogger(exiting)
                 Response(ACCEPTED).with(message of Message("processing"))
             } else Response(NOT_FOUND).with(message of Message("User is not inside building"))
         }

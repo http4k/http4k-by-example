@@ -1,5 +1,6 @@
 package env
 
+import org.http4k.chaos.withChaosEngine
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -76,7 +77,7 @@ class FakeUserDirectory : HttpHandler {
         "/user" bind POST to create(),
         "/user/{id}" bind DELETE to delete(),
         "/user/{username}" bind GET to lookup()
-    )
+    ).withChaosEngine()
 
     override fun invoke(p1: Request) = app(p1)
 }

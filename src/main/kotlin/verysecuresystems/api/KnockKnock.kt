@@ -13,22 +13,23 @@ import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Query
-import verysecuresystems.Inhabitants
 import verysecuresystems.Message
+import verysecuresystems.User
+import verysecuresystems.UserEntry
 import verysecuresystems.Username
-import verysecuresystems.external.EntryLogger
-import verysecuresystems.external.UserDirectory
 
 object KnockKnock {
-    operator fun invoke(inhabitants: Inhabitants, userDirectory: UserDirectory, entryLogger: EntryLogger): ContractRoute {
+    operator fun invoke(lookup: (Username) -> User?,
+                        add: (Username) -> Boolean,
+                        entryLogger: (Username) -> UserEntry): ContractRoute {
         val username = Query.map(::Username).required("username")
         val message = Body.auto<Message>().toLens()
 
         val userEntry: HttpHandler = {
-            userDirectory.lookup(username(it))
+            lookup(username(it))
                 ?.let {
-                    if (inhabitants.add(it.name)) {
-                        entryLogger.enter(it.name)
+                    if (add(it.name)) {
+                        entryLogger(it.name)
                         Response(ACCEPTED).with(message of Message("Access granted"))
                     } else {
                         Response(CONFLICT).with(message of Message("User is already inside building"))

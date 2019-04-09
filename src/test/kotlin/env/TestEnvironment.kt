@@ -14,20 +14,19 @@ import java.time.Instant
 import java.time.ZoneId
 
 class TestEnvironment {
-    val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.systemDefault())!!
+    val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.of("UTC"))!!
 
     val userDirectory = FakeUserDirectory()
     val entryLogger = FakeEntryLogger()
 
-    val events = mutableListOf<Event>()
+    private val events = mutableListOf<Event>()
 
     val app = SecuritySystem(
         clock,
         { events.add(it) },
         userDirectory,
         entryLogger
-    )
-}
+    )}
 
 private val username = Query.optional("username")
 private val key = Header.required("key")

@@ -1,27 +1,32 @@
 package functional
 
-import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.assertion.assertThat
 import env.TestEnvironment
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
-import org.http4k.core.Status.Companion.OK
-import org.http4k.hamkrest.hasHeader
-import org.http4k.hamkrest.hasStatus
+import org.http4k.testing.ApprovalTest
+import org.http4k.testing.Approver
+import org.http4k.webdriver.Http4kWebDriver
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExtendWith(ApprovalTest::class)
 class WebTest {
     private val env = TestEnvironment()
 
+    private val browser = Http4kWebDriver(env.app)
+
     @Test
-    fun homepage() {
-        val response = env.app(Request(GET, ""))
-        assertThat(response, hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8")))
+    fun homepage(approver: Approver) {
+        approver.assertApproved(env.app(Request(GET, "")))
     }
 
     @Test
-    fun `manage users`() {
-        val response = env.app(Request(GET, "/users"))
-        assertThat(response, hasStatus(OK).and(hasHeader("content-type", "text/html; charset=utf-8")))
+    fun `manage users`(approver: Approver) {
+        approver.assertApproved(env.app(Request(GET, "/users")))
+    }
+
+    @Test
+    fun `serves static content`(approver: Approver) {
+        approver.assertApproved(env.app(Request(GET, "/style.css")))
     }
 }

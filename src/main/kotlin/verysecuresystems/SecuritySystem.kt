@@ -35,7 +35,7 @@ object SecuritySystem {
         val app = routes(
             Api(userDirectory, entryLogger, inhabitants),
             Diagnostic(clock),
-            Web(userDirectory),
+            Web(clock, userDirectory),
             "/" bind static(Classpath("public"))
         )
 

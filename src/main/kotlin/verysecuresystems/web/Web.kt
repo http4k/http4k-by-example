@@ -9,6 +9,7 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.template.HandlebarsTemplates
 import verysecuresystems.external.UserDirectory
+import java.time.Clock
 
 val SetHtmlContentType = Filter { next ->
     { next(it).with(CONTENT_TYPE of TEXT_HTML) }
@@ -18,7 +19,7 @@ val SetHtmlContentType = Filter { next ->
  * Defines the web content layer of the app.
  */
 object Web {
-    operator fun invoke(userDirectory: UserDirectory): RoutingHttpHandler {
+    operator fun invoke(clock: Clock, userDirectory: UserDirectory): RoutingHttpHandler {
         val templates = HandlebarsTemplates().CachingClasspath()
 
         return routes(
@@ -27,7 +28,7 @@ object Web {
                 CreateUser(templates, userDirectory),
                 ListUsers(templates, userDirectory)
             ),
-            ShowIndex(templates)
+            ShowIndex(clock, templates)
         )
     }
 }
