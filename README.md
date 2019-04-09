@@ -1,4 +1,4 @@
-# http4k-contract sample application 
+# http4k-by-example application 
 
 <a href="https://travis-ci.org/http4k/http4k-contract-example-app" target="_top"><img src="https://travis-ci.org/http4k/http4k-contract-example-app.svg?branch=master"/></a>&nbsp;&nbsp;&nbsp;
 [![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master)
@@ -6,17 +6,14 @@
 #### about
 Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building apps:
 
-
-- Composable routing in both standard and contract (Swagger) forms with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body)
-
-
+- Composable routing in both standard and contract (OpenAPI) forms with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body/Forms)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
-- Swagger 2.0 documentation and JSON schema generation from example model objects
+- OpenAPI documentation and JSON schema generation from example model objects
 - Automatic invalid request handling
 - Endpoint security via an API-key header - the key is "realSecret"
 - Templating system (Handlebars)
-- Typesafe Form handling with validation and error feedback.
+- Typesafe Form handling with validation and error feedback
 - Configuration via typesafe configuration
 - Event stream implementation
 - Serving of static resources
