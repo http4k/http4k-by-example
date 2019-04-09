@@ -26,7 +26,6 @@ class DiagnosticTest {
         assertThat(response, hasStatus(OK).and(hasBody("uptime is: 0s")))
     }
 
-
 //
 //    it("has a sitemap") {
 //        val response = env.responseTo(Request("/sitemap.xml"))
