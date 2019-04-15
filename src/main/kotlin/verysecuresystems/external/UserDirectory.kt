@@ -30,7 +30,7 @@ import verysecuresystems.Username
 class UserDirectory(http: HttpHandler) {
 
     // this filter will handle and rethrow non-successful HTTP responses
-    private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
+    private val http = ClientFilters.HandleUpstreamRequestFailed({ status.successful || status == NOT_FOUND }).then(http)
 
     private val users = Body.auto<Array<User>>().toLens()
     private val user = Body.auto<User>().toLens()
