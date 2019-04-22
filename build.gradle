@@ -17,8 +17,8 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'application'
 apply plugin: 'cobertura'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -54,3 +54,5 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+mainClassName = 'verysecuresystems.MainKt'
