@@ -1,7 +1,7 @@
 package verysecuresystems.api
 
 import org.http4k.contract.ApiInfo
-import org.http4k.contract.ApiKey
+import org.http4k.contract.ApiKeySecurity
 import org.http4k.contract.OpenApi
 import org.http4k.contract.contract
 import org.http4k.core.then
@@ -21,7 +21,7 @@ object Api {
             .then(contract {
                 renderer = OpenApi(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
                 descriptionPath = "/api-docs"
-                security = ApiKey(Header.required("key"), { key: String -> key == "realSecret" })
+                security = ApiKeySecurity(Header.required("key"), { key: String -> key == "realSecret" })
                 routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)
                 routes += WhoIsThere(inhabitants, userDirectory::lookup)
                 routes += ByeBye(inhabitants::remove, entryLogger::exit)
