@@ -1,44 +1,46 @@
 {
-  "swagger": "2.0",
   "info": {
     "title": "Security server API - the API key is 'realSecret'!",
     "version": "v1.0",
-    "description": ""
+    "description": null
   },
-  "basePath": "/",
   "tags": [
   ],
   "paths": {
-    "/api/knock": {
+    "/api/bye": {
       "post": {
+        "summary": "User exits the building",
+        "description": null,
         "tags": [
           "/api"
         ],
-        "summary": "User enters the building",
-        "produces": [
-        ],
-        "consumes": [
-        ],
         "parameters": [
           {
+            "schema": {
+              "type": "string"
+            },
             "in": "query",
             "name": "username",
             "required": true,
-            "type": "string"
+            "description": null
           }
         ],
+        "requestBody": null,
         "responses": {
           "202": {
-            "description": "Access granted"
+            "description": "Exit granted",
+            "content": {
+            }
           },
           "404": {
-            "description": "Unknown user"
-          },
-          "409": {
-            "description": "User is already inside building"
+            "description": "User is not inside building",
+            "content": {
+            }
           },
           "401": {
-            "description": "Incorrect key"
+            "description": "Incorrect key",
+            "content": {
+            }
           }
         },
         "security": [
@@ -46,29 +48,93 @@
             "api_key": [
             ]
           }
-        ]
+        ],
+        "operationId": null
+      }
+    },
+    "/api/knock": {
+      "post": {
+        "summary": "User enters the building",
+        "description": null,
+        "tags": [
+          "/api"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "username",
+            "required": true,
+            "description": null
+          }
+        ],
+        "requestBody": null,
+        "responses": {
+          "202": {
+            "description": "Access granted",
+            "content": {
+            }
+          },
+          "404": {
+            "description": "Unknown user",
+            "content": {
+            }
+          },
+          "409": {
+            "description": "User is already inside building",
+            "content": {
+            }
+          },
+          "401": {
+            "description": "Incorrect key",
+            "content": {
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": [
+            ]
+          }
+        ],
+        "operationId": null
       }
     },
     "/api/whoIsThere": {
       "get": {
+        "summary": "List current users in the building",
+        "description": null,
         "tags": [
           "/api"
         ],
-        "summary": "List current users in the building",
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-        ],
-        "parameters": [
-        ],
+        "parameters": null,
+        "requestBody": null,
         "responses": {
           "200": {
             "description": "Inhabitant list",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/object927961565"
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": {
+                      "value": 1
+                    },
+                    "name": {
+                      "value": "A user"
+                    },
+                    "email": {
+                      "value": "user@bob.com"
+                    }
+                  }
+                ],
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/object328108586"
+                  }
+                }
               }
             }
           }
@@ -78,95 +144,62 @@
             "api_key": [
             ]
           }
-        ]
-      }
-    },
-    "/api/bye": {
-      "post": {
-        "tags": [
-          "/api"
         ],
-        "summary": "User exits the building",
-        "produces": [
-        ],
-        "consumes": [
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "username",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Exit granted"
-          },
-          "404": {
-            "description": "User is not inside building"
-          },
-          "401": {
-            "description": "Incorrect key"
-          }
-        },
-        "security": [
-          {
-            "api_key": [
-            ]
-          }
-        ]
+        "operationId": null
       }
     }
   },
-  "securityDefinitions": {
-    "api_key": {
-      "type": "apiKey",
-      "in": "header",
-      "name": "key"
+  "components": {
+    "schemas": {
+      "object-1359007950": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "example": 1
+          }
+        }
+      },
+      "object100322318": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "example": "A user"
+          }
+        }
+      },
+      "object1347509803": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "example": "user@bob.com"
+          }
+        }
+      },
+      "object328108586": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/object-1359007950"
+          },
+          "name": {
+            "$ref": "#/components/schemas/object100322318"
+          },
+          "email": {
+            "$ref": "#/components/schemas/object1347509803"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "key"
+      }
     }
   },
-  "definitions": {
-    "object-1359007950": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "integer",
-          "example": 1
-        }
-      }
-    },
-    "object100322318": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "string",
-          "example": "A user"
-        }
-      }
-    },
-    "object1347509803": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "string",
-          "example": "user@bob.com"
-        }
-      }
-    },
-    "object927961565": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/object-1359007950"
-        },
-        "name": {
-          "$ref": "#/definitions/object100322318"
-        },
-        "email": {
-          "$ref": "#/definitions/object1347509803"
-        }
-      }
-    }
-  }
+  "openapi": "3.0.0"
 }

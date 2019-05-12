@@ -30,5 +30,5 @@ fun main() {
         USER_DIRECTORY_URL of Uri.of("http://localhost:$userDirectoryPort"),
         ENTRY_LOGGER_URL of Uri.of("http://localhost:$entryLoggerPort")
     )
-    SecuritySystemServer(env).start().block()
+    SecuritySystemServer(env).start()
 }

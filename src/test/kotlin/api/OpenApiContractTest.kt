@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(JsonApprovalTest::class)
 class OpenApiContractTest {
-    private val env =TestEnvironment()
+    private val env = TestEnvironment()
 
     @Test
     fun `provides API documentation in open api format`(approver: Approver) {

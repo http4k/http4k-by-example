@@ -9,7 +9,7 @@ Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot 
 - Composable routing in both standard and contract (OpenAPI) forms with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body/Forms)
 - HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
-- OpenAPI documentation and JSON schema generation from example model objects
+- OpenAPI v3 documentation and JSON schema generation from example model objects
 - Automatic invalid request handling
 - Endpoint security via an API-key header - the key is "realSecret"
 - Templating system (Handlebars)
