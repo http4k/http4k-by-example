@@ -24,11 +24,8 @@ object WhoIsThere {
         }
 
         return "/whoIsThere" meta {
-                summary = "List current users in the building"
-                returning("Inhabitant list" to
-                    Response(OK)
-                        .with(users of arrayOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com")))))
-
-            } bindContract Method.GET to listUsers
+            summary = "List current users in the building"
+            returning(OK, users to arrayOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))), "Inhabitant list")
+        } bindContract Method.GET to listUsers
     }
 }

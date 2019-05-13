@@ -131,8 +131,9 @@
                 ],
                 "schema": {
                   "type": "array",
+                  "required": true,
                   "items": {
-                    "$ref": "#/components/schemas/object328108586"
+                    "$ref": "#/components/schemas/urn:jsonschema:verysecuresystems:User"
                   }
                 }
               }
@@ -151,44 +152,42 @@
   },
   "components": {
     "schemas": {
-      "object-1359007950": {
+      "urn:jsonschema:verysecuresystems:User": {
         "type": "object",
-        "properties": {
-          "value": {
-            "type": "integer",
-            "example": 1
-          }
-        }
-      },
-      "object100322318": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "example": "A user"
-          }
-        }
-      },
-      "object1347509803": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "string",
-            "example": "user@bob.com"
-          }
-        }
-      },
-      "object328108586": {
-        "type": "object",
+        "id": "urn:jsonschema:verysecuresystems:User",
         "properties": {
           "id": {
-            "$ref": "#/components/schemas/object-1359007950"
+            "type": "object",
+            "id": "urn:jsonschema:verysecuresystems:Id",
+            "required": true,
+            "properties": {
+              "value": {
+                "type": "integer",
+                "required": true
+              }
+            }
           },
           "name": {
-            "$ref": "#/components/schemas/object100322318"
+            "type": "object",
+            "id": "urn:jsonschema:verysecuresystems:Username",
+            "required": true,
+            "properties": {
+              "value": {
+                "type": "string",
+                "required": true
+              }
+            }
           },
           "email": {
-            "$ref": "#/components/schemas/object1347509803"
+            "type": "object",
+            "id": "urn:jsonschema:verysecuresystems:EmailAddress",
+            "required": true,
+            "properties": {
+              "value": {
+                "type": "string",
+                "required": true
+              }
+            }
           }
         }
       }

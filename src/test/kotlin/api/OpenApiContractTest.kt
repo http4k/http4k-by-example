@@ -18,4 +18,5 @@ class OpenApiContractTest {
     fun `provides API documentation in open api format`(approver: Approver) {
         approver.assertApproved(env.app(Request(Method.GET, "/api/api-docs")), OK)
     }
+
 }
