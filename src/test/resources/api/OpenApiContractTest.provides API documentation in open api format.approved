@@ -25,7 +25,11 @@
             "description": null
           }
         ],
-        "requestBody": null,
+        "requestBody": {
+          "content": {
+          },
+          "required": false
+        },
         "responses": {
           "202": {
             "description": "Exit granted",
@@ -70,7 +74,11 @@
             "description": null
           }
         ],
-        "requestBody": null,
+        "requestBody": {
+          "content": {
+          },
+          "required": false
+        },
         "responses": {
           "202": {
             "description": "Access granted",
@@ -109,8 +117,13 @@
         "tags": [
           "/api"
         ],
-        "parameters": null,
-        "requestBody": null,
+        "parameters": [
+        ],
+        "requestBody": {
+          "content": {
+          },
+          "required": false
+        },
         "responses": {
           "200": {
             "description": "Inhabitant list",
