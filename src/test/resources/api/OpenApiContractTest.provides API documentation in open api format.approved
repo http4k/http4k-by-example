@@ -25,11 +25,6 @@
             "description": null
           }
         ],
-        "requestBody": {
-          "content": {
-          },
-          "required": false
-        },
         "responses": {
           "202": {
             "description": "Exit granted",
@@ -53,7 +48,7 @@
             ]
           }
         ],
-        "operationId": null
+        "operationId": "postApiBye"
       }
     },
     "/api/knock": {
@@ -74,11 +69,6 @@
             "description": null
           }
         ],
-        "requestBody": {
-          "content": {
-          },
-          "required": false
-        },
         "responses": {
           "202": {
             "description": "Access granted",
@@ -107,7 +97,7 @@
             ]
           }
         ],
-        "operationId": null
+        "operationId": "postApiKnock"
       }
     },
     "/api/whoIsThere": {
@@ -119,11 +109,6 @@
         ],
         "parameters": [
         ],
-        "requestBody": {
-          "content": {
-          },
-          "required": false
-        },
         "responses": {
           "200": {
             "description": "Inhabitant list",
@@ -143,11 +128,27 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
-                  "required": true,
                   "items": {
-                    "$ref": "#/components/schemas/urn:jsonschema:verysecuresystems:User"
-                  }
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    ]
+                  },
+                  "example": [
+                    {
+                      "id": {
+                        "value": 1
+                      },
+                      "name": {
+                        "value": "A user"
+                      },
+                      "email": {
+                        "value": "user@bob.com"
+                      }
+                    }
+                  ],
+                  "type": "array"
                 }
               }
             }
@@ -159,50 +160,89 @@
             ]
           }
         ],
-        "operationId": null
+        "operationId": "getApiWhoIsThere"
       }
     }
   },
   "components": {
     "schemas": {
-      "urn:jsonschema:verysecuresystems:User": {
-        "type": "object",
-        "id": "urn:jsonschema:verysecuresystems:User",
+      "User": {
         "properties": {
           "id": {
-            "type": "object",
-            "id": "urn:jsonschema:verysecuresystems:Id",
-            "required": true,
-            "properties": {
-              "value": {
-                "type": "integer",
-                "required": true
-              }
-            }
+            "$ref": "#/components/schemas/Id",
+            "example": null
           },
           "name": {
-            "type": "object",
-            "id": "urn:jsonschema:verysecuresystems:Username",
-            "required": true,
-            "properties": {
-              "value": {
-                "type": "string",
-                "required": true
-              }
-            }
+            "$ref": "#/components/schemas/Username",
+            "example": null
           },
           "email": {
-            "type": "object",
-            "id": "urn:jsonschema:verysecuresystems:EmailAddress",
-            "required": true,
-            "properties": {
-              "value": {
-                "type": "string",
-                "required": true
-              }
-            }
+            "$ref": "#/components/schemas/EmailAddress",
+            "example": null
           }
-        }
+        },
+        "example": {
+          "id": {
+            "value": 1
+          },
+          "name": {
+            "value": "A user"
+          },
+          "email": {
+            "value": "user@bob.com"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "id",
+          "name"
+        ]
+      },
+      "Id": {
+        "properties": {
+          "value": {
+            "example": 1,
+            "type": "number"
+          }
+        },
+        "example": {
+          "value": 1
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ]
+      },
+      "Username": {
+        "properties": {
+          "value": {
+            "example": "A user",
+            "type": "string"
+          }
+        },
+        "example": {
+          "value": "A user"
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ]
+      },
+      "EmailAddress": {
+        "properties": {
+          "value": {
+            "example": "user@bob.com",
+            "type": "string"
+          }
+        },
+        "example": {
+          "value": "user@bob.com"
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ]
       }
     },
     "securitySchemes": {
