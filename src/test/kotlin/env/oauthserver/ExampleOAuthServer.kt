@@ -4,12 +4,14 @@ import env.oauthserver.ExampleOAuthServer.Form.formLens
 import org.http4k.cloudnative.env.Secret
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.TEXT_HTML
+import org.http4k.core.Credentials
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.FORBIDDEN
+import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.format.Jackson
@@ -34,8 +36,8 @@ object ExampleOAuthServer {
         val server = OAuthServer(
             "/oauth2/token",
             InsecureCookieBasedAuthRequestTracking(),
-            SimpleClientValidator(),
-            InMemoryAuthorizationCodes(),
+            SimpleClientValidator(Credentials("user", "password"), Uri.of("")),
+            InMemoryAuthorizationCodes(clock),
             InMemoryAccessTokens(),
             Jackson,
             clock
@@ -50,7 +52,7 @@ object ExampleOAuthServer {
                     try {
                         Response(FORBIDDEN)
                     } catch (e: Exception) {
-                        Response(FORBIDDEN).with(view of LoginView("no way"))
+                        Response(FORBIDDEN).with(view of LoginView("failed"))
                     }
                 }
             )
