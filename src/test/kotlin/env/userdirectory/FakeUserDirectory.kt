@@ -1,4 +1,4 @@
-package env
+package env.userdirectory
 
 import org.http4k.chaos.withChaosEngine
 import org.http4k.core.Body

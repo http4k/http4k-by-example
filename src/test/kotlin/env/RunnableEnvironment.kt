@@ -1,5 +1,7 @@
 package env
 
+import env.entrylogger.FakeEntryLogger
+import env.userdirectory.FakeUserDirectory
 import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Uri
 import org.http4k.server.Undertow

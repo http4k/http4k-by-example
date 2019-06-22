@@ -1,5 +1,7 @@
 package env
 
+import env.entrylogger.FakeEntryLogger
+import env.userdirectory.FakeUserDirectory
 import org.http4k.core.Event
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST

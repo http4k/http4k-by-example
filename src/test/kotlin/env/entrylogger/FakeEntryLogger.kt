@@ -1,4 +1,4 @@
-package env
+package env.entrylogger
 
 import org.http4k.chaos.withChaosEngine
 import org.http4k.core.Body

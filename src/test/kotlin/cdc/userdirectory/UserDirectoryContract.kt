@@ -1,4 +1,4 @@
-package cdc
+package cdc.userdirectory
 
 import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
