@@ -77,8 +77,8 @@ object ExampleOAuthServer {
 private const val LOGIN_PAGE = """
     <html>
     <form method="POST">
-        <input id="username" type="text" name="username"><br>
-        <input id="password" type="password" name="password"><br>
+        <input id="username" type="text" value="user" name="username"><br>
+        <input id="password" type="password" value="password" name="password"><br>
         <button type="submit">Login</button>
     </form>
     </html>
