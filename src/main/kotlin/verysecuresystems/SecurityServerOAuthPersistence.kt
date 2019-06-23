@@ -37,7 +37,7 @@ private class SecurityServerOAuthPersistence(private val clock: Clock = Clock.sy
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
-    override fun retrieveToken(request: Request): AccessTokenContainer? = request.cookie(accessTokenCookieName)?.value?.let(::AccessTokenContainer)
+    override fun retrieveToken(request: Request) = request.cookie(accessTokenCookieName)?.value?.let(::AccessTokenContainer)
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
