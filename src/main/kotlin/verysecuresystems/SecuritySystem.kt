@@ -2,6 +2,7 @@ package verysecuresystems
 
 import org.http4k.core.Events
 import org.http4k.core.HttpHandler
+import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
@@ -23,6 +24,7 @@ import java.time.Clock
  */
 object SecuritySystem {
     operator fun invoke(clock: Clock, events: Events,
+                        oauthServerUri: Uri,
                         oauthServerHttp: HttpHandler,
                         userDirectoryHttp: HttpHandler,
                         entryLoggerHttp: HttpHandler): HttpHandler {
@@ -34,7 +36,8 @@ object SecuritySystem {
 
         // we compose the various route blocks together here
         val app = routes(
-            Api(userDirectory, entryLogger, inhabitants, SecuritySystemOAuthProvider(clock, oauthServerHttp)),
+            Api(userDirectory, entryLogger, inhabitants,
+                SecuritySystemOAuthProvider(clock, oauthServerHttp, oauthServerUri)),
             Diagnostic(clock),
             Web(clock, userDirectory),
             static(Classpath("public"))

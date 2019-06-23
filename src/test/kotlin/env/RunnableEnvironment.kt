@@ -36,7 +36,7 @@ fun main() {
     ExampleOAuthServer(
         Credentials("user", "password"),
         OAuthClientData(Credentials("securityServer", "securityServerSecret"),
-            Uri.of("http://localhost:$securityServerPort/")
+            Uri.of("http://localhost:$securityServerPort/openapi/oauth2-redirect.html")
         )
     ).asServer(Undertow(oauthServerPort)).start()
 

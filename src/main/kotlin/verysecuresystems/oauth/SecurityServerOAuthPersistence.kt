@@ -20,9 +20,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 object SecuritySystemOAuthProvider {
-    operator fun invoke(clock: Clock, oauthProviderHttp: HttpHandler) = OAuthProvider(
-        OAuthProviderConfig(Uri.of("http://localhost:9000"),
-            "/", "/oauth2/token",
+    operator fun invoke(clock: Clock, oauthProviderHttp: HttpHandler, oauthServerUri: Uri) = OAuthProvider(
+        OAuthProviderConfig(oauthServerUri, "/", "/oauth2/token",
             Credentials("securityServer", "securityServerSecret")),
         oauthProviderHttp,
         Uri.of("/oauth-callback"),

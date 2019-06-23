@@ -20,6 +20,7 @@ import java.time.Clock
  */
 object SecuritySystemServer {
     operator fun invoke(env: Environment) = SecuritySystem(Clock.systemUTC(), ::println,
+        OAUTH_SERVER_URL(env),
         SetHostFrom(OAUTH_SERVER_URL(env)).then(OkHttp()),
         SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
         SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
