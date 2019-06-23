@@ -68,7 +68,7 @@ object ExampleOAuthServer {
 }
 
 private const val LOGIN_PAGE = """
-    <html>Login to {{clientService}}
+    <html>
     <form method="POST">
         <input id="username" type="text" name="username"><br>
         <input id="password" type="password" name="password"><br>
