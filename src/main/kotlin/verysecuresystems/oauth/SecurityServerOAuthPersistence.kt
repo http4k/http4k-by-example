@@ -9,7 +9,7 @@ import org.http4k.core.Uri
 import org.http4k.core.cookie.Cookie
 import org.http4k.core.cookie.cookie
 import org.http4k.core.cookie.invalidateCookie
-import org.http4k.security.AccessTokenContainer
+import org.http4k.security.AccessToken
 import org.http4k.security.CrossSiteRequestForgeryToken
 import org.http4k.security.OAuthPersistence
 import org.http4k.security.OAuthProvider
@@ -36,11 +36,11 @@ private class SecurityServerOAuthPersistence(private val clock: Clock = Clock.sy
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
-    override fun retrieveToken(request: Request) = request.cookie(accessTokenCookieName)?.value?.let(::AccessTokenContainer)
+    override fun retrieveToken(request: Request) = request.cookie(accessTokenCookieName)?.value?.let(::AccessToken)
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
-    override fun assignToken(request: Request, redirect: Response, accessToken: AccessTokenContainer) = redirect.cookie(expiring(accessTokenCookieName, accessToken.value)).invalidateCookie(csrfName)
+    override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken) = redirect.cookie(expiring(accessTokenCookieName, accessToken.value)).invalidateCookie(csrfName)
 
     override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(accessTokenCookieName)
 
