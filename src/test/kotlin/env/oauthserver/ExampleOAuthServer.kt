@@ -1,44 +1,47 @@
 package env.oauthserver
 
 import env.oauthserver.ExampleOAuthServer.Form.formLens
-import org.http4k.cloudnative.env.Secret
+import env.oauthserver.ExampleOAuthServer.Form.password
+import env.oauthserver.ExampleOAuthServer.Form.username
 import org.http4k.core.Body
-import org.http4k.core.ContentType.Companion.TEXT_HTML
 import org.http4k.core.Credentials
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Response
-import org.http4k.core.Status
-import org.http4k.core.Status.Companion.FORBIDDEN
-import org.http4k.core.Uri
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.format.Jackson
 import org.http4k.lens.FormField
-import org.http4k.lens.Query
-import org.http4k.lens.Validator
+import org.http4k.lens.Header
+import org.http4k.lens.Validator.Strict
 import org.http4k.lens.webForm
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.security.oauth.server.InsecureCookieBasedAuthRequestTracking
 import org.http4k.security.oauth.server.OAuthServer
-import org.http4k.template.HandlebarsTemplates
-import org.http4k.template.ViewModel
-import org.http4k.template.viewModel
-import verysecuresystems.Username
 import java.time.Clock
 
-object ExampleOAuthServer {
-    private val view = Body.viewModel(HandlebarsTemplates().CachingClasspath(), TEXT_HTML).toLens()
+interface UserAuthentication {
+    fun authenticate(credentials: Credentials): Boolean
+}
 
-    operator fun invoke(clock: Clock): HttpHandler {
+class InsecureUserAuthentication(private vararg val validCredentials: Credentials) : UserAuthentication {
+    override fun authenticate(credentials: Credentials): Boolean = validCredentials.contains(credentials)
+}
+
+object ExampleOAuthServer {
+    operator fun invoke(credentials: Credentials, vararg oAuthClientData: OAuthClientData): HttpHandler {
+        val userAuth = InsecureUserAuthentication(credentials)
+        val clock: Clock = Clock.systemUTC()
         val server = OAuthServer(
             "/oauth2/token",
             InsecureCookieBasedAuthRequestTracking(),
-            SimpleClientValidator(Credentials("user", "password"), Uri.of("")),
-            InMemoryAuthorizationCodes(clock),
-            InMemoryAccessTokens(),
+            SimpleClientValidator(*oAuthClientData),
+            InsecureAuthorizationCodes(clock),
+            InsecureAccessTokens(),
             Jackson,
             clock
         )
@@ -46,27 +49,31 @@ object ExampleOAuthServer {
         return routes(
             server.tokenRoute,
             "/" bind routes(
-                GET to server.authenticationStart.then { request -> Response(Status.OK).with(view of LoginView(clientIdQuery(request))) },
+                GET to server.authenticationStart.then { Response(OK).body(LOGIN_PAGE) },
                 POST to { request ->
                     val form = formLens(request)
-                    try {
-                        Response(FORBIDDEN)
-                    } catch (e: Exception) {
-                        Response(FORBIDDEN).with(view of LoginView("failed"))
-                    }
+                    if (userAuth.authenticate(Credentials(username(form), password(form)))) {
+                        server.authenticationComplete(request)
+                    } else Response(SEE_OTHER).with(Header.LOCATION of request.uri)
                 }
             )
         )
     }
 
-    val clientIdQuery = Query.required("client_id")
-
-    object Form {
-        val username = FormField.map(::Username).required("username")
-        val password = FormField.map(::Secret).required("password")
-        val formLens = Body.webForm(Validator.Strict, username, password).toLens()
+    private object Form {
+        val username = FormField.required("username")
+        val password = FormField.required("password")
+        val formLens = Body.webForm(Strict, username, password).toLens()
     }
 }
 
-data class LoginView(val message: String? = null) : ViewModel
+private const val LOGIN_PAGE = """
+    <html>Login to {{clientService}}
+    <form method="POST">
+        <input id="username" type="text" name="username"><br>
+        <input id="password" type="password" name="password"><br>
+        <button type="submit">Login</button>
+    </form>
+    </html>
+"""
 

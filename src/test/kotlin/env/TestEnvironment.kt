@@ -7,7 +7,10 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
 import org.http4k.core.with
+import org.http4k.filter.DebuggingFilters
 import org.http4k.lens.Header
 import org.http4k.lens.Query
 import verysecuresystems.SecuritySystem
@@ -23,21 +26,26 @@ class TestEnvironment {
 
     private val events = mutableListOf<Event>()
 
-    val app = SecuritySystem(
-        clock,
-        { events.add(it) },
-        userDirectory,
-        entryLogger
-    )}
+    val app = DebuggingFilters.PrintRequestAndResponse()
+            .then(
+                SecuritySystem(
+                    clock,
+                    { events.add(it) },
+                    { Response(OK) },
+                    userDirectory,
+                    entryLogger
+                )
+            )
+}
 
 private val username = Query.optional("username")
-private val key = Header.required("key")
+private val authorization = Header.optional("Authorization")
 
-fun TestEnvironment.enterBuilding(user: String?, secret: String): Response =
-    app(Request(POST, "/api/knock").with(username of user, key of secret))
+fun TestEnvironment.enterBuilding(user: String?, token: String): Response =
+    app(Request(POST, "/api/knock").with(username of user, authorization of "Bearer $token"))
 
-fun TestEnvironment.exitBuilding(user: String?, secret: String): Response =
-    app(Request(POST, "/api/bye").with(username of user, key of secret))
+fun TestEnvironment.exitBuilding(user: String?, token: String): Response =
+    app(Request(POST, "/api/bye").with(username of user, authorization of "Bearer $token"))
 
-fun TestEnvironment.checkInhabitants(secret: String): Response =
-    app(Request(GET, "/api/whoIsThere").with(key of secret))
+fun TestEnvironment.checkInhabitants(token: String): Response =
+    app(Request(GET, "/api/whoIsThere").with(authorization of "Bearer $token"))

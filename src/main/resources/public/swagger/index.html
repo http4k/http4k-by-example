@@ -53,6 +53,15 @@
       })
       // End Swagger UI call region
 
+      ui.initOAuth({
+        clientId: "securityServer",
+        clientSecret: "securityServerSecret",
+        realm: "",
+        appName: "Security Server",
+        scopeSeparator: " ",
+        additionalQueryStringParams: {}
+      });
+
       window.ui = ui
     }
   </script>

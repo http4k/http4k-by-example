@@ -11,7 +11,7 @@ Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot 
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
 - OpenAPI v3 documentation and JSON schema generation from example model objects
 - Automatic invalid request handling
-- Endpoint security via an API-key header - the key is "realSecret"
+- Endpoint security via an OAuth token header - log in via OpenAPI UI with `user/password`
 - Templating system (Handlebars)
 - Typesafe Form handling with validation and error feedback
 - Configuration via typesafe configuration

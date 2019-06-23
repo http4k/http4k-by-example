@@ -44,7 +44,7 @@
         },
         "security": [
           {
-            "api_key": [
+            "oauthSecurity": [
             ]
           }
         ],
@@ -93,7 +93,7 @@
         },
         "security": [
           {
-            "api_key": [
+            "oauthSecurity": [
             ]
           }
         ],
@@ -156,7 +156,7 @@
         },
         "security": [
           {
-            "api_key": [
+            "oauthSecurity": [
             ]
           }
         ],
@@ -246,10 +246,16 @@
       }
     },
     "securitySchemes": {
-      "api_key": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "key"
+      "oauthSecurity": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "http://localhost:9000/",
+            "tokenUrl": "http://localhost:9000/oauth2/token",
+            "scopes": {
+            }
+          }
+        }
       }
     }
   },
