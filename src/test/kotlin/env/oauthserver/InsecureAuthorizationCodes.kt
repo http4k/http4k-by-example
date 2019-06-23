@@ -8,6 +8,7 @@ import org.http4k.security.oauth.server.AuthorizationCode
 import org.http4k.security.oauth.server.AuthorizationCodeDetails
 import org.http4k.security.oauth.server.AuthorizationCodes
 import java.time.Clock
+import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 
 class InsecureAuthorizationCodes(private val clock: Clock) : AuthorizationCodes {
@@ -18,6 +19,6 @@ class InsecureAuthorizationCodes(private val clock: Clock) : AuthorizationCodes 
 
     override fun create(request: Request, authRequest: AuthRequest, response: Response) =
         Success(AuthorizationCode(UUID.randomUUID().toString()).also {
-            codes[it] = AuthorizationCodeDetails(authRequest.client, authRequest.redirectUri, clock.instant(), authRequest.responseType)
+            codes[it] = AuthorizationCodeDetails(authRequest.client, authRequest.redirectUri, clock.instant().plus(1, DAYS), authRequest.responseType)
         })
 }
