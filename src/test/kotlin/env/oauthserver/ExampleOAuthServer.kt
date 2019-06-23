@@ -15,6 +15,7 @@ import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.CorsPolicy
+import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters.Cors
 import org.http4k.format.Jackson
 import org.http4k.lens.FormField
@@ -23,25 +24,15 @@ import org.http4k.lens.Validator.Strict
 import org.http4k.lens.webForm
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import org.http4k.security.oauth.server.InsecureCookieBasedAuthRequestTracking
 import org.http4k.security.oauth.server.OAuthServer
 import java.time.Clock
 
-interface UserAuthentication {
-    fun authenticate(credentials: Credentials): Boolean
-}
-
-class InsecureUserAuthentication(private vararg val validCredentials: Credentials) : UserAuthentication {
-    override fun authenticate(credentials: Credentials): Boolean = validCredentials.contains(credentials)
-}
-
 object ExampleOAuthServer {
     operator fun invoke(credentials: Credentials, vararg oAuthClientData: OAuthClientData): HttpHandler {
-        val userAuth = InsecureUserAuthentication(credentials)
-        val clock: Clock = Clock.systemUTC()
+        val clock = Clock.systemUTC()
         val server = OAuthServer(
             "/oauth2/token",
-            InsecureCookieBasedAuthRequestTracking(),
+            InMemoryBasedAuthRequestTracking(),
             SimpleClientValidator(*oAuthClientData),
             InsecureAuthorizationCodes(clock),
             InsecureAccessTokens(),
@@ -49,8 +40,11 @@ object ExampleOAuthServer {
             clock
         )
 
+        val userAuth = UserAuthentication(credentials)
+
         // this CORS filter is here to allow interactions from the OpenAPI UI (running in a browser)
-        return Cors(CorsPolicy(listOf("*"), listOf("*"), Method.values().toList()))
+        return DebuggingFilters.PrintRequestAndResponse()
+            .then(Cors(CorsPolicy(listOf("*"), listOf("*"), Method.values().toList())))
             .then(
                 routes(
                     server.tokenRoute,
