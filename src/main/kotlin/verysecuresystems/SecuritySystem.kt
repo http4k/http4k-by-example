@@ -13,6 +13,7 @@ import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
+import verysecuresystems.oauth.SecuritySystemOAuthProvider
 import verysecuresystems.web.Web
 import java.time.Clock
 

@@ -1,4 +1,4 @@
-package verysecuresystems
+package verysecuresystems.oauth
 
 import org.http4k.core.Credentials
 import org.http4k.core.HttpHandler
