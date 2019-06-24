@@ -21,12 +21,11 @@ object Api {
                         entryLogger: EntryLogger,
                         inhabitants: Inhabitants,
                         oAuthProvider: OAuthProvider
-    ) =
-        "/api" bind Cors(UnsafeGlobalPermissive)
+    ) = Cors(UnsafeGlobalPermissive)
             .then(
                 routes(
                     "/oauth/callback" bind GET to oAuthProvider.callback,
-                    contract {
+                    "/api" bind contract {
                         renderer = OpenApi3(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
                         descriptionPath = "/api-docs"
                         security = OAuthSecurity(oAuthProvider)
@@ -34,6 +33,7 @@ object Api {
                         routes += WhoIsThere(inhabitants, userDirectory::lookup)
                         routes += ByeBye(inhabitants::remove, entryLogger::exit)
                     }
-                ))
+                )
+            )
 }
 
