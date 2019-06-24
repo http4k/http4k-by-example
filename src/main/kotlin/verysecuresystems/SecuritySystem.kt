@@ -4,6 +4,7 @@ import org.http4k.core.Events
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
+import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
@@ -45,6 +46,7 @@ object SecuritySystem {
 
         // Create the application "stack", including inbound auditing
         return Auditor.Incoming(clock, events)
+            .then(DebuggingFilters.PrintRequestAndResponse())
             .then(ServerFilters.CatchAll())
             .then(ServerFilters.HandleUpstreamRequestFailed())
             .then(app)

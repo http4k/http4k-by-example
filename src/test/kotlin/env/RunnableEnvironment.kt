@@ -7,7 +7,7 @@ import env.userdirectory.FakeUserDirectory
 import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Credentials
 import org.http4k.core.Uri
-import org.http4k.server.Undertow
+import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import verysecuresystems.EmailAddress
 import verysecuresystems.Id
@@ -29,16 +29,16 @@ fun main() {
         contains(User(Id(0), Username("Bob"), EmailAddress("bob@bob.com")))
         contains(User(Id(1), Username("Rita"), EmailAddress("rita@bob.com")))
         contains(User(Id(2), Username("Sue"), EmailAddress("sue@bob.com")))
-    }.asServer(Undertow(userDirectoryPort)).start()
+    }.asServer(SunHttp(userDirectoryPort)).start()
 
-    FakeEntryLogger().asServer(Undertow(entryLoggerPort)).start()
+    FakeEntryLogger().asServer(SunHttp(entryLoggerPort)).start()
 
     ExampleOAuthServer(
         Credentials("user", "password"),
         OAuthClientData(Credentials("securityServer", "securityServerSecret"),
             Uri.of("http://localhost:$securityServerPort/openapi/oauth2-redirect.html")
         )
-    ).asServer(Undertow(oauthServerPort)).start()
+    ).asServer(SunHttp(oauthServerPort)).start()
 
     val env = Environment.defaults(PORT of securityServerPort,
         USER_DIRECTORY_URL of Uri.of("http://localhost:$userDirectoryPort"),
