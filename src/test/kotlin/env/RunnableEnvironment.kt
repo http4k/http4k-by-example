@@ -1,8 +1,8 @@
 package env
 
 import env.entrylogger.FakeEntryLogger
-import env.oauthserver.ExampleOAuthServer
 import env.oauthserver.OAuthClientData
+import env.oauthserver.SimpleOAuthServer
 import env.userdirectory.FakeUserDirectory
 import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Credentials
@@ -33,7 +33,7 @@ fun main() {
 
     FakeEntryLogger().asServer(SunHttp(entryLoggerPort)).start()
 
-    ExampleOAuthServer(
+    SimpleOAuthServer(
         Credentials("user", "password"),
         OAuthClientData(Credentials("securityServer", "securityServerSecret"),
             Uri.of("http://localhost:$securityServerPort/openapi/oauth2-redirect.html")

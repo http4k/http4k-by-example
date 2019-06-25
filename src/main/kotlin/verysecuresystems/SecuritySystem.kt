@@ -14,7 +14,7 @@ import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
-import verysecuresystems.oauth.SecuritySystemOAuthProvider
+import verysecuresystems.oauth.SecurityServerAuthProvider
 import verysecuresystems.web.Web
 import java.time.Clock
 
@@ -36,8 +36,7 @@ object SecuritySystem {
 
         // we compose the various route blocks together here
         val app = routes(
-            Api(userDirectory, entryLogger, inhabitants,
-                SecuritySystemOAuthProvider(clock, oauthServerHttp, oauthServerUri)),
+            Api(userDirectory, entryLogger, inhabitants, SecurityServerAuthProvider(oauthServerUri, oauthServerHttp, clock)),
             Diagnostic(clock),
             Web(clock, userDirectory),
             static(Classpath("public"))

@@ -1,8 +1,8 @@
 package env.oauthserver
 
-import env.oauthserver.ExampleOAuthServer.Form.formLens
-import env.oauthserver.ExampleOAuthServer.Form.password
-import env.oauthserver.ExampleOAuthServer.Form.username
+import env.oauthserver.SimpleOAuthServer.Form.formLens
+import env.oauthserver.SimpleOAuthServer.Form.password
+import env.oauthserver.SimpleOAuthServer.Form.username
 import org.http4k.core.Body
 import org.http4k.core.Credentials
 import org.http4k.core.HttpHandler
@@ -26,7 +26,7 @@ import org.http4k.routing.routes
 import org.http4k.security.oauth.server.OAuthServer
 import java.time.Clock
 
-object ExampleOAuthServer {
+object SimpleOAuthServer {
     operator fun invoke(credentials: Credentials, vararg oAuthClientData: OAuthClientData): HttpHandler {
         val clock = Clock.systemUTC()
         val server = OAuthServer(

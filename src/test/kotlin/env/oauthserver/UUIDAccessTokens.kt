@@ -7,11 +7,15 @@ import org.http4k.security.oauth.server.AccessTokens
 import org.http4k.security.oauth.server.AuthorizationCode
 import org.http4k.security.oauth.server.ClientId
 import org.http4k.security.oauth.server.UnsupportedGrantType
-import java.util.UUID
 
 class UUIDAccessTokens : AccessTokens {
     override fun create(clientId: ClientId) = Failure(UnsupportedGrantType("client_credentials"))
 
-    override fun create(authorizationCode: AuthorizationCode) =
-        Success(AccessToken(UUID.randomUUID().toString()))
+    override fun create(authorizationCode: AuthorizationCode): Success<AccessToken> {
+        return Success(AccessToken(PREFIX + authorizationCode.value))
+    }
+
+    companion object {
+        const val PREFIX = "AUTH_TOKEN_"
+    }
 }
