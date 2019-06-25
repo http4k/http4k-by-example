@@ -15,6 +15,7 @@ import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.CorsPolicy
+import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ServerFilters.Cors
 import org.http4k.format.Jackson
 import org.http4k.lens.FormField
@@ -31,7 +32,7 @@ object ExampleOAuthServer {
         val clock = Clock.systemUTC()
         val server = OAuthServer(
             "/oauth2/token",
-            InMemoryBasedAuthRequestTracking(),
+            ExampleAuthRequestTracking(),
             SimpleClientValidator(*oAuthClientData),
             InsecureAuthorizationCodes(clock),
             InsecureAccessTokens(),
@@ -43,6 +44,7 @@ object ExampleOAuthServer {
 
         // this CORS filter is here to allow interactions from the OpenAPI UI (running in a browser)
         return Cors(CorsPolicy(listOf("*"), listOf("*"), Method.values().toList()))
+            .then(DebuggingFilters.PrintRequestAndResponse())
             .then(
                 routes(
                     server.tokenRoute,

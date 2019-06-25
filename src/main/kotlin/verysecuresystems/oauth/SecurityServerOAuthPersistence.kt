@@ -24,8 +24,8 @@ object SecuritySystemOAuthProvider {
         OAuthProviderConfig(oauthServerUri, "/", "/oauth2/token",
             Credentials("securityServer", "securityServerSecret")),
         oauthProviderHttp,
-        Uri.of("/oauth-callback"),
-        listOf(),
+        oauthServerUri.path("/api/oauth/callback"),
+        emptyList(),
         SecurityServerOAuthPersistence(clock)
     )
 }

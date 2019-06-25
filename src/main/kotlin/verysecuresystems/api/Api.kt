@@ -22,18 +22,18 @@ object Api {
                         inhabitants: Inhabitants,
                         oAuthProvider: OAuthProvider
     ) = Cors(UnsafeGlobalPermissive)
-            .then(
-                routes(
-                    "/oauth/callback" bind GET to oAuthProvider.callback,
-                    "/api" bind contract {
-                        renderer = OpenApi3(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
-                        descriptionPath = "/api-docs"
-                        security = OAuthSecurity(oAuthProvider)
-                        routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)
-                        routes += WhoIsThere(inhabitants, userDirectory::lookup)
-                        routes += ByeBye(inhabitants::remove, entryLogger::exit)
-                    }
-                )
+        .then(
+            "/api" bind routes(
+                "/oauth/callback" bind GET to oAuthProvider.callback,
+                contract {
+                    renderer = OpenApi3(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
+                    descriptionPath = "/api-docs"
+                    security = OAuthSecurity(oAuthProvider)
+                    routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)
+                    routes += WhoIsThere(inhabitants, userDirectory::lookup)
+                    routes += ByeBye(inhabitants::remove, entryLogger::exit)
+                }
             )
+        )
 }
 
