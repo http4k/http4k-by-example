@@ -11,11 +11,10 @@ import java.time.Clock
 import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 
-class InsecureAuthorizationCodes(private val clock: Clock) : AuthorizationCodes {
+class InMemoryAuthorizationCodes(private val clock: Clock) : AuthorizationCodes {
     private val codes = mutableMapOf<AuthorizationCode, AuthorizationCodeDetails>()
 
-    override fun detailsFor(code: AuthorizationCode) =
-        codes[code] ?: error("code not stored")
+    override fun detailsFor(code: AuthorizationCode) = codes[code] ?: error("code not stored")
 
     override fun create(request: Request, authRequest: AuthRequest, response: Response) =
         Success(AuthorizationCode(UUID.randomUUID().toString()).also {

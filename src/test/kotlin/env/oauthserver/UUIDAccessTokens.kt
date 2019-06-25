@@ -9,7 +9,7 @@ import org.http4k.security.oauth.server.ClientId
 import org.http4k.security.oauth.server.UnsupportedGrantType
 import java.util.UUID
 
-class InsecureAccessTokens : AccessTokens {
+class UUIDAccessTokens : AccessTokens {
     override fun create(clientId: ClientId) = Failure(UnsupportedGrantType("client_credentials"))
 
     override fun create(authorizationCode: AuthorizationCode) =
