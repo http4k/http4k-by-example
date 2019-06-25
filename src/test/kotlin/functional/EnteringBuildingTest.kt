@@ -23,7 +23,7 @@ class EnteringBuildingTest {
 
     @Test
     fun `unknown user is not allowed into building`() {
-        assertThat(env.enterBuilding("Rita", AccessTokens.invalid), hasStatus(NOT_FOUND))
+        assertThat(env.enterBuilding("Rita", AccessTokens.valid), hasStatus(NOT_FOUND))
     }
 
     @Test
@@ -33,7 +33,7 @@ class EnteringBuildingTest {
 
     @Test
     fun `entry endpoint is protected with oauth token`() {
-        assertThat(env.enterBuilding("Bob", AccessTokens.valid), hasStatus(TEMPORARY_REDIRECT))
+        assertThat(env.enterBuilding("Bob", AccessTokens.invalid), hasStatus(TEMPORARY_REDIRECT))
     }
 
     @Test
