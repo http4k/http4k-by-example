@@ -14,6 +14,7 @@ import org.http4k.core.with
 import org.http4k.filter.DebuggingFilters
 import org.http4k.lens.Header
 import org.http4k.lens.Query
+import org.http4k.security.AccessToken
 import verysecuresystems.SecuritySystem
 import java.time.Clock
 import java.time.Instant
@@ -28,26 +29,27 @@ class TestEnvironment {
     private val events = mutableListOf<Event>()
 
     val app = DebuggingFilters.PrintRequestAndResponse()
-            .then(
-                SecuritySystem(
-                    clock,
-                    { events.add(it) },
-                    Uri.of("http://oauth"),
-                    { Response(OK) },
-                    userDirectory,
-                    entryLogger
-                )
+        .then(
+            SecuritySystem(
+                clock,
+                { events.add(it) },
+                Uri.of("http://oauth"),
+                { Response(OK) },
+                userDirectory,
+                entryLogger
             )
+        )
 }
 
 private val username = Query.optional("username")
-private val authorization = Header.optional("Authorization")
+private val authorization = Header.map({ AccessToken(it.removePrefix("Bearer ")) }, { "Bearer ${it.value}" }
+).optional("Authorization")
 
-fun TestEnvironment.enterBuilding(user: String?, token: String): Response =
-    app(Request(POST, "/api/knock").with(username of user, authorization of "Bearer $token"))
+fun TestEnvironment.enterBuilding(user: String?, token: AccessToken?): Response =
+    app(Request(POST, "/api/knock").with(username of user, authorization of token))
 
-fun TestEnvironment.exitBuilding(user: String?, token: String): Response =
-    app(Request(POST, "/api/bye").with(username of user, authorization of "Bearer $token"))
+fun TestEnvironment.exitBuilding(user: String?, token: AccessToken?): Response =
+    app(Request(POST, "/api/bye").with(username of user, authorization of token))
 
-fun TestEnvironment.checkInhabitants(token: String): Response =
-    app(Request(GET, "/api/whoIsThere").with(authorization of "Bearer $token"))
+fun TestEnvironment.checkInhabitants(token: AccessToken): Response =
+    app(Request(GET, "/api/whoIsThere").with(authorization of token))

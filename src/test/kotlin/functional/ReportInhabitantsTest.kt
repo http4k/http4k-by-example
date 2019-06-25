@@ -8,7 +8,7 @@ import env.enterBuilding
 import env.exitBuilding
 import org.http4k.core.Body
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Status.Companion.UNAUTHORIZED
+import org.http4k.core.Status.Companion.TEMPORARY_REDIRECT
 import org.http4k.format.Jackson.auto
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
@@ -23,13 +23,13 @@ class ReportInhabitantsTest {
     private val inhabitants = Body.auto<Array<User>>().map(Array<User>::toList).toLens()
 
     @Test
-    fun `who is there endpoint is protected with a secret key`() {
-        assertThat(env.checkInhabitants("fakeSecret").status, equalTo(UNAUTHORIZED))
+    fun `who is there endpoint is protected with oauth token`() {
+        assertThat(env.checkInhabitants(AccessTokens.invalid).status, equalTo(TEMPORARY_REDIRECT))
     }
 
     @Test
     fun `initially there is no-one inside`() {
-        val checkInhabitants = env.checkInhabitants("realSecret")
+        val checkInhabitants = env.checkInhabitants(AccessTokens.valid)
         assertThat(checkInhabitants, hasStatus(OK))
         assertThat(inhabitants(checkInhabitants), equalTo(listOf()))
     }
@@ -40,10 +40,10 @@ class ReportInhabitantsTest {
 
         env.userDirectory.contains(user)
 
-        env.enterBuilding("Bob", "realSecret")
-        assertThat(inhabitants(env.checkInhabitants("realSecret")), equalTo(listOf(user)))
+        env.enterBuilding("Bob", AccessTokens.valid)
+        assertThat(inhabitants(env.checkInhabitants(AccessTokens.valid)), equalTo(listOf(user)))
 
-        env.exitBuilding("Bob", "realSecret")
-        assertThat(inhabitants(env.checkInhabitants("realSecret")), equalTo(listOf()))
+        env.exitBuilding("Bob", AccessTokens.valid)
+        assertThat(inhabitants(env.checkInhabitants(AccessTokens.valid)), equalTo(listOf()))
     }
 }

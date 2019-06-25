@@ -250,8 +250,8 @@
         "type": "oauth2",
         "flows": {
           "authorizationCode": {
-            "authorizationUrl": "http://localhost:9000/",
-            "tokenUrl": "http://localhost:9000/oauth2/token",
+            "authorizationUrl": "http://oauth/",
+            "tokenUrl": "http://oauth/oauth2/token",
             "scopes": {
             }
           }
