@@ -19,12 +19,15 @@ import org.http4k.lens.Header
 import org.http4k.lens.Query
 import org.http4k.security.AccessToken
 import verysecuresystems.SecuritySystem
-import java.time.Clock
-import java.time.Instant
+import java.time.Clock.fixed
+import java.time.Instant.ofEpochSecond
+import java.time.LocalDate
+import java.time.LocalTime.MIDNIGHT
 import java.time.ZoneId
+import java.time.ZoneOffset.UTC
 
 class TestEnvironment {
-    val clock = Clock.fixed(Instant.ofEpochMilli(0), ZoneId.of("UTC"))!!
+    val clock = fixed(ofEpochSecond(LocalDate.of(3000, 1, 1).toEpochSecond(MIDNIGHT, UTC)), ZoneId.of("UTC"))!!
 
     val userDirectory = FakeUserDirectory()
     val entryLogger = FakeEntryLogger()

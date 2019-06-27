@@ -5,7 +5,7 @@
 <body>
 <div class="content">
     <h1>Welcome to Very Secure Systems Ltd</h1>
-    <p>The time is 1970-01-01T00:00:00</p>
+    <p>The time is 3000-01-01T00:00:00</p>
     <p>Your browser is unknown</p>
     <p><a href="/users">Here</a> is a list of known users (rendered with a Handlebars template)</p>
     <p><a href="/api/api-docs">Here</a> is the auto-generated remote API documentation (using a OpenApi renderer)</p>
