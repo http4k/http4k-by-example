@@ -30,10 +30,27 @@ class ManageUsersTest {
     fun `add user`(approver: Approver) {
         approver.assertApproved(browser {
             logIn()
-            findElement(By.id("username"))?.sendKeys("bob")
-            findElement(By.id("email"))?.sendKeys("email@email")
-            findElement(By.id("manageUserForm"))?.apply { submit() }
+            addUser()
         })
+    }
+
+    @Test
+    fun `add user then delete them`(approver: Approver) {
+        approver.assertApproved(browser {
+            logIn()
+            addUser()
+            deleteUser()
+        })
+    }
+
+    private fun Http4kWebDriver.addUser() {
+        findElement(By.id("username"))?.sendKeys("bob")
+        findElement(By.id("email"))?.sendKeys("email@email")
+        findElement(By.id("createUserForm"))?.apply { submit() }
+    }
+
+    private fun Http4kWebDriver.deleteUser() {
+        findElement(By.id("deleteUserForm"))?.apply { submit() }
     }
 
     private fun Http4kWebDriver.logIn() = apply {

@@ -23,11 +23,12 @@ import java.time.LocalDate
 import java.time.LocalTime.MIDNIGHT
 import java.time.ZoneId
 import java.time.ZoneOffset.UTC
+import java.util.Random
 
 class TestEnvironment {
     val clock = fixed(ofEpochSecond(LocalDate.of(3000, 1, 1).toEpochSecond(MIDNIGHT, UTC)), ZoneId.of("UTC"))!!
 
-    val userDirectory = FakeUserDirectory()
+    val userDirectory = FakeUserDirectory { Random(1).nextInt() }
     val entryLogger = FakeEntryLogger()
 
     private val events = mutableListOf<Event>()

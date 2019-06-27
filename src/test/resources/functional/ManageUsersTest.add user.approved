@@ -7,6 +7,13 @@
 <table>
     <tbody>
     
+        <tr><td>bob</td><td>email@email</td><td>
+            <form method="POST" id="deleteUserForm" action="/users/delete">
+                <input type="hidden" name="id" value="-1155869325"/>
+                <button>delete</button>
+            </form>
+        </td></tr>
+    
     </tbody>
 </table>
 

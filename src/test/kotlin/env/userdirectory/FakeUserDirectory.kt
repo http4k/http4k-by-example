@@ -27,7 +27,7 @@ import verysecuresystems.User
 import verysecuresystems.Username
 import java.util.Random
 
-class FakeUserDirectory : HttpHandler {
+class FakeUserDirectory(private val idGen: () -> Int = Random()::nextInt) : HttpHandler {
 
     private val users = mutableMapOf<Id, User>()
 
@@ -42,7 +42,7 @@ class FakeUserDirectory : HttpHandler {
         return {
             println(it)
             val data = form(it)
-            val newUser = User(Id(Random().nextInt()), username(data), email(data))
+            val newUser = User(Id(idGen()), username(data), email(data))
             users[newUser.id] = newUser
             Response(CREATED).with(user of newUser)
         }
