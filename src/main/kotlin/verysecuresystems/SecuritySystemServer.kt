@@ -7,7 +7,7 @@ import org.http4k.core.then
 import org.http4k.filter.ClientFilters.SetHostFrom
 import org.http4k.lens.int
 import org.http4k.lens.uri
-import org.http4k.server.SunHttp
+import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import verysecuresystems.Settings.ENTRY_LOGGER_URL
 import verysecuresystems.Settings.OAUTH_SERVER_URL
@@ -26,7 +26,7 @@ object SecuritySystemServer {
         SetHostFrom(OAUTH_SERVER_URL(env)).then(OkHttp()),
         SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
         SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
-    ).asServer(SunHttp(PORT(env)))
+    ).asServer(Undertow(PORT(env)))
 }
 
 object Settings {
