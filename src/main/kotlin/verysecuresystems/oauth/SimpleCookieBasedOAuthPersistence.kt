@@ -35,5 +35,7 @@ class SimpleCookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChe
 
     override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(accessTokenCookieName)
 
-    private fun expiring(name: String, value: String) = Cookie(name, value, expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
+    private fun expiring(name: String, value: String) = Cookie(name, value,
+        path = "/",
+        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
 }
