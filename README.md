@@ -4,20 +4,27 @@
 [![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master)
 
 #### about
-Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building apps:
+Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building and testing apps. 
 
+##### Features:
 - Composable routing in both standard and contract (OpenAPI) forms with automatic parameter marshalling and unmarshalling (Headers/Query/Path/Body/Forms)
-- HTTP clients with request creation and route spec reuse for Fake Server implementations
 - HTTP response building, including sample JSON library support (Jackson) and auto-data class instance marshalling
-- OpenAPI v3 documentation and JSON schema generation from example model objects
+- OpenAPI v3 documentation and JSON schema generation from example model objects and OAuth-based security
 - Automatic invalid request handling
-- Endpoint security via an API-key header - the key is "realSecret"
+- Endpoint security via an OAuth (including simple OAuth Server implementation)
 - Templating system (Handlebars)
 - Typesafe Form handling with validation and error feedback
-- Configuration via typesafe configuration
+- Configured via typesafe 12-factor configuration
 - Event stream implementation
 - Serving of static resources
 
+##### Testing features:
+- Testing applications completely in-memory for ultra fast test suites
+- Approval-based testing for testing JSON and HTML responses
+- Hamkrest matchers for easy assertions on http4k objects
+- Reusable Fake HTTP dependencies, with behaviour proven by Consumer Driven Contracts
+- WebDriver usage for browser-based testing
+- Simulating failures with the http4k ChaosEngine
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
 to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of
@@ -27,8 +34,9 @@ code looking as awesome as possible! :).
 #### running this demo app
 1. Clone this repo
 2. Run `RunnableEnvironment` from an IDE. This will start the application on port 9000 
-which has been configured to use a fake versions of the remote dependencies (on ports 10000 and 11000)
+which has been configured to use a fake versions of the remote dependencies (on ports 10000, 11000 and 12000)
 3. Just point your browser at <a href="http://localhost:9000/">http://localhost:9000/</a>
+4. OAuth login details are `user:password`
 
 <hr/>
 <hr/>
@@ -38,11 +46,16 @@ which has been configured to use a fake versions of the remote dependencies (on 
 #### requirements
 This example models a simple building security system accessible over HTTP. Requirements are:
 
+#### Functional:
 1. Users can ask to be let into and out of the building.
-2. Usernames are checked for validity against a remote HTTP UserDirectory system.
-3. Successful entries and exits are logged in a remote HTTP EntryLogger system.
-4. Ability to check on the current inhabitants of a building.
-5. Users are tracking in a binary state - inside or not (outside). Only people outside the building can enter, and vice versa.
-6. All HTTP endpoints are protected with a secret HTTP header to only allow authorised access.
-7. API documentation should be available.
-8. Logging of every successful requests should be made.
+1. Usernames are checked for validity against a remote HTTP UserDirectory system.
+1. Successful entries and exits are logged in a remote HTTP EntryLogger system.
+1. Ability to check on the current inhabitants of a building.
+1. Users are tracking in a binary state - inside or not (outside). Only people outside the building can enter, and vice versa.
+1. Custom UI (OAuth protected) to add users.
+
+#### Operational:
+1. API documentation should be available with security enforced via OAuth login.
+1. All API HTTP endpoints are protected with bearer token to only allow authorised access.
+1. Logging of every successful requests should be made.
+1. Support distributed tracing via Zipkin headers

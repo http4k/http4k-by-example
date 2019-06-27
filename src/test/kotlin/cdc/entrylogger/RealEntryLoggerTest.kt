@@ -1,4 +1,4 @@
-package cdc
+package cdc.entrylogger
 
 import org.http4k.client.OkHttp
 import org.http4k.core.Uri

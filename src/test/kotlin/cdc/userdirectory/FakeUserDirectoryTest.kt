@@ -1,6 +1,6 @@
-package cdc
+package cdc.userdirectory
 
-import env.FakeUserDirectory
+import env.userdirectory.FakeUserDirectory
 import verysecuresystems.EmailAddress
 import verysecuresystems.Username
 
