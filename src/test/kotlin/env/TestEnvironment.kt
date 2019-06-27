@@ -12,9 +12,7 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Uri
-import org.http4k.core.then
 import org.http4k.core.with
-import org.http4k.filter.DebuggingFilters
 import org.http4k.lens.Header
 import org.http4k.lens.Query
 import org.http4k.security.AccessToken
@@ -50,11 +48,11 @@ class TestEnvironment {
             entryLogger
         )
 
-    val http: HttpHandler =
-        DebuggingFilters.PrintRequestAndResponse()
-            .then {
-                if (it.uri.authority == "oauth") oauthServer(it) else securityServer(it)
-            }
+    // this HttpHandler handles switching of hosts from the security server and the oauth server
+    // (due to redirects happening during the OAuth flow)
+    val http: HttpHandler = {
+        if (it.uri.authority == "oauth") oauthServer(it) else securityServer(it)
+    }
 }
 
 private val username = Query.optional("username")

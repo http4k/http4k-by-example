@@ -14,7 +14,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class CookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, private val clock: Clock) : OAuthPersistence {
+class SimpleCookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, private val clock: Clock) : OAuthPersistence {
     private val csrfName = "securityServerCsrf"
     private val accessTokenCookieName = "securityServerAccessToken"
 
@@ -26,7 +26,7 @@ class CookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, 
 
     private fun Request.authToken() = header("Authorization")
         ?.removePrefix("Bearer ")
-        ?: cookie("accessTokenCookieName")?.value
+        ?: cookie(accessTokenCookieName)?.value
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
