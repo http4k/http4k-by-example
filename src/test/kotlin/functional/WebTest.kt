@@ -27,11 +27,13 @@ class WebTest {
     @Test
     fun `manage users requires login via oauth`(approver: Approver) {
         approver.assertApproved(
-            browser.apply {
-                get(Uri.of("/users"))
-                findElement(By.id("loginForm"))?.apply { submit() }
-            }
+            logIn()
         )
+    }
+
+    private fun logIn() = browser.apply {
+        get(Uri.of("/users"))
+        findElement(By.id("loginForm"))?.apply { submit() }
     }
 
     @Test
