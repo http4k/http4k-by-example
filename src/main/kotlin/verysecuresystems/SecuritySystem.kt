@@ -4,6 +4,7 @@ import org.http4k.core.Events
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
+import org.http4k.filter.ClientFilters
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
@@ -33,8 +34,13 @@ object SecuritySystem {
         val inhabitants = Inhabitants()
         val oAuthProvider = SecurityServerAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
-        val userDirectory = UserDirectory(Auditor.Outgoing(clock, events).then(userDirectoryHttp))
-        val entryLogger = EntryLogger(Auditor.Outgoing(clock, events).then(entryLoggerHttp), clock)
+        val userDirectory = UserDirectory(ClientFilters.RequestTracing()
+            .then(Auditor.Outgoing(clock, events))
+            .then(userDirectoryHttp))
+
+        val entryLogger = EntryLogger(ClientFilters.RequestTracing()
+            .then(Auditor.Outgoing(clock, events))
+            .then(entryLoggerHttp), clock)
 
         // we compose the various route blocks together here
         val app = routes(
@@ -48,6 +54,7 @@ object SecuritySystem {
         return Auditor.Incoming(clock, events)
             .then(ServerFilters.CatchAll())
             .then(ServerFilters.HandleUpstreamRequestFailed())
+            .then(ServerFilters.RequestTracing())
             .then(app)
     }
 }
