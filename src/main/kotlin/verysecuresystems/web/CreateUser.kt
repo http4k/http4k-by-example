@@ -27,7 +27,7 @@ object CreateUser {
             val webForm = form(it)
             if (webForm.errors.isEmpty()) {
                 userDirectory.create(username(webForm), email(webForm))
-                Response(SEE_OTHER).header("location", ".")
+                Response(SEE_OTHER).header("location", "/users")
             } else {
                 Response(OK).body(renderer(ListUsersView(userDirectory.list(), webForm)))
             }

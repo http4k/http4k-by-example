@@ -2,7 +2,6 @@ package verysecuresystems.external
 
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.then
@@ -24,7 +23,6 @@ class EntryLogger(http: HttpHandler, private val clock: Clock) {
     private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
 
     private val userEntry = Body.auto<UserEntry>().toLens()
-    private val userEntries = Body.auto<List<UserEntry>>().toLens()
 
     fun enter(username: Username): UserEntry =
         userEntry(
@@ -40,6 +38,4 @@ class EntryLogger(http: HttpHandler, private val clock: Clock) {
                     .with(userEntry of UserEntry(username.value, false, clock.instant().toEpochMilli()))
             )
         )
-
-    fun list(): List<UserEntry> = userEntries(http(Request(GET, "/list")))
 }

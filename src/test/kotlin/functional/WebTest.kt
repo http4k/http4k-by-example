@@ -11,7 +11,6 @@ import org.http4k.testing.assertApproved
 import org.http4k.webdriver.Http4kWebDriver
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.openqa.selenium.By
 
 @ExtendWith(ApprovalTest::class)
 class WebTest {
@@ -22,16 +21,6 @@ class WebTest {
     @Test
     fun homepage(approver: Approver) {
         approver.assertApproved(browser.apply { get(Uri.of("")) })
-    }
-
-    @Test
-    fun `manage users requires login via oauth`(approver: Approver) {
-        approver.assertApproved(
-            browser.apply {
-                get(Uri.of("/users"))
-                findElement(By.id("loginForm"))?.apply { submit() }
-            }
-        )
     }
 
     @Test

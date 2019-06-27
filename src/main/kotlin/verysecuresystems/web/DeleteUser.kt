@@ -21,7 +21,7 @@ object DeleteUser {
 
         return "/delete" bind POST to SetHtmlContentType.then {
             userDirectory.delete(id(form(it)))
-            Response(SEE_OTHER).header("location", ".")
+            Response(SEE_OTHER).header("location", "/users")
         }
     }
 }

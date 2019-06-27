@@ -6,23 +6,14 @@
 <p>Known users are:</p>
 <table>
     <tbody>
-    {{#users}}
-        <tr><td>{{name.value}}</td><td>{{email.value}}</td><td>
-            <form method="POST" id="deleteUserForm" action="/users/delete">
-                <input type="hidden" name="id" value="{{id.value}}"/>
-                <button>delete</button>
-            </form>
-        </td></tr>
-    {{/users}}
+    
     </tbody>
 </table>
 
 <br/>
 <b>Add a user:</b>
 <ul class="errors">
-    {{#errors}}
-        <li>{{.}}</li>
-    {{/errors}}
+    
 </ul>
 <form method="POST" id="createUserForm" action="/users/create">
     <label for="username">username: <input id="username" type="text" name="username"/></label>
