@@ -1,0 +1,9 @@
+language: java
+
+jdk:
+  - openjdk11
+
+build:
+  ci:
+    - "./gradlew -i check jacocoTestReport"
+    - "cp build/reports/jacoco/test/jacocoRootReport.xml shippable/codecoverage"

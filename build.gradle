@@ -12,25 +12,19 @@ buildscript {
     }
     dependencies {
         classpath 'net.saliman:gradle-cobertura-plugin:2.6.1'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'application'
-apply plugin: 'cobertura'
-apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco'
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     jcenter()
     mavenCentral()
 }
-
-cobertura.coverageFormats = ['html', 'xml']
-cobertura.coverageSourceDirs = ['src/main/kotlin']
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -56,4 +50,12 @@ test {
     useJUnitPlatform()
 }
 
-mainClassName = 'verysecuresystems.MainKt'
+jacoco {
+    toolVersion = '0.8.3'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+    }
+}
