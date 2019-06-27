@@ -20,10 +20,13 @@ class CookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, 
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
-    override fun retrieveToken(request: Request) = request.header("Authorization")
-        ?.removePrefix("Bearer ")
+    override fun retrieveToken(request: Request) = request.authToken()
         ?.let(::AccessToken)
         ?.takeIf(tokenChecker)
+
+    private fun Request.authToken() = header("Authorization")
+        ?.removePrefix("Bearer ")
+        ?: cookie("accessTokenCookieName")?.value
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
@@ -32,5 +35,5 @@ class CookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, 
 
     override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(accessTokenCookieName)
 
-    private fun expiring(name: String, value: String) = Cookie(name, value, expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(1)), ZoneId.of("GMT")))
+    private fun expiring(name: String, value: String) = Cookie(name, value, expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
 }

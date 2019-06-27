@@ -16,13 +16,13 @@ class DiagnosticTest {
 
     @Test
     fun `responds to ping`() {
-        val response = env.app(Request(GET, "/internal/ping"))
+        val response = env.http(Request(GET, "/internal/ping"))
         assertThat(response, hasStatus(OK).and(hasBody("pong")))
     }
 
     @Test
     fun `responds to uptime`() {
-        val response = env.app(Request(GET, "/internal/uptime"))
+        val response = env.http(Request(GET, "/internal/uptime"))
         assertThat(response, hasStatus(OK).and(hasBody("uptime is: 0s")))
     }
 

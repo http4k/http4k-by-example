@@ -24,21 +24,23 @@ import java.time.Clock
  */
 object SecuritySystem {
     operator fun invoke(clock: Clock, events: Events,
+                        oauthCallbackUri: Uri,
                         oauthServerUri: Uri,
                         oauthServerHttp: HttpHandler,
                         userDirectoryHttp: HttpHandler,
                         entryLoggerHttp: HttpHandler): HttpHandler {
 
         val inhabitants = Inhabitants()
+        val oAuthProvider = SecurityServerAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
         val userDirectory = UserDirectory(Auditor.Outgoing(clock, events).then(userDirectoryHttp))
         val entryLogger = EntryLogger(Auditor.Outgoing(clock, events).then(entryLoggerHttp), clock)
 
         // we compose the various route blocks together here
         val app = routes(
-            Api(userDirectory, entryLogger, inhabitants, SecurityServerAuthProvider(oauthServerUri, oauthServerHttp, clock)),
+            Api(userDirectory, entryLogger, inhabitants, oAuthProvider),
             Diagnostic(clock),
-            Web(clock, userDirectory),
+            Web(clock, oAuthProvider, userDirectory),
             static(Classpath("public"))
         )
 

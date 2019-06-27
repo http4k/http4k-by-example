@@ -7,12 +7,15 @@ import org.http4k.security.OAuthProvider
 import org.http4k.security.OAuthProviderConfig
 import java.time.Clock
 
-fun SecurityServerAuthProvider(oauthServerUri: Uri, oauthServerHttp: HttpHandler, clock: Clock) =
+fun SecurityServerAuthProvider(securityServerUri: Uri,
+                               oauthServerUri: Uri,
+                               oauthServerHttp: HttpHandler,
+                               clock: Clock) =
     OAuthProvider(
         OAuthProviderConfig(oauthServerUri, "/", "/oauth2/token",
             Credentials("securityServer", "securityServerSecret")),
         oauthServerHttp,
-        oauthServerUri.path("/api/oauth/callback"),
+        securityServerUri.path("/api/oauth/callback"),
         emptyList(),
         CookieBasedOAuthPersistence(InsecureAccessTokenChecker, clock)
     )

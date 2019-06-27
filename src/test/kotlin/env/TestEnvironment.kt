@@ -1,13 +1,16 @@
 package env
 
 import env.entrylogger.FakeEntryLogger
+import env.oauthserver.OAuthClientData
+import env.oauthserver.SimpleOAuthServer
 import env.userdirectory.FakeUserDirectory
+import org.http4k.core.Credentials
 import org.http4k.core.Event
+import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.core.with
@@ -28,17 +31,27 @@ class TestEnvironment {
 
     private val events = mutableListOf<Event>()
 
-    val app = DebuggingFilters.PrintRequestAndResponse()
-        .then(
-            SecuritySystem(
-                clock,
-                { events.add(it) },
-                Uri.of("http://oauth"),
-                { Response(OK) },
-                userDirectory,
-                entryLogger
-            )
+    private val oauthServer = SimpleOAuthServer(
+        Credentials("user", "password"),
+        OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
+    )
+
+    private val securityServer =
+        SecuritySystem(
+            clock,
+            { events.add(it) },
+            Uri.of("http://security"),
+            Uri.of("http://oauth"),
+            oauthServer,
+            userDirectory,
+            entryLogger
         )
+
+    val http: HttpHandler =
+        DebuggingFilters.PrintRequestAndResponse()
+            .then {
+                if (it.uri.authority == "oauth") oauthServer(it) else securityServer(it)
+            }
 }
 
 private val username = Query.optional("username")
@@ -46,10 +59,10 @@ private val authorization = Header.map({ AccessToken(it.removePrefix("Bearer "))
 ).optional("Authorization")
 
 fun TestEnvironment.enterBuilding(user: String?, token: AccessToken?): Response =
-    app(Request(POST, "/api/knock").with(username of user, authorization of token))
+    http(Request(POST, "/api/knock").with(username of user, authorization of token))
 
 fun TestEnvironment.exitBuilding(user: String?, token: AccessToken?): Response =
-    app(Request(POST, "/api/bye").with(username of user, authorization of token))
+    http(Request(POST, "/api/bye").with(username of user, authorization of token))
 
 fun TestEnvironment.checkInhabitants(token: AccessToken): Response =
-    app(Request(GET, "/api/whoIsThere").with(authorization of token))
+    http(Request(GET, "/api/whoIsThere").with(authorization of token))

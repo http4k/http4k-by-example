@@ -15,6 +15,7 @@ import verysecuresystems.SecuritySystemServer
 import verysecuresystems.Settings.ENTRY_LOGGER_URL
 import verysecuresystems.Settings.OAUTH_SERVER_URL
 import verysecuresystems.Settings.PORT
+import verysecuresystems.Settings.SECURITY_SERVER_URL
 import verysecuresystems.Settings.USER_DIRECTORY_URL
 import verysecuresystems.User
 import verysecuresystems.Username
@@ -37,10 +38,14 @@ fun main() {
         Credentials("user", "password"),
         OAuthClientData(Credentials("securityServer", "securityServerSecret"),
             Uri.of("http://localhost:$securityServerPort/openapi/oauth2-redirect.html")
+        ),
+        OAuthClientData(Credentials("securityServer", "securityServerSecret"),
+            Uri.of("http://localhost:$securityServerPort/api/oauth/callback")
         )
     ).asServer(SunHttp(oauthServerPort)).start()
 
     val env = Environment.defaults(PORT of securityServerPort,
+        SECURITY_SERVER_URL of Uri.of("http://localhost:$securityServerPort"),
         USER_DIRECTORY_URL of Uri.of("http://localhost:$userDirectoryPort"),
         ENTRY_LOGGER_URL of Uri.of("http://localhost:$entryLoggerPort"),
         OAUTH_SERVER_URL of Uri.of("http://localhost:$oauthServerPort")

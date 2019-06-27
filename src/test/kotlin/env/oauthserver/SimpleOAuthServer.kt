@@ -68,7 +68,7 @@ object SimpleOAuthServer {
 
 private const val LOGIN_PAGE = """
     <html>
-    <form method="POST">
+    <form id="loginForm" method="POST">
         <input id="username" type="text" value="user" name="username"><br>
         <input id="password" type="password" value="password" name="password"><br>
         <button type="submit">Login</button>
