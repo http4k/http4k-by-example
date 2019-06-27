@@ -24,10 +24,6 @@ class SimpleCookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChe
         ?.let(::AccessToken)
         ?.takeIf(tokenChecker)
 
-    private fun Request.authToken() = header("Authorization")
-        ?.removePrefix("Bearer ")
-        ?: cookie(accessTokenCookieName)?.value
-
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken) =
@@ -38,4 +34,8 @@ class SimpleCookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChe
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",
         expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
+
+    private fun Request.authToken() = header("Authorization")
+        ?.removePrefix("Bearer ")
+        ?: cookie(accessTokenCookieName)?.value
 }
