@@ -25,7 +25,7 @@ class WebTest {
     }
 
     @Test
-    fun `manage users login via oauth`(approver: Approver) {
+    fun `manage users requires login via oauth`(approver: Approver) {
         approver.assertApproved(
             browser.apply {
                 get(Uri.of("/users"))
