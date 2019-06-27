@@ -1,7 +1,7 @@
 # http4k-by-example application 
 
-<a href="https://travis-ci.org/http4k/http4k-contract-example-app" target="_top"><img src="https://travis-ci.org/http4k/http4k-contract-example-app.svg?branch=master"/></a>&nbsp;&nbsp;&nbsp;
-[![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-contract-example-app/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-contract-example-app?branch=master)
+<a href="https://travis-ci.org/http4k/http4k-by-example" target="_top"><img src="https://travis-ci.org/http4k/http4k-by-example.svg?branch=master"/></a>&nbsp;&nbsp;&nbsp;
+[![Coverage Status](https://coveralls.io/repos/github/http4k/http4k-by-example/badge.svg?branch=master)](https://coveralls.io/github/http4k/http4k-by-example?branch=master)
 
 #### about
 Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot of the http4k features for building and testing apps. 
