@@ -11,23 +11,38 @@ import org.http4k.testing.assertApproved
 import org.http4k.webdriver.Http4kWebDriver
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.openqa.selenium.By
 
 @ExtendWith(ApprovalTest::class)
-class WebTest {
+class ManageUsersTest {
     private val env = TestEnvironment()
 
     private val browser = Http4kWebDriver(env.http)
 
     @Test
-    fun homepage(approver: Approver) {
-        approver.assertApproved(browser.apply { get(Uri.of("")) })
+    fun `manage users requires login via oauth`(approver: Approver) {
+        approver.assertApproved(browser {
+            logIn()
+        })
     }
 
     @Test
-    fun `serves static content`(approver: Approver) {
-        approver.assertApproved(browser.apply { get(Uri.of("/style.css")) })
+    fun `add user`(approver: Approver) {
+        approver.assertApproved(browser {
+            logIn()
+            findElement(By.id("username"))?.sendKeys("bob")
+            findElement(By.id("email"))?.sendKeys("email@email")
+            findElement(By.id("manageUserForm"))?.apply { submit() }
+        })
+    }
+
+    private fun Http4kWebDriver.logIn() = apply {
+        get(Uri.of("/users"))
+        findElement(By.id("loginForm"))?.apply { submit() }
     }
 }
+
+private operator fun Http4kWebDriver.invoke(fn: Http4kWebDriver.() -> Unit): Http4kWebDriver = apply(fn)
 
 private fun Approver.assertApproved(browser: Http4kWebDriver) {
     assertApproved(Response(browser.status ?: I_M_A_TEAPOT).body(browser.pageSource ?: ""), OK)

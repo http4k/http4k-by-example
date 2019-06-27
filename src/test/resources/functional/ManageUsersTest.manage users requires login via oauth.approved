@@ -15,9 +15,9 @@
 <ul class="errors">
     
 </ul>
-<form method="POST" action="/users/create">
-    <label for="username">username: <input type="text" name="username"/></label>
-    <label for="email">email: <input type="text" name="email"/></label>
+<form method="POST" id="manageUserForm" action="/users/create">
+    <label for="username">username: <input id="username" type="text" name="username"/></label>
+    <label for="email">email: <input id="email" type="text" name="email"/></label>
     <button>add new user</button>
 </form>
 </body>
