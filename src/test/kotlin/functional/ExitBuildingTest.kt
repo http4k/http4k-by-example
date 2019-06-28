@@ -28,7 +28,7 @@ class ExitingBuildingTest {
 
     @Test
     fun `exit endpoint is protected with oauth token`() {
-        assertThat(env.exitBuilding("Bob", env.obtainAccessToken()), hasStatus(TEMPORARY_REDIRECT))
+        assertThat(env.exitBuilding("Bob", null), hasStatus(TEMPORARY_REDIRECT))
     }
 
     @Test

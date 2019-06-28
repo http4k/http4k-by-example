@@ -46,8 +46,10 @@ class EnteringBuildingTest {
     @Test
     fun `does not allow double entry`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        assertThat(env.enterBuilding("Bob", env.obtainAccessToken()), hasStatus(ACCEPTED))
-        assertThat(env.enterBuilding("Bob", env.obtainAccessToken()), hasStatus(CONFLICT))
+        val accessToken = env.obtainAccessToken()
+
+        assertThat(env.enterBuilding("Bob", accessToken), hasStatus(ACCEPTED))
+        assertThat(env.enterBuilding("Bob", accessToken), hasStatus(CONFLICT))
     }
 }
 

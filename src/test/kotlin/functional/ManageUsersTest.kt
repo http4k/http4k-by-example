@@ -1,10 +1,10 @@
 package functional
 
 import env.TestEnvironment
+import env.logIn
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.I_M_A_TEAPOT
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Uri
 import org.http4k.testing.ApprovalTest
 import org.http4k.testing.Approver
 import org.http4k.testing.assertApproved
@@ -17,18 +17,16 @@ import org.openqa.selenium.By
 class ManageUsersTest {
     private val env = TestEnvironment()
 
-    private val browser = Http4kWebDriver(env.http)
-
     @Test
     fun `manage users requires login via oauth`(approver: Approver) {
-        approver.assertApproved(browser {
+        approver.assertApproved(env.browser {
             logIn()
         })
     }
 
     @Test
     fun `add user`(approver: Approver) {
-        approver.assertApproved(browser {
+        approver.assertApproved(env.browser {
             logIn()
             addUser()
         })
@@ -36,7 +34,7 @@ class ManageUsersTest {
 
     @Test
     fun `add user then delete them`(approver: Approver) {
-        approver.assertApproved(browser {
+        approver.assertApproved(env.browser {
             logIn()
             addUser()
             deleteUser()
@@ -51,11 +49,6 @@ class ManageUsersTest {
 
     private fun Http4kWebDriver.deleteUser() {
         findElement(By.id("deleteUserForm"))?.apply { submit() }
-    }
-
-    private fun Http4kWebDriver.logIn() = apply {
-        get(Uri.of("/users"))
-        findElement(By.id("loginForm"))?.apply { submit() }
     }
 }
 

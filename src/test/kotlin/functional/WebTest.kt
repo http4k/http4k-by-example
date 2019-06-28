@@ -16,16 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 class WebTest {
     private val env = TestEnvironment()
 
-    private val browser = Http4kWebDriver(env.http)
-
     @Test
     fun homepage(approver: Approver) {
-        approver.assertApproved(browser.apply { get(Uri.of("")) })
+        approver.assertApproved(env.browser.apply { get(Uri.of("/")) })
     }
 
     @Test
     fun `serves static content`(approver: Approver) {
-        approver.assertApproved(browser.apply { get(Uri.of("/style.css")) })
+        approver.assertApproved(env.browser.apply { get(Uri.of("/style.css")) })
     }
 }
 

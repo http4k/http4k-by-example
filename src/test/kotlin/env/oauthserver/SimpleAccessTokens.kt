@@ -8,8 +8,8 @@ import org.http4k.security.oauth.server.AuthorizationCode
 import org.http4k.security.oauth.server.ClientId
 import org.http4k.security.oauth.server.UnsupportedGrantType
 
-class UUIDAccessTokens : AccessTokens {
+class SimpleAccessTokens : AccessTokens {
     override fun create(clientId: ClientId) = Failure(UnsupportedGrantType("client_credentials"))
 
-    override fun create(authorizationCode: AuthorizationCode) = Success(AccessToken(authorizationCode.value))
+    override fun create(authorizationCode: AuthorizationCode) = Success(AccessToken(authorizationCode.value.reversed()))
 }
