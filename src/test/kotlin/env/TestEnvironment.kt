@@ -4,6 +4,7 @@ import env.entrylogger.FakeEntryLogger
 import env.oauthserver.OAuthClientData
 import env.oauthserver.SimpleOAuthServer
 import env.userdirectory.FakeUserDirectory
+import functional.AccessTokens
 import org.http4k.core.Credentials
 import org.http4k.core.Event
 import org.http4k.core.HttpHandler
@@ -28,6 +29,7 @@ import java.time.ZoneOffset.UTC
 import java.util.Random
 
 class TestEnvironment {
+
     val clock = fixed(ofEpochSecond(LocalDate.of(3000, 1, 1).toEpochSecond(MIDNIGHT, UTC)), ZoneId.of("UTC"))!!
 
     val userDirectory = FakeUserDirectory { Random(1).nextInt() }
@@ -56,6 +58,8 @@ class TestEnvironment {
     val http: HttpHandler = DebuggingFilters.PrintRequestAndResponse().then {
         if (it.uri.authority == "oauth") oauthServer(it) else securityServer(it)
     }
+
+    fun obtainAccessToken() = AccessTokens.valid
 }
 
 private val username = Query.optional("username")
