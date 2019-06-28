@@ -8,10 +8,10 @@ import org.http4k.security.oauth.server.AuthRequestTracking
 import org.http4k.security.oauth.server.OAuthServer
 
 class InMemoryAuthRequestTracking : AuthRequestTracking {
-    private val initiatedRequests = mutableListOf<AuthRequest>()
+    private val inFlightRequests = mutableListOf<AuthRequest>()
 
     override fun trackAuthRequest(request: Request, authRequest: AuthRequest, response: Response) =
-        response.also { initiatedRequests += authRequest }
+        response.also { inFlightRequests += authRequest }
 
     override fun resolveAuthRequest(request: Request) =
         try {
@@ -23,7 +23,7 @@ class InMemoryAuthRequestTracking : AuthRequestTracking {
                     state(request),
                     responseType(request)
                 )
-                if (initiatedRequests.remove(extracted)) extracted else null
+                if (inFlightRequests.remove(extracted)) extracted else null
             }
         } catch (e: LensFailure) {
             null

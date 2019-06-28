@@ -1,8 +1,8 @@
 {
   "info": {
-    "title": "Security server API - the API key is 'realSecret'!",
+    "title": "Security Server API",
     "version": "v1.0",
-    "description": null
+    "description": "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."
   },
   "tags": [
   ],

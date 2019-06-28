@@ -12,15 +12,15 @@ import java.time.temporal.ChronoUnit.DAYS
 import java.util.UUID
 
 class InMemoryAuthorizationCodes(private val clock: Clock) : AuthorizationCodes {
-    private val codes = mutableMapOf<AuthorizationCode, AuthorizationCodeDetails>()
+    private val inFlightCodes = mutableMapOf<AuthorizationCode, AuthorizationCodeDetails>()
 
     override fun detailsFor(code: AuthorizationCode): AuthorizationCodeDetails =
-        codes[code]?.also {
-            codes -= code
+        inFlightCodes[code]?.also {
+            inFlightCodes -= code
         } ?: error("code not stored")
 
     override fun create(request: Request, authRequest: AuthRequest, response: Response) =
-        Success(AuthorizationCode("AUTH_CODE_" + UUID.randomUUID().toString()).also {
-            codes[it] = AuthorizationCodeDetails(authRequest.client, authRequest.redirectUri, clock.instant().plus(1, DAYS), authRequest.responseType)
+        Success(AuthorizationCode(UUID.randomUUID().toString()).also {
+            inFlightCodes[it] = AuthorizationCodeDetails(authRequest.client, authRequest.redirectUri, clock.instant().plus(1, DAYS), authRequest.responseType)
         })
 }
