@@ -39,8 +39,7 @@ class TestEnvironment {
     private val oAuthClientData = OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
     private val credentials = Credentials("user", "password")
 
-    private val accessTokens = RecordingAccessTokens()
-    private val oauthServer = SimpleOAuthServer(credentials, accessTokens, oAuthClientData)
+    private val oauthServer = SimpleOAuthServer(credentials, oAuthClientData)
 
     private val securityServer =
         SecuritySystem(
@@ -60,11 +59,6 @@ class TestEnvironment {
     }
 
     val browser = Http4kWebDriver(http)
-
-    fun obtainAccessToken(): AccessToken {
-        browser.logIn()
-        return accessTokens.issuedToken()
-    }
 }
 
 private val username = Query.optional("username")

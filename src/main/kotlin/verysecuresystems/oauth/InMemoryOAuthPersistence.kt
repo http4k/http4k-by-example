@@ -15,28 +15,36 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.UUID
 
-class InMemoryOAuthPersistence(private val clock: Clock) : OAuthPersistence {
+/**
+ * This persistence handles both Bearer-token (API) and cookie-swapped access token (standard OAuth-web) flows.
+ */
+class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecker: TokenChecker) : OAuthPersistence {
     private val csrfName = "securityServerCsrf"
     private val clientAuthCookie = "securityServerAuth"
-    private val userTokens = mutableMapOf<String, AccessToken>()
+    private val cookieSwappableTokens = mutableMapOf<String, AccessToken>()
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
-    override fun retrieveToken(request: Request) = request.header("Authorization")
-        ?.removePrefix("Bearer ")
-        ?.let(::AccessToken)
-        ?.takeIf(userTokens::containsValue)
-        ?: request.cookie(clientAuthCookie)?.value?.let { userTokens[it] }
+    override fun retrieveToken(request: Request) = (tryBearerToken(request)
+        ?: tryCookieToken(request))
+        ?.takeIf(tokenChecker::check)
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken) =
         UUID.randomUUID().let {
-            userTokens[it.toString()] = accessToken
+            cookieSwappableTokens[it.toString()] = accessToken
             redirect.cookie(expiring(clientAuthCookie, it.toString())).invalidateCookie(csrfName)
         }
 
     override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(clientAuthCookie)
+
+    private fun tryCookieToken(request: Request) =
+        request.cookie(clientAuthCookie)?.value?.let { cookieSwappableTokens[it] }
+
+    private fun tryBearerToken(request: Request) = request.header("Authorization")
+        ?.removePrefix("Bearer ")
+        ?.let(::AccessToken)
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",

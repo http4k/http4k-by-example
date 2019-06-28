@@ -23,19 +23,18 @@ import org.http4k.lens.Validator.Strict
 import org.http4k.lens.webForm
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import org.http4k.security.oauth.server.AccessTokens
 import org.http4k.security.oauth.server.OAuthServer
 import java.time.Clock
 
 object SimpleOAuthServer {
-    operator fun invoke(credentials: Credentials, accessTokens: AccessTokens, vararg oAuthClientData: OAuthClientData): HttpHandler {
+    operator fun invoke(credentials: Credentials, vararg oAuthClientData: OAuthClientData): HttpHandler {
         val clock = Clock.systemUTC()
         val server = OAuthServer(
             "/oauth2/token",
             InMemoryAuthRequestTracking(),
             SimpleClientValidator(*oAuthClientData),
             InMemoryAuthorizationCodes(clock),
-            accessTokens,
+            SimpleAccessTokens(),
             Jackson,
             clock
         )

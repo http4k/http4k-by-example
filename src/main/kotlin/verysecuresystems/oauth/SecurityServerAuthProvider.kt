@@ -17,5 +17,5 @@ fun SecurityServerAuthProvider(securityServerUri: Uri,
         oauthServerHttp,
         securityServerUri.path("/api/oauth/callback"),
         emptyList(),
-        InMemoryOAuthPersistence(clock)
+        InMemoryOAuthPersistence(clock, InsecureTokenChecker)
     )
