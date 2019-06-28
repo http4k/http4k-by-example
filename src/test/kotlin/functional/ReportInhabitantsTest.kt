@@ -24,12 +24,12 @@ class ReportInhabitantsTest {
 
     @Test
     fun `who is there endpoint is protected with oauth token`() {
-        assertThat(env.checkInhabitants(AccessTokens.invalid).status, equalTo(TEMPORARY_REDIRECT))
+        assertThat(env.checkInhabitants(null).status, equalTo(TEMPORARY_REDIRECT))
     }
 
     @Test
     fun `initially there is no-one inside`() {
-        val checkInhabitants = env.checkInhabitants(AccessTokens.valid)
+        val checkInhabitants = env.checkInhabitants(env.obtainAccessToken())
         assertThat(checkInhabitants, hasStatus(OK))
         assertThat(inhabitants(checkInhabitants), equalTo(listOf()))
     }
@@ -40,10 +40,12 @@ class ReportInhabitantsTest {
 
         env.userDirectory.contains(user)
 
-        env.enterBuilding("Bob", AccessTokens.valid)
-        assertThat(inhabitants(env.checkInhabitants(AccessTokens.valid)), equalTo(listOf(user)))
+        val accessToken = env.obtainAccessToken()
 
-        env.exitBuilding("Bob", AccessTokens.valid)
-        assertThat(inhabitants(env.checkInhabitants(AccessTokens.valid)), equalTo(listOf()))
+        env.enterBuilding("Bob", accessToken)
+        assertThat(inhabitants(env.checkInhabitants(accessToken)), equalTo(listOf(user)))
+
+        env.exitBuilding("Bob", accessToken)
+        assertThat(inhabitants(env.checkInhabitants(accessToken)), equalTo(listOf()))
     }
 }

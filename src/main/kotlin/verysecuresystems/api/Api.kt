@@ -26,7 +26,7 @@ object Api {
             "/api" bind routes(
                 "/oauth/callback" bind GET to oAuthProvider.callback,
                 contract {
-                    renderer = OpenApi3(ApiInfo("Security server API - the API key is 'realSecret'!", "v1.0"), Jackson)
+                    renderer = OpenApi3(ApiInfo("Security Server API", "v1.0", "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."), Jackson)
                     descriptionPath = "/api-docs"
                     security = OAuthSecurity(oAuthProvider)
                     routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)

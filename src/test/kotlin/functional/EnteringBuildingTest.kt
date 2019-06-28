@@ -23,31 +23,33 @@ class EnteringBuildingTest {
 
     @Test
     fun `unknown user is not allowed into building`() {
-        assertThat(env.enterBuilding("Rita", AccessTokens.valid), hasStatus(NOT_FOUND))
+        assertThat(env.enterBuilding("Rita", env.obtainAccessToken()), hasStatus(NOT_FOUND))
     }
 
     @Test
     fun `rejects missing username in entry endpoint`() {
-        assertThat(env.enterBuilding(null, AccessTokens.valid), hasStatus(BAD_REQUEST))
+        assertThat(env.enterBuilding(null, env.obtainAccessToken()), hasStatus(BAD_REQUEST))
     }
 
     @Test
     fun `entry endpoint is protected with oauth token`() {
-        assertThat(env.enterBuilding("Bob", AccessTokens.invalid), hasStatus(TEMPORARY_REDIRECT))
+        assertThat(env.enterBuilding("Bob", null), hasStatus(TEMPORARY_REDIRECT))
     }
 
     @Test
     fun `allows known user in and logs entry`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        assertThat(env.enterBuilding("Bob", AccessTokens.valid), hasStatus(ACCEPTED))
+        assertThat(env.enterBuilding("Bob", env.obtainAccessToken()), hasStatus(ACCEPTED))
         assertThat(env.entryLogger.entries, equalTo(listOf(UserEntry("Bob", true, env.clock.millis()))))
     }
 
     @Test
     fun `does not allow double entry`() {
         env.userDirectory.contains(User(Id(1), Username("Bob"), EmailAddress("bob@bob.com")))
-        assertThat(env.enterBuilding("Bob", AccessTokens.valid), hasStatus(ACCEPTED))
-        assertThat(env.enterBuilding("Bob", AccessTokens.valid), hasStatus(CONFLICT))
+        val accessToken = env.obtainAccessToken()
+
+        assertThat(env.enterBuilding("Bob", accessToken), hasStatus(ACCEPTED))
+        assertThat(env.enterBuilding("Bob", accessToken), hasStatus(CONFLICT))
     }
 }
 

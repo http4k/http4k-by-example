@@ -13,29 +13,32 @@ import java.time.Clock
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.UUID
 
-class SimpleCookieBasedOAuthPersistence(private val tokenChecker: AccessTokenChecker, private val clock: Clock) : OAuthPersistence {
+class InMemoryOAuthPersistence(private val clock: Clock) : OAuthPersistence {
     private val csrfName = "securityServerCsrf"
-    private val accessTokenCookieName = "securityServerAccessToken"
+    private val clientAuthCookie = "securityServerAuth"
+    private val userTokens = mutableMapOf<String, AccessToken>()
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
-    override fun retrieveToken(request: Request) = request.authToken()
+    override fun retrieveToken(request: Request) = request.header("Authorization")
+        ?.removePrefix("Bearer ")
         ?.let(::AccessToken)
-        ?.takeIf(tokenChecker)
+        ?.takeIf(userTokens::containsValue)
+        ?: request.cookie(clientAuthCookie)?.value?.let { userTokens[it] }
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
 
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken) =
-        redirect.cookie(expiring(accessTokenCookieName, accessToken.value)).invalidateCookie(csrfName)
+        UUID.randomUUID().let {
+            userTokens[it.toString()] = accessToken
+            redirect.cookie(expiring(clientAuthCookie, it.toString())).invalidateCookie(csrfName)
+        }
 
-    override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(accessTokenCookieName)
+    override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(clientAuthCookie)
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",
         expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
-
-    private fun Request.authToken() = header("Authorization")
-        ?.removePrefix("Bearer ")
-        ?: cookie(accessTokenCookieName)?.value
 }

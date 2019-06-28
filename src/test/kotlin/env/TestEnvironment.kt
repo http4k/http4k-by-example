@@ -16,6 +16,8 @@ import org.http4k.core.with
 import org.http4k.lens.Header
 import org.http4k.lens.Query
 import org.http4k.security.AccessToken
+import org.http4k.webdriver.Http4kWebDriver
+import org.openqa.selenium.By
 import verysecuresystems.SecuritySystem
 import java.time.Clock.fixed
 import java.time.Instant.ofEpochSecond
@@ -26,6 +28,7 @@ import java.time.ZoneOffset.UTC
 import java.util.Random
 
 class TestEnvironment {
+
     val clock = fixed(ofEpochSecond(LocalDate.of(3000, 1, 1).toEpochSecond(MIDNIGHT, UTC)), ZoneId.of("UTC"))!!
 
     val userDirectory = FakeUserDirectory { Random(1).nextInt() }
@@ -33,10 +36,11 @@ class TestEnvironment {
 
     private val events = mutableListOf<Event>()
 
-    private val oauthServer = SimpleOAuthServer(
-        Credentials("user", "password"),
-        OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
-    )
+    private val oAuthClientData = OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
+    private val credentials = Credentials("user", "password")
+
+    private val accessTokens = RecordingAccessTokens()
+    private val oauthServer = SimpleOAuthServer(credentials, accessTokens, oAuthClientData)
 
     private val securityServer =
         SecuritySystem(
@@ -54,6 +58,13 @@ class TestEnvironment {
     val http: HttpHandler = {
         if (it.uri.authority == "oauth") oauthServer(it) else securityServer(it)
     }
+
+    val browser = Http4kWebDriver(http)
+
+    fun obtainAccessToken(): AccessToken {
+        browser.logIn()
+        return accessTokens.issuedToken()
+    }
 }
 
 private val username = Query.optional("username")
@@ -66,5 +77,10 @@ fun TestEnvironment.enterBuilding(user: String?, token: AccessToken?): Response 
 fun TestEnvironment.exitBuilding(user: String?, token: AccessToken?): Response =
     http(Request(POST, "/api/bye").with(username of user, authorization of token))
 
-fun TestEnvironment.checkInhabitants(token: AccessToken): Response =
+fun TestEnvironment.checkInhabitants(token: AccessToken?): Response =
     http(Request(GET, "/api/whoIsThere").with(authorization of token))
+
+fun Http4kWebDriver.logIn() = apply {
+    get(Uri.of("/users"))
+    findElement(By.id("loginForm"))?.apply { submit() }
+}
