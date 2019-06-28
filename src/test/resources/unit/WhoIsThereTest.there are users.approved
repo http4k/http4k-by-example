@@ -1,0 +1,13 @@
+[
+  {
+    "id": {
+      "value": 1
+    },
+    "name": {
+      "value": "bob"
+    },
+    "email": {
+      "value": "a@b"
+    }
+  }
+]
