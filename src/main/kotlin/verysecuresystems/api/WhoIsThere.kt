@@ -17,15 +17,15 @@ import verysecuresystems.Username
 object WhoIsThere {
     operator fun invoke(inhabitants: Iterable<Username>,
                         lookup: (Username) -> User?): ContractRoute {
-        val users = Body.auto<Array<User>>().toLens()
+        val users = Body.auto<List<User>>().toLens()
 
         val listUsers: HttpHandler = {
-            Response(OK).with(users of inhabitants.mapNotNull(lookup).toTypedArray())
+            Response(OK).with(users of inhabitants.mapNotNull(lookup))
         }
 
         return "/whoIsThere" meta {
             summary = "List current users in the building"
-            returning(OK, users to arrayOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))), "Inhabitant list")
+            returning(OK, users to listOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))), "Inhabitant list")
         } bindContract Method.GET to listUsers
     }
 }
