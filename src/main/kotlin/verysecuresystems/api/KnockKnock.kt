@@ -30,10 +30,10 @@ object KnockKnock {
         val message = Body.auto<Message>().toLens()
 
         val userEntry: HttpHandler = {
-            lookup(username(it))
+            lookup(username(it))?.name
                 ?.let {
-                    if (add(it.name)) {
-                        entryLogger(it.name)
+                    if (add(it)) {
+                        entryLogger(it)
                         Response(ACCEPTED).with(message of Message("Access granted"))
                     } else {
                         Response(CONFLICT).with(message of Message("User is already inside building"))
