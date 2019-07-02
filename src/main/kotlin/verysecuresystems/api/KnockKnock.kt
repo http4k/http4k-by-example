@@ -18,6 +18,9 @@ import verysecuresystems.User
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
 
+/**
+ * Allows users to enter the building, but only if they exist.
+ */
 object KnockKnock {
     operator fun invoke(lookup: (Username) -> User?,
                         add: (Username) -> Boolean,

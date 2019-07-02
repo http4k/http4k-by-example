@@ -15,7 +15,7 @@ import verysecuresystems.diagnostic.Auditor
 import verysecuresystems.diagnostic.Diagnostic
 import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
-import verysecuresystems.oauth.SecurityServerAuthProvider
+import verysecuresystems.oauth.SecurityServerOAuthProvider
 import verysecuresystems.web.Web
 import java.time.Clock
 
@@ -32,7 +32,7 @@ object SecuritySystem {
                         entryLoggerHttp: HttpHandler): HttpHandler {
 
         val inhabitants = Inhabitants()
-        val oAuthProvider = SecurityServerAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
+        val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
         val userDirectory = UserDirectory(ClientFilters.RequestTracing()
             .then(Auditor.Outgoing(clock, events))

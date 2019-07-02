@@ -15,7 +15,8 @@ import verysecuresystems.external.EntryLogger
 import verysecuresystems.external.UserDirectory
 
 /**
- * The exposed Server API, protected by Bearer Token.
+ * The exposed Server API, protected by Bearer Token (which can be retrieved via
+ * OAuth login).
  */
 object Api {
     operator fun invoke(userDirectory: UserDirectory,

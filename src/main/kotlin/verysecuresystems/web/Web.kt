@@ -18,7 +18,8 @@ val SetHtmlContentType = Filter { next ->
 }
 
 /**
- * Defines the web content layer of the app.
+ * Defines the web content layer of the app, including the OAuth-protected
+ * user management UI.
  */
 object Web {
     operator fun invoke(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory): RoutingHttpHandler {

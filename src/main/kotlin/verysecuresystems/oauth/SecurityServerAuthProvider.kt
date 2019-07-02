@@ -7,10 +7,13 @@ import org.http4k.security.OAuthProvider
 import org.http4k.security.OAuthProviderConfig
 import java.time.Clock
 
-fun SecurityServerAuthProvider(securityServerUri: Uri,
-                               oauthServerUri: Uri,
-                               oauthServerHttp: HttpHandler,
-                               clock: Clock) =
+/**
+ * OAuthProvider configured to callback to this server.
+ */
+fun SecurityServerOAuthProvider(securityServerUri: Uri,
+                                oauthServerUri: Uri,
+                                oauthServerHttp: HttpHandler,
+                                clock: Clock) =
     OAuthProvider(
         OAuthProviderConfig(oauthServerUri, "/", "/oauth2/token",
             Credentials("securityServer", "securityServerSecret")),

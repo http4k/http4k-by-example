@@ -11,6 +11,9 @@ import org.http4k.template.ViewModel
 import verysecuresystems.User
 import verysecuresystems.external.UserDirectory
 
+/**
+ * Displays the list of known users using a ViewModel
+ */
 object ListUsers {
     operator fun invoke(renderer: TemplateRenderer, userDirectory: UserDirectory) =
         "/" bind GET to SetHtmlContentType.then {

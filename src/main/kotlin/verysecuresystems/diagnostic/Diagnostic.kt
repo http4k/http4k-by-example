@@ -7,6 +7,9 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import java.time.Clock
 
+/**
+ * The internal monitoring API.
+ */
 object Diagnostic {
     operator fun invoke(clock: Clock) = "/internal" bind routes(
         Ping(),

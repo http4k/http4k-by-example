@@ -1,5 +1,8 @@
 package verysecuresystems
 
+/**
+ * Simple, in-memory persistence of who is currently inside the building
+ */
 class Inhabitants : Iterable<Username> {
     private val currentUsers = mutableListOf<Username>()
 

@@ -16,6 +16,9 @@ import verysecuresystems.Message
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
 
+/**
+ * Allows users to exit the building, but only if they are already inside.
+ */
 object ByeBye {
    operator fun invoke(removeUser: (Username) -> Boolean,
                        entryLogger: (Username) -> UserEntry): ContractRoute {

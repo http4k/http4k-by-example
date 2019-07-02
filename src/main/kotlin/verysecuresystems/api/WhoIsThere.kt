@@ -14,6 +14,9 @@ import verysecuresystems.Id
 import verysecuresystems.User
 import verysecuresystems.Username
 
+/**
+ * Retrieves a list of the users inside the building.
+ */
 object WhoIsThere {
     operator fun invoke(inhabitants: Iterable<Username>,
                         lookup: (Username) -> User?): ContractRoute {

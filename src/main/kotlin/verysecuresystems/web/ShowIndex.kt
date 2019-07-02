@@ -13,6 +13,9 @@ import java.time.format.DateTimeFormatter
 
 data class Index(val time: String, val browser: String) : ViewModel
 
+/**
+ * The root index page of the server, displayed using a ViewModel.
+ */
 object ShowIndex {
     operator fun invoke(clock: Clock, renderer: TemplateRenderer) =
         "/" bind GET to SetHtmlContentType.then {
