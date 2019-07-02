@@ -26,15 +26,12 @@ Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot 
 - Simulating failures with the http4k ChaosEngine
 
 It has been developed in a London-TDD style with outside-in acceptance testing and CDCs for outside dependencies,
-to give a complete overview of how the app would look when finished. The code itself has been left without optimisation of
-imports in order to aid comprehension - which is a little frustrating from a maintainer perspective (as you always want your 
-code looking as awesome as possible! :).
+to give a complete overview of how the app would look when finished. 
 
 #### running this demo app
 1. Clone this repo
-2. Run `RunnableEnvironment` from an IDE. This will start the application on port 9000 
-which has been configured to use a fake versions of the remote dependencies (on ports 10000, 11000 and 12000)
-3. Just point your browser at <a href="http://localhost:9000/">http://localhost:9000/</a>
+2. Run `RunnableEnvironment` from an IDE. This will start the application on port 9000, which has been configured to use a fake versions of the remote dependencies (on ports 10000, 11000 and 12000)
+3. Just point your browser at [http://localhost:9000/](http://localhost:9000/)
 4. OAuth login details are `user:password`
 
 <hr/>
