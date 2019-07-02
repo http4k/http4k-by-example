@@ -15,7 +15,6 @@ Complete TDD'd example [http4k](http://http4k.org) application showcasing a lot 
 - Templating system (Handlebars)
 - Typesafe Form handling with validation and error feedback
 - Configured via typesafe 12-factor configuration
-- Event stream implementation
 - Serving of static resources
 
 ##### Testing features:
