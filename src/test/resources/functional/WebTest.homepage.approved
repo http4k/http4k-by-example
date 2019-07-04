@@ -11,6 +11,7 @@
     <p><a href="/api/api-docs">Here</a> is the auto-generated remote API documentation (using a OpenApi 3 renderer)</p>
     <p><a href="/openapi/index.html">Here</a> is a secured OpenApi 3 UI for interacting with the API (using a StaticModule)</p>
     <p><a href="/internal">Here</a> are some diagnostic endpoints</p>
+    <p><a href="/openapi/index.html?url=http://localhost:10000/chaos">Here</a> is the Chaos injection interface for the user directory.</p>
     <img src="/brain.png"/>
 </div>
 </body>
