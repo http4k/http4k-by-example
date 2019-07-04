@@ -5,7 +5,6 @@ import org.http4k.core.Filter
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.lens.Header.CONTENT_TYPE
-import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.security.OAuthProvider
@@ -22,18 +21,20 @@ val SetHtmlContentType = Filter { next ->
  * user management UI.
  */
 object Web {
-    operator fun invoke(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory): RoutingHttpHandler {
-        val templates = HandlebarsTemplates().CachingClasspath()
+    private val templates = HandlebarsTemplates().CachingClasspath()
 
-        return routes(
-            oAuthProvider.authFilter.then(
-                "/users" bind routes(
-                    DeleteUser(userDirectory),
-                    CreateUser(templates, userDirectory),
-                    ListUsers(templates, userDirectory)
+    operator fun invoke(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory) =
+        ShowError(templates)
+            .then(
+                routes(
+                    oAuthProvider.authFilter.then(
+                        "/users" bind routes(
+                            DeleteUser(userDirectory),
+                            CreateUser(templates, userDirectory),
+                            ListUsers(templates, userDirectory)
+                        )
+                    ),
+                    ShowIndex(clock, templates)
                 )
-            ),
-            ShowIndex(clock, templates)
-        )
-    }
+            )
 }
