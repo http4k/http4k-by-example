@@ -27,13 +27,31 @@
         ],
         "responses": {
           "202": {
-            "description": "Exit granted",
+            "description": "Accepted",
             "content": {
+              "application/json": {
+                "example": {
+                  "message": "processing"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Message",
+                  "example": null
+                }
+              }
             }
           },
           "404": {
-            "description": "User is not inside building",
+            "description": "Not Found",
             "content": {
+              "application/json": {
+                "example": {
+                  "message": "User is not inside building"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Message",
+                  "example": null
+                }
+              }
             }
           },
           "401": {
@@ -44,7 +62,7 @@
         },
         "security": [
           {
-            "oauthSecurity": [
+            "oauthSecurityAuthCode": [
             ]
           }
         ],
@@ -71,18 +89,45 @@
         ],
         "responses": {
           "202": {
-            "description": "Access granted",
+            "description": "Accepted",
             "content": {
+              "application/json": {
+                "example": {
+                  "message": "Access granted"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Message",
+                  "example": null
+                }
+              }
             }
           },
           "404": {
-            "description": "Unknown user",
+            "description": "Not Found",
             "content": {
+              "application/json": {
+                "example": {
+                  "message": "Unknown user"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Message",
+                  "example": null
+                }
+              }
             }
           },
           "409": {
-            "description": "User is already inside building",
+            "description": "Conflict",
             "content": {
+              "application/json": {
+                "example": {
+                  "message": "User is already inside building"
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Message",
+                  "example": null
+                }
+              }
             }
           },
           "401": {
@@ -93,7 +138,7 @@
         },
         "security": [
           {
-            "oauthSecurity": [
+            "oauthSecurityAuthCode": [
             ]
           }
         ],
@@ -156,7 +201,7 @@
         },
         "security": [
           {
-            "oauthSecurity": [
+            "oauthSecurityAuthCode": [
             ]
           }
         ],
@@ -166,6 +211,21 @@
   },
   "components": {
     "schemas": {
+      "Message": {
+        "properties": {
+          "message": {
+            "example": "User is not inside building",
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "User is not inside building"
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ]
+      },
       "User": {
         "properties": {
           "id": {
@@ -246,7 +306,7 @@
       }
     },
     "securitySchemes": {
-      "oauthSecurity": {
+      "oauthSecurityAuthCode": {
         "type": "oauth2",
         "flows": {
           "authorizationCode": {
