@@ -21,20 +21,18 @@ import verysecuresystems.external.UserDirectory
  * Handles the creation of a new user, using standardised http4k form lenses
  * configured to feedback errors to the user.
  */
-object CreateUser {
-    operator fun invoke(renderer: TemplateRenderer, userDirectory: UserDirectory): RoutingHttpHandler {
-        val username = FormField.nonEmptyString().map(::Username, Username::value).required("username")
-        val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
-        val form = Body.webForm(Feedback, username, email).toLens()
+fun CreateUser(renderer: TemplateRenderer, userDirectory: UserDirectory): RoutingHttpHandler {
+    val username = FormField.nonEmptyString().map(::Username, Username::value).required("username")
+    val email = FormField.nonEmptyString().map(::EmailAddress, EmailAddress::value).required("email")
+    val form = Body.webForm(Feedback, username, email).toLens()
 
-        return "/create" bind POST to SetHtmlContentType.then {
-            val webForm = form(it)
-            if (webForm.errors.isEmpty()) {
-                userDirectory.create(username(webForm), email(webForm))
-                Response(SEE_OTHER).header("location", "/users")
-            } else {
-                Response(OK).body(renderer(ListUsersView(userDirectory.list(), webForm)))
-            }
+    return "/create" bind POST to SetHtmlContentType.then {
+        val webForm = form(it)
+        if (webForm.errors.isEmpty()) {
+            userDirectory.create(username(webForm), email(webForm))
+            Response(SEE_OTHER).header("location", "/users")
+        } else {
+            Response(OK).body(renderer(ListUsersView(userDirectory.list(), webForm)))
         }
     }
 }

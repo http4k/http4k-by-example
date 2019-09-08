@@ -5,6 +5,7 @@ import org.http4k.core.Filter
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.lens.Header.CONTENT_TYPE
+import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.security.OAuthProvider
@@ -20,21 +21,20 @@ val SetHtmlContentType = Filter { next ->
  * Defines the web content layer of the app, including the OAuth-protected
  * user management UI.
  */
-object Web {
-    private val templates = HandlebarsTemplates().CachingClasspath()
+fun Web(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory): RoutingHttpHandler {
+    val templates = HandlebarsTemplates().CachingClasspath()
 
-    operator fun invoke(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory) =
-        ShowError(templates)
-            .then(
-                routes(
-                    oAuthProvider.authFilter.then(
-                        "/users" bind routes(
-                            DeleteUser(userDirectory),
-                            CreateUser(templates, userDirectory),
-                            ListUsers(templates, userDirectory)
-                        )
-                    ),
-                    ShowIndex(clock, templates)
-                )
+    return ShowError(templates)
+        .then(
+            routes(
+                oAuthProvider.authFilter.then(
+                    "/users" bind routes(
+                        DeleteUser(userDirectory),
+                        CreateUser(templates, userDirectory),
+                        ListUsers(templates, userDirectory)
+                    )
+                ),
+                ShowIndex(clock, templates)
             )
+        )
 }

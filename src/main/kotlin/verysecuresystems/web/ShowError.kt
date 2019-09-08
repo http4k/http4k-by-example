@@ -13,14 +13,12 @@ import org.http4k.template.viewModel
 /**
  * Catch all exceptions and shows a nice HTML page instead of a stacktrace
  */
-object ShowError {
-    operator fun invoke(templates: TemplateRenderer) = Filter { next ->
-        {
-            try {
-                next(it)
-            } catch (e: Exception) {
-                Response(SERVICE_UNAVAILABLE).with(Body.viewModel(templates, TEXT_HTML).toLens() of (Error(e)))
-            }
+fun ShowError(templates: TemplateRenderer) = Filter { next ->
+    {
+        try {
+            next(it)
+        } catch (e: Exception) {
+            Response(SERVICE_UNAVAILABLE).with(Body.viewModel(templates, TEXT_HTML).toLens() of (Error(e)))
         }
     }
 }

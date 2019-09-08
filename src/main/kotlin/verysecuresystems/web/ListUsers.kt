@@ -14,12 +14,10 @@ import verysecuresystems.external.UserDirectory
 /**
  * Displays the list of known users using a ViewModel
  */
-object ListUsers {
-    operator fun invoke(renderer: TemplateRenderer, userDirectory: UserDirectory) =
-        "/" bind GET to SetHtmlContentType.then {
-            Response(OK).body(renderer(ListUsersView(userDirectory.list(), WebForm())))
-        }
-}
+fun ListUsers(renderer: TemplateRenderer, userDirectory: UserDirectory) =
+    "/" bind GET to SetHtmlContentType.then {
+        Response(OK).body(renderer(ListUsersView(userDirectory.list(), WebForm())))
+    }
 
 data class ListUsersView(val users: List<User>, val form: WebForm) : ViewModel {
     val errors: List<String> = form.errors.map { it.toString() }

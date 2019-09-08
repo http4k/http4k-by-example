@@ -16,12 +16,11 @@ data class Index(val time: String, val browser: String) : ViewModel
 /**
  * The root index page of the server, displayed using a ViewModel.
  */
-object ShowIndex {
-    operator fun invoke(clock: Clock, renderer: TemplateRenderer) =
-        "/" bind GET to SetHtmlContentType.then {
-            Response(OK).body(
-                renderer(
-                    Index(LocalDateTime.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), it.header("User-Agent") ?: "unknown"))
-            )
-        }
-}
+fun ShowIndex(clock: Clock, renderer: TemplateRenderer) =
+    "/" bind GET to SetHtmlContentType.then {
+        Response(OK).body(
+            renderer(
+                Index(LocalDateTime.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), it.header("User-Agent")
+                    ?: "unknown"))
+        )
+    }

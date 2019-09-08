@@ -5,6 +5,4 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 
-object Ping {
-    operator fun invoke() = "/ping" bind GET to { Response(OK).body("pong") }
-}
+fun Ping() = "/ping" bind GET to { Response(OK).body("pong") }

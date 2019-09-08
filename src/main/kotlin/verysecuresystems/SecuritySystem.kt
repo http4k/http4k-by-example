@@ -23,39 +23,37 @@ import java.time.Clock
  * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
  * inject non-HTTP versions of the downstream dependencies so we can run tests without starting up real HTTP servers.
  */
-object SecuritySystem {
-    operator fun invoke(clock: Clock, events: Events,
-                        oauthCallbackUri: Uri,
-                        oauthServerUri: Uri,
-                        oauthServerHttp: HttpHandler,
-                        userDirectoryHttp: HttpHandler,
-                        entryLoggerHttp: HttpHandler): HttpHandler {
+fun SecuritySystem(clock: Clock, events: Events,
+                   oauthCallbackUri: Uri,
+                   oauthServerUri: Uri,
+                   oauthServerHttp: HttpHandler,
+                   userDirectoryHttp: HttpHandler,
+                   entryLoggerHttp: HttpHandler): HttpHandler {
 
-        val inhabitants = Inhabitants()
-        val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
+    val inhabitants = Inhabitants()
+    val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
-        val userDirectory = UserDirectory(ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(clock, events))
-            .then(userDirectoryHttp))
+    val userDirectory = UserDirectory(ClientFilters.RequestTracing()
+        .then(Auditor.Outgoing(clock, events))
+        .then(userDirectoryHttp))
 
-        val entryLogger = EntryLogger(ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(clock, events))
-            .then(entryLoggerHttp), clock)
+    val entryLogger = EntryLogger(ClientFilters.RequestTracing()
+        .then(Auditor.Outgoing(clock, events))
+        .then(entryLoggerHttp), clock)
 
-        // we compose the various route blocks together here
-        val app = routes(
-            Api(userDirectory, entryLogger, inhabitants, oAuthProvider),
-            Diagnostic(clock),
-            Web(clock, oAuthProvider, userDirectory),
-            static(Classpath("public"))
-        )
+    // we compose the various route blocks together here
+    val app = routes(
+        Api(userDirectory, entryLogger, inhabitants, oAuthProvider),
+        Diagnostic(clock),
+        Web(clock, oAuthProvider, userDirectory),
+        static(Classpath("public"))
+    )
 
-        // Create the application "stack", including inbound auditing
-        return Auditor.Incoming(clock, events)
-            .then(ServerFilters.CatchAll())
-            .then(ServerFilters.HandleUpstreamRequestFailed())
-            .then(ServerFilters.RequestTracing())
-            .then(app)
-    }
+    // Create the application "stack", including inbound auditing
+    return Auditor.Incoming(clock, events)
+        .then(ServerFilters.CatchAll())
+        .then(ServerFilters.HandleUpstreamRequestFailed())
+        .then(ServerFilters.RequestTracing())
+        .then(app)
 }
 

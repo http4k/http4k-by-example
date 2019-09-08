@@ -17,14 +17,12 @@ import verysecuresystems.external.UserDirectory
 /**
  * Handles the deletion of an existing user, using standardised http4k form lenses.
  */
-object DeleteUser {
-    operator fun invoke(userDirectory: UserDirectory): RoutingHttpHandler {
-        val id = FormField.int().map(::Id, Id::value).required("id")
-        val form = Body.webForm(Strict, id).toLens()
+fun DeleteUser(userDirectory: UserDirectory): RoutingHttpHandler {
+    val id = FormField.int().map(::Id, Id::value).required("id")
+    val form = Body.webForm(Strict, id).toLens()
 
-        return "/delete" bind POST to SetHtmlContentType.then {
-            userDirectory.delete(id(form(it)))
-            Response(SEE_OTHER).header("location", "/users")
-        }
+    return "/delete" bind POST to SetHtmlContentType.then {
+        userDirectory.delete(id(form(it)))
+        Response(SEE_OTHER).header("location", "/users")
     }
 }

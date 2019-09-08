@@ -11,10 +11,8 @@ import java.time.Clock
 /**
  * The internal monitoring API.
  */
-object Diagnostic {
-    operator fun invoke(clock: Clock): RoutingHttpHandler = "/internal" bind routes(
-        Ping(),
-        Uptime(clock),
-        "/" bind GET to { Response(OK).body("diagnostic module. visit: /ping or /uptime") }
-    )
-}
+fun Diagnostic(clock: Clock): RoutingHttpHandler = "/internal" bind routes(
+    Ping(),
+    Uptime(clock),
+    "/" bind GET to { Response(OK).body("diagnostic module. visit: /ping or /uptime") }
+)
