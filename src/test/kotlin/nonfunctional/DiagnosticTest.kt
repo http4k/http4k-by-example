@@ -1,4 +1,4 @@
-package diagnostic
+package nonfunctional
 
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
@@ -25,15 +25,4 @@ class DiagnosticTest {
         val response = env.http(Request(GET, "/internal/uptime"))
         assertThat(response, hasStatus(OK).and(hasBody("uptime is: 0s")))
     }
-
-//
-//    it("has a sitemap") {
-//        val response = env.responseTo(Request("/sitemap.xml"))
-//        response.status shouldBe Ok
-//        response.contentType.startsWith(ContentTypes.APPLICATION_XML.value) shouldBe true
-//        val siteMap = trim(XML.loadString(response.content))
-//        ((siteMap \\ "urlset" \\ "url") (0) \\ "loc").text shouldBe "http://my.security.system/users"
-//        ((siteMap \\ "urlset" \\ "url") (1) \\ "loc").text shouldBe "http://my.security.system"
-//    }
-//
 }

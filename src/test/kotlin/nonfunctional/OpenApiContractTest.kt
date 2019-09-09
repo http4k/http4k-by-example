@@ -1,4 +1,4 @@
-package api
+package nonfunctional
 
 import env.TestEnvironment
 import org.http4k.core.Method

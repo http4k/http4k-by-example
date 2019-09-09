@@ -9,7 +9,7 @@ import verysecuresystems.Settings
 class SecuritySystemServerTest {
 
     @Test
-    fun `can build server and start and stop it`() {
+    fun `can start and stop server`() {
         val securityServerPort = 9000
         val userDirectoryPort = 10000
         val entryLoggerPort = 11000
