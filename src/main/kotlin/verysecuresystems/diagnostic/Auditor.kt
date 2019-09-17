@@ -4,7 +4,6 @@ import org.http4k.core.Filter
 import org.http4k.events.Events
 import verysecuresystems.IncomingEvent
 import verysecuresystems.OutgoingEvent
-import java.time.Clock
 
 /**
  * This auditor is responsible for logging the performance of inbound calls to the system.
@@ -23,7 +22,7 @@ object Auditor {
     /**
      * Audit outgoing HTTP interactions
      */
-    fun Outgoing(clock: Clock, events: Events) = Filter { next ->
+    fun Outgoing(events: Events) = Filter { next ->
         {
             next(it).apply { events(OutgoingEvent(it.uri, status)) }
         }

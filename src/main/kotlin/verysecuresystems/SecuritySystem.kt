@@ -25,24 +25,24 @@ import java.time.Clock
  * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
  * inject non-HTTP versions of the downstream dependencies so we can run tests without starting up real HTTP servers.
  */
-fun SecuritySystem(clock: Clock, events: Events,
+fun SecuritySystem(clock: Clock,
+                   events: Events,
                    oauthCallbackUri: Uri,
                    oauthServerUri: Uri,
                    oauthServerHttp: HttpHandler,
                    userDirectoryHttp: HttpHandler,
                    entryLoggerHttp: HttpHandler): HttpHandler {
 
+    val timedEvents = EventFilters.AddTimestamp(clock).then(events)
     val inhabitants = Inhabitants()
     val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
-    EventFilters.AddTimestamp(clock).then(events)
-
     val userDirectory = UserDirectory(ClientFilters.RequestTracing()
-        .then(Auditor.Outgoing(clock, events))
+        .then(Auditor.Outgoing(timedEvents))
         .then(userDirectoryHttp))
 
     val entryLogger = EntryLogger(ClientFilters.RequestTracing()
-        .then(Auditor.Outgoing(clock, events))
+        .then(Auditor.Outgoing(timedEvents))
         .then(entryLoggerHttp), clock)
 
     // we compose the various route blocks together here
