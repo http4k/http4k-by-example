@@ -1,7 +1,7 @@
 package verysecuresystems.diagnostic
 
-import org.http4k.core.Events
 import org.http4k.core.Filter
+import org.http4k.events.Events
 import verysecuresystems.IncomingEvent
 import verysecuresystems.OutgoingEvent
 import java.time.Clock
@@ -14,9 +14,9 @@ object Auditor {
     /**
      * Audit incoming HTTP interactions
      */
-    fun Incoming(clock: Clock, events: Events) = Filter { next ->
+    fun Incoming(events: Events) = Filter { next ->
         {
-            next(it).apply { events(IncomingEvent(clock.instant(), it.uri, status)) }
+            next(it).apply { events(IncomingEvent(it.uri, status)) }
         }
     }
 
@@ -25,7 +25,7 @@ object Auditor {
      */
     fun Outgoing(clock: Clock, events: Events) = Filter { next ->
         {
-            next(it).apply { events(OutgoingEvent(clock.instant(), it.uri, status)) }
+            next(it).apply { events(OutgoingEvent(it.uri, status)) }
         }
     }
 }

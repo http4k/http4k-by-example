@@ -1,9 +1,11 @@
 package verysecuresystems
 
-import org.http4k.core.Events
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
+import org.http4k.events.EventFilters
+import org.http4k.events.Events
+import org.http4k.events.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.HandleUpstreamRequestFailed
 import org.http4k.filter.ServerFilters
@@ -33,6 +35,8 @@ fun SecuritySystem(clock: Clock, events: Events,
     val inhabitants = Inhabitants()
     val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
+    EventFilters.AddTimestamp(clock).then(events)
+
     val userDirectory = UserDirectory(ClientFilters.RequestTracing()
         .then(Auditor.Outgoing(clock, events))
         .then(userDirectoryHttp))
@@ -50,7 +54,7 @@ fun SecuritySystem(clock: Clock, events: Events,
     )
 
     // Create the application "stack", including inbound auditing
-    return Auditor.Incoming(clock, events)
+    return Auditor.Incoming(events)
         .then(ServerFilters.CatchAll())
         .then(ServerFilters.HandleUpstreamRequestFailed())
         .then(ServerFilters.RequestTracing())

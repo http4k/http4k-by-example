@@ -23,7 +23,7 @@ import java.util.UUID
 class ReportInhabitantsTest {
 
     private val env = TestEnvironment()
-    private val inhabitants = Body.auto<Array<User>>().map(Array<User>::toList).toLens()
+    private val inhabitants = Body.auto<List<User>>().toLens()
 
     @Test
     fun `who is there endpoint is protected with oauth token`() {

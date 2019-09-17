@@ -5,7 +5,6 @@ import env.oauthserver.OAuthClientData
 import env.oauthserver.SimpleOAuthServer
 import env.userdirectory.FakeUserDirectory
 import org.http4k.core.Credentials
-import org.http4k.core.Event
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -16,6 +15,7 @@ import org.http4k.core.with
 import org.http4k.lens.Header
 import org.http4k.lens.Query
 import org.http4k.security.AccessToken
+import org.http4k.testing.RecordingEvents
 import org.http4k.webdriver.Http4kWebDriver
 import org.openqa.selenium.By
 import verysecuresystems.SecuritySystem
@@ -34,7 +34,7 @@ class TestEnvironment {
     val userDirectory = FakeUserDirectory { Random(1).nextInt() }
     val entryLogger = FakeEntryLogger()
 
-    private val events = mutableListOf<Event>()
+    private val events = RecordingEvents()
 
     private val oAuthClientData = OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
     private val credentials = Credentials("user", "password")
@@ -44,7 +44,7 @@ class TestEnvironment {
     private val securityServer =
         SecuritySystem(
             clock,
-            { events.add(it) },
+            events,
             Uri.of("http://security"),
             Uri.of("http://oauth"),
             oauthServer,

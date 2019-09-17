@@ -32,7 +32,7 @@ class UserDirectory(http: HttpHandler) {
     // this filter will handle and rethrow non-successful HTTP responses
     private val http = ClientFilters.HandleUpstreamRequestFailed({ status.successful || status == NOT_FOUND }).then(http)
 
-    private val users = Body.auto<Array<User>>().toLens()
+    private val users = Body.auto<List<User>>().toLens()
     private val user = Body.auto<User>().toLens()
 
     fun create(name: Username, inEmail: EmailAddress): User =
@@ -48,7 +48,7 @@ class UserDirectory(http: HttpHandler) {
             if (status != ACCEPTED) throw UpstreamRequestFailed(status, "user directory")
         }
 
-    fun list(): List<User> = users(http(Request(GET, "/user"))).asList()
+    fun list(): List<User> = users(http(Request(GET, "/user")))
 
     fun lookup(username: Username): User? =
         with(http(Request(GET, "/user/${username.value}"))) {

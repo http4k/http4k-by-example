@@ -1,17 +1,16 @@
 package verysecuresystems
 
-import org.http4k.core.Event
-import org.http4k.core.EventCategory
 import org.http4k.core.Status
 import org.http4k.core.Uri
-import java.time.Instant
+import org.http4k.events.Event
+import org.http4k.events.EventCategory
 
-data class IncomingEvent(val time: Instant, val uri: Uri, val status: Status) : Event {
-    override val category = EventCategory("incoming")
+data class IncomingEvent(val uri: Uri, val status: Status) : Event {
+    val category = EventCategory("incoming")
 }
 
-data class OutgoingEvent(val time: Instant, val uri: Uri, val status: Status) : Event {
-    override val category = EventCategory("outgoing")
+data class OutgoingEvent(val uri: Uri, val status: Status) : Event {
+    val category = EventCategory("outgoing")
 }
 
 data class Id(val value: Int)

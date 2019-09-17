@@ -56,8 +56,8 @@ class FakeUserDirectory(private val idGen: () -> Int = Random()::nextInt) : Http
     }
 
     private fun list(): HttpHandler = {
-        val userList = Body.auto<Array<User>>().toLens()
-        Response(OK).with(userList of users.values.toTypedArray())
+        val userList = Body.auto<List<User>>().toLens()
+        Response(OK).with(userList of users.values.toList())
     }
 
     private fun lookup(): HttpHandler {
