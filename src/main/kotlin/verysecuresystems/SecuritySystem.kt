@@ -54,7 +54,7 @@ fun SecuritySystem(clock: Clock,
     )
 
     // Create the application "stack", including inbound auditing
-    return Auditor.Incoming(events)
+    return Auditor.Incoming(timedEvents)
         .then(ServerFilters.CatchAll())
         .then(ServerFilters.HandleUpstreamRequestFailed())
         .then(ServerFilters.RequestTracing())
