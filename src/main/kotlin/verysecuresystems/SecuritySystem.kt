@@ -33,17 +33,25 @@ fun SecuritySystem(clock: Clock,
                    userDirectoryHttp: HttpHandler,
                    entryLoggerHttp: HttpHandler): HttpHandler {
 
-    val timedEvents = EventFilters.AddTimestamp(clock).then(events)
+    val timedEvents = EventFilters.AddZipkinTraces()
+        .then(EventFilters.AddTimestamp(clock))
+        .then(events)
+
     val inhabitants = Inhabitants()
     val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
-    val userDirectory = UserDirectory(ClientFilters.RequestTracing()
-        .then(Auditor.Outgoing(timedEvents))
-        .then(userDirectoryHttp))
+    val userDirectory = UserDirectory(
+        ClientFilters.RequestTracing()
+            .then(Auditor.Outgoing(timedEvents))
+            .then(userDirectoryHttp)
+    )
 
-    val entryLogger = EntryLogger(ClientFilters.RequestTracing()
-        .then(Auditor.Outgoing(timedEvents))
-        .then(entryLoggerHttp), clock)
+    val entryLogger = EntryLogger(
+        ClientFilters.RequestTracing()
+            .then(Auditor.Outgoing(timedEvents))
+            .then(entryLoggerHttp),
+        clock
+    )
 
     // we compose the various route blocks together here
     val app = routes(
@@ -54,10 +62,10 @@ fun SecuritySystem(clock: Clock,
     )
 
     // Create the application "stack", including inbound auditing
-    return Auditor.Incoming(timedEvents)
+    return ServerFilters.RequestTracing()
+        .then(Auditor.Incoming(timedEvents))
         .then(ServerFilters.CatchAll())
         .then(ServerFilters.HandleUpstreamRequestFailed())
-        .then(ServerFilters.RequestTracing())
         .then(app)
 }
 

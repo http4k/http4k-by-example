@@ -10,6 +10,8 @@ data class OAuthClientData(val credentials: Credentials, val redirectionUri: Uri
 
 object SimpleClientValidator {
     operator fun invoke(vararg clientData: OAuthClientData) = object : ClientValidator {
+        override fun validateScopes(request: Request, clientId: ClientId, scopes: List<String>) = true
+
         override fun validateClientId(request: Request, clientId: ClientId) =
             clientData.any { clientId.value == it.credentials.user }
 
