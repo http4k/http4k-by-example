@@ -21,20 +21,22 @@ val SetHtmlContentType = Filter { next ->
  * Defines the web content layer of the app, including the OAuth-protected
  * user management UI.
  */
-fun Web(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory): RoutingHttpHandler {
-    val templates = HandlebarsTemplates().CachingClasspath()
+object Web {
+    fun getHttpHandler(clock: Clock, oAuthProvider: OAuthProvider, userDirectory: UserDirectory): RoutingHttpHandler {
+        val templates = HandlebarsTemplates().CachingClasspath()
 
-    return ShowError(templates)
-        .then(
-            routes(
-                oAuthProvider.authFilter.then(
-                    "/users" bind routes(
-                        DeleteUser(userDirectory),
-                        CreateUser(templates, userDirectory),
-                        ListUsers(templates, userDirectory)
-                    )
-                ),
-                ShowIndex(clock, templates)
-            )
-        )
+        return ShowError(templates)
+                .then(
+                        routes(
+                                oAuthProvider.authFilter.then(
+                                        "/users" bind routes(
+                                                DeleteUser(userDirectory),
+                                                CreateUser(templates, userDirectory),
+                                                ListUsers(templates, userDirectory)
+                                        )
+                                ),
+                                ShowIndex(clock, templates)
+                        )
+                )
+    }
 }

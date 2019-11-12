@@ -25,47 +25,49 @@ import java.time.Clock
  * Sets up the business-level API for the application. Note that the generic clients on the constructor allow us to
  * inject non-HTTP versions of the downstream dependencies so we can run tests without starting up real HTTP servers.
  */
-fun SecuritySystem(clock: Clock,
-                   events: Events,
-                   oauthCallbackUri: Uri,
-                   oauthServerUri: Uri,
-                   oauthServerHttp: HttpHandler,
-                   userDirectoryHttp: HttpHandler,
-                   entryLoggerHttp: HttpHandler): HttpHandler {
+object SecuritySystem {
+    fun getHttpHandler(clock: Clock,
+                       events: Events,
+                       oauthCallbackUri: Uri,
+                       oauthServerUri: Uri,
+                       oauthServerHttp: HttpHandler,
+                       userDirectoryHttp: HttpHandler,
+                       entryLoggerHttp: HttpHandler): HttpHandler {
 
-    val timedEvents = EventFilters.AddZipkinTraces()
-        .then(EventFilters.AddTimestamp(clock))
-        .then(events)
+        val timedEvents = EventFilters.AddZipkinTraces()
+                .then(EventFilters.AddTimestamp(clock))
+                .then(events)
 
-    val inhabitants = Inhabitants()
-    val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
+        val inhabitants = Inhabitants()
+        val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
 
-    val userDirectory = UserDirectory(
-        ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(timedEvents))
-            .then(userDirectoryHttp)
-    )
+        val userDirectory = UserDirectory(
+                ClientFilters.RequestTracing()
+                        .then(Auditor.Outgoing(timedEvents))
+                        .then(userDirectoryHttp)
+        )
 
-    val entryLogger = EntryLogger(
-        ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(timedEvents))
-            .then(entryLoggerHttp),
-        clock
-    )
+        val entryLogger = EntryLogger(
+                ClientFilters.RequestTracing()
+                        .then(Auditor.Outgoing(timedEvents))
+                        .then(entryLoggerHttp),
+                clock
+        )
 
-    // we compose the various route blocks together here
-    val app = routes(
-        Api(userDirectory, entryLogger, inhabitants, oAuthProvider),
-        Diagnostic(clock),
-        Web(clock, oAuthProvider, userDirectory),
-        static(Classpath("public"))
-    )
+        // we compose the various route blocks together here
+        val app = routes(
+                Api.getHttpHandler(userDirectory, entryLogger, inhabitants, oAuthProvider),
+                Diagnostic.getHttpHandler(clock),
+                Web.getHttpHandler(clock, oAuthProvider, userDirectory),
+                static(Classpath("public"))
+        )
 
-    // Create the application "stack", including inbound auditing
-    return ServerFilters.RequestTracing()
-        .then(Auditor.Incoming(timedEvents))
-        .then(ServerFilters.CatchAll())
-        .then(ServerFilters.HandleUpstreamRequestFailed())
-        .then(app)
+        // Create the application "stack", including inbound auditing
+        return ServerFilters.RequestTracing()
+                .then(Auditor.Incoming(timedEvents))
+                .then(ServerFilters.CatchAll())
+                .then(ServerFilters.HandleUpstreamRequestFailed())
+                .then(app)
+    }
 }
 

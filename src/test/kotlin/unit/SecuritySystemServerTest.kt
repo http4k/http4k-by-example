@@ -22,6 +22,6 @@ class SecuritySystemServerTest {
             Settings.OAUTH_SERVER_URL of Uri.of("http://localhost:$oauthServerPort")
         )
 
-        SecuritySystemServer(env).start().stop()
+        SecuritySystemServer.createHttpHandler(env).start().stop()
     }
 }

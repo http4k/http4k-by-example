@@ -17,16 +17,18 @@ import verysecuresystems.Username
 /**
  * Retrieves a list of the users inside the building.
  */
-fun WhoIsThere(inhabitants: Iterable<Username>,
-               lookup: (Username) -> User?): ContractRoute {
-    val users = Body.auto<List<User>>().toLens()
+object WhoIsThere {
+    fun getRoute(inhabitants: Iterable<Username>,
+                   lookup: (Username) -> User?): ContractRoute {
+        val users = Body.auto<List<User>>().toLens()
 
-    val listUsers: HttpHandler = {
-        Response(OK).with(users of inhabitants.mapNotNull(lookup))
+        val listUsers: HttpHandler = {
+            Response(OK).with(users of inhabitants.mapNotNull(lookup))
+        }
+
+        return "/whoIsThere" meta {
+            summary = "List current users in the building"
+            returning(OK, users to listOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))), "Inhabitant list")
+        } bindContract Method.GET to listUsers
     }
-
-    return "/whoIsThere" meta {
-        summary = "List current users in the building"
-        returning(OK, users to listOf(User(Id(1), Username("A user"), EmailAddress("user@bob.com"))), "Inhabitant list")
-    } bindContract Method.GET to listUsers
 }

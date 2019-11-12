@@ -25,19 +25,19 @@ class KnockKnockTest {
 
     @Test
     fun `user is accepted`(approver: Approver) {
-        val app = KnockKnock({ user }, { true }, { entry })
+        val app = KnockKnock.getRoute({ user }, { true }, { entry })
         approver.assertApproved(app(Request(POST, "/knock").query("username", "bob")), ACCEPTED)
     }
 
     @Test
     fun `user not found`(approver: Approver) {
-        val app = KnockKnock({ null }, { true }, { entry })
+        val app = KnockKnock.getRoute({ null }, { true }, { entry })
         approver.assertApproved(app(Request(POST, "/knock").query("username", "bob")), NOT_FOUND)
     }
 
     @Test
     fun `user is already in building`(approver: Approver) {
-        val app = KnockKnock({ user }, { false }, { entry })
+        val app = KnockKnock.getRoute({ user }, { false }, { entry })
         approver.assertApproved(app(Request(POST, "/knock").query("username", "bob")), CONFLICT)
     }
 }

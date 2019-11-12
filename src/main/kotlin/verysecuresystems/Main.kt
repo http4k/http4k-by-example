@@ -7,5 +7,5 @@ import org.http4k.cloudnative.env.Environment
  * - see RunnableEnvironment for a demo-able version of the server.
  */
 fun main() {
-    SecuritySystemServer(Environment.ENV).start()
+    SecuritySystemServer.createHttpHandler(Environment.ENV).start()
 }

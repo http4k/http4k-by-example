@@ -42,7 +42,7 @@ class TestEnvironment {
     private val oauthServer = SimpleOAuthServer(credentials, oAuthClientData)
 
     private val securityServer =
-        SecuritySystem(
+        SecuritySystem.getHttpHandler(
             clock,
             events,
             Uri.of("http://security"),

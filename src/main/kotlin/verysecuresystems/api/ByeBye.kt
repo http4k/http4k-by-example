@@ -19,24 +19,26 @@ import verysecuresystems.Username
 /**
  * Allows users to exit the building, but only if they are already inside.
  */
-fun ByeBye(removeUser: (Username) -> Boolean,
-           entryLogger: (Username) -> UserEntry): ContractRoute {
-    val username = Query.map(::Username).required("username")
-    val message = Body.auto<Message>().toLens()
+object ByeBye {
+    fun getRoute(removeUser: (Username) -> Boolean,
+               entryLogger: (Username) -> UserEntry): ContractRoute {
+        val username = Query.map(::Username).required("username")
+        val message = Body.auto<Message>().toLens()
 
-    val userExit: HttpHandler = {
-        val exiting = username(it)
-        if (removeUser(exiting)) {
-            entryLogger(exiting)
-            Response(ACCEPTED).with(message of Message("processing"))
-        } else Response(NOT_FOUND).with(message of Message("User is not inside building"))
+        val userExit: HttpHandler = {
+            val exiting = username(it)
+            if (removeUser(exiting)) {
+                entryLogger(exiting)
+                Response(ACCEPTED).with(message of Message("processing"))
+            } else Response(NOT_FOUND).with(message of Message("User is not inside building"))
+        }
+
+        return "/bye" meta {
+            summary = "User exits the building"
+            queries += username
+            returning(ACCEPTED, message to Message("processing"))
+            returning(NOT_FOUND, message to Message("User is not inside building"))
+            returning(UNAUTHORIZED to "Incorrect key")
+        } bindContract POST to userExit
     }
-
-    return "/bye" meta {
-        summary = "User exits the building"
-        queries += username
-        returning(ACCEPTED, message to Message("processing"))
-        returning(NOT_FOUND, message to Message("User is not inside building"))
-        returning(UNAUTHORIZED to "Incorrect key")
-    } bindContract POST to userExit
 }

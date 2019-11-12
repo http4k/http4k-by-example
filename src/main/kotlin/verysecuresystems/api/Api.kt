@@ -18,20 +18,22 @@ import verysecuresystems.external.UserDirectory
  * The exposed Server API, protected by Bearer Token (which can be retrieved via
  * OAuth login).
  */
-fun Api(userDirectory: UserDirectory,
-        entryLogger: EntryLogger,
-        inhabitants: Inhabitants,
-        oAuthProvider: OAuthProvider
-): RoutingHttpHandler =
-    "/api" bind routes(
-        "/oauth/callback" bind GET to oAuthProvider.callback,
-        contract {
-            renderer = OpenApi3(ApiInfo("Security Server API", "v1.0", "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."), Jackson)
-            descriptionPath = "/api-docs"
-            security = AuthCodeOAuthSecurity(oAuthProvider)
-            routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)
-            routes += WhoIsThere(inhabitants, userDirectory::lookup)
-            routes += ByeBye(inhabitants::remove, entryLogger::exit)
-        }
-    )
+object Api {
+    fun getHttpHandler(userDirectory: UserDirectory,
+                       entryLogger: EntryLogger,
+                       inhabitants: Inhabitants,
+                       oAuthProvider: OAuthProvider
+    ): RoutingHttpHandler =
+            "/api" bind routes(
+                    "/oauth/callback" bind GET to oAuthProvider.callback,
+                    contract {
+                        renderer = OpenApi3(ApiInfo("Security Server API", "v1.0", "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."), Jackson)
+                        descriptionPath = "/api-docs"
+                        security = AuthCodeOAuthSecurity(oAuthProvider)
+                        routes += KnockKnock.getRoute(userDirectory::lookup, inhabitants::add, entryLogger::enter)
+                        routes += WhoIsThere.getRoute(inhabitants, userDirectory::lookup)
+                        routes += ByeBye.getRoute(inhabitants::remove, entryLogger::exit)
+                    }
+            )
+}
 

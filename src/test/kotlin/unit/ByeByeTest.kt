@@ -19,13 +19,13 @@ class ByeByeTest {
 
     @Test
     fun `user is removed`(approver: Approver) {
-        val app = ByeBye({ true }, { entry })
+        val app = ByeBye.getRoute({ true }, { entry })
         approver.assertApproved(app(Request(POST, "/bye").query("username", "bob")), ACCEPTED)
     }
 
     @Test
     fun `user not found`(approver: Approver) {
-        val app = ByeBye({ false }, { entry })
+        val app = ByeBye.getRoute({ false }, { entry })
         approver.assertApproved(app(Request(POST, "/bye").query("username", "bob")), NOT_FOUND)
     }
 }

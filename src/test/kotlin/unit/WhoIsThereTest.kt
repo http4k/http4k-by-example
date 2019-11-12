@@ -19,13 +19,13 @@ class WhoIsThereTest {
 
     @Test
     fun `no users`(approver: Approver) {
-        val app = WhoIsThere(emptyList()) { user }
+        val app = WhoIsThere.getRoute(emptyList()) { user }
         approver.assertApproved(app(Request(GET, "/whoIsThere")))
     }
 
     @Test
     fun `there are users`(approver: Approver) {
-        val app = WhoIsThere(listOf(user.name)) { user }
+        val app = WhoIsThere.getRoute(listOf(user.name)) { user }
         approver.assertApproved(app(Request(GET, "/whoIsThere")))
     }
 }

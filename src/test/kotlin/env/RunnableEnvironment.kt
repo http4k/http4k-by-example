@@ -50,5 +50,5 @@ fun main() {
         ENTRY_LOGGER_URL of Uri.of("http://localhost:$entryLoggerPort"),
         OAUTH_SERVER_URL of Uri.of("http://localhost:$oauthServerPort")
     )
-    SecuritySystemServer(env).start()
+    SecuritySystemServer.createHttpHandler(env).start()
 }

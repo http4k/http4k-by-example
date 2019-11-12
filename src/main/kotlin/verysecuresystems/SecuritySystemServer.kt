@@ -21,14 +21,16 @@ import java.time.Clock
 /**
  * Responsible for setting up real HTTP servers and clients to downstream services via HTTP
  */
-fun SecuritySystemServer(env: Environment) =
-    SecuritySystem(Clock.systemUTC(), AutoJsonEvents(Jackson),
-        SECURITY_SERVER_URL(env),
-        OAUTH_SERVER_URL(env),
-        SetHostFrom(OAUTH_SERVER_URL(env)).then(OkHttp()),
-        SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
-        SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
-    ).asServer(Undertow(PORT(env)))
+object SecuritySystemServer {
+    fun createHttpHandler(env: Environment) =
+            SecuritySystem.getHttpHandler(Clock.systemUTC(), AutoJsonEvents(Jackson),
+                    SECURITY_SERVER_URL(env),
+                    OAUTH_SERVER_URL(env),
+                    SetHostFrom(OAUTH_SERVER_URL(env)).then(OkHttp()),
+                    SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
+                    SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
+            ).asServer(Undertow(PORT(env)))
+}
 
 object Settings {
     val PORT = EnvironmentKey.int().required("PORT")

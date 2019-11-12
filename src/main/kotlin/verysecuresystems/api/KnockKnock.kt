@@ -21,31 +21,34 @@ import verysecuresystems.Username
 /**
  * Allows users to enter the building, but only if they exist.
  */
-fun KnockKnock(lookup: (Username) -> User?,
-               add: (Username) -> Boolean,
-               entryLogger: (Username) -> UserEntry): ContractRoute {
-    val username = Query.map(::Username).required("username")
-    val message = Body.auto<Message>().toLens()
+object KnockKnock {
+    fun getRoute(lookup: (Username) -> User?,
+                 add: (Username) -> Boolean,
+                 entryLogger: (Username) -> UserEntry): ContractRoute {
+        val getUsername = Query.map(::Username).required("username")
+        val message = Body.auto<Message>().toLens()
 
-    val userEntry: HttpHandler = {
-        lookup(username(it))?.name
-            ?.let {
-                if (add(it)) {
-                    entryLogger(it)
-                    Response(ACCEPTED).with(message of Message("Access granted"))
-                } else {
-                    Response(CONFLICT).with(message of Message("User is already inside building"))
-                }
-            }
-            ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
+        val userEntry: HttpHandler = { request ->
+            val username = getUsername(request)
+            lookup(username)?.name
+                    ?.let {
+                        if (add(it)) {
+                            entryLogger(it)
+                            Response(ACCEPTED).with(message of Message("Access granted"))
+                        } else {
+                            Response(CONFLICT).with(message of Message("User is already inside building"))
+                        }
+                    }
+                    ?: Response(NOT_FOUND).with(message of Message("Unknown user"))
+        }
+
+        return "/knock" meta {
+            queries += getUsername
+            summary = "User enters the building"
+            returning(ACCEPTED, message to Message("Access granted"))
+            returning(NOT_FOUND, message to Message("Unknown user"))
+            returning(CONFLICT, message to Message("User is already inside building"))
+            returning(UNAUTHORIZED to "Incorrect key")
+        } bindContract POST to userEntry
     }
-
-    return "/knock" meta {
-        queries += username
-        summary = "User enters the building"
-        returning(ACCEPTED, message to Message("Access granted"))
-        returning(NOT_FOUND, message to Message("Unknown user"))
-        returning(CONFLICT, message to Message("User is already inside building"))
-        returning(UNAUTHORIZED to "Incorrect key")
-    } bindContract POST to userEntry
 }
