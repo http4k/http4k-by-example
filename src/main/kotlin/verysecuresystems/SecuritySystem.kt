@@ -7,7 +7,7 @@ import org.http4k.events.EventFilters
 import org.http4k.events.Events
 import org.http4k.events.then
 import org.http4k.filter.ClientFilters
-import org.http4k.filter.HandleUpstreamRequestFailed
+import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
 import org.http4k.routing.routes
@@ -65,7 +65,7 @@ fun SecuritySystem(clock: Clock,
     return ServerFilters.RequestTracing()
         .then(Auditor.Incoming(timedEvents))
         .then(ServerFilters.CatchAll())
-        .then(ServerFilters.HandleUpstreamRequestFailed())
+        .then(ServerFilters.HandleRemoteRequestFailed())
         .then(app)
 }
 

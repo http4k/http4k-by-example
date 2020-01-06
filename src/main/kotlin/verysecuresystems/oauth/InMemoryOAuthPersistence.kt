@@ -44,7 +44,7 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
 
     private fun tryBearerToken(request: Request) = request.header("Authorization")
         ?.removePrefix("Bearer ")
-        ?.let(::AccessToken)
+        ?.let { AccessToken(it) }
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",

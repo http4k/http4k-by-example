@@ -17,9 +17,9 @@ class InMemoryAuthRequestTracking : AuthRequestTracking {
         try {
             with(OAuthServer) {
                 val extracted = AuthRequest(
-                    clientId(request),
-                    scopes(request) ?: listOf(),
-                    redirectUri(request),
+                    clientIdQueryParameter(request),
+                    scopesQueryParameter(request) ?: listOf(),
+                    redirectUriQueryParameter(request),
                     state(request),
                     responseType(request)
                 )

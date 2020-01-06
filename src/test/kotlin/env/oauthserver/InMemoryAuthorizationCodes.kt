@@ -21,11 +21,7 @@ class InMemoryAuthorizationCodes(private val clock: Clock) : AuthorizationCodes 
 
     override fun create(request: Request, authRequest: AuthRequest, response: Response) =
         Success(AuthorizationCode(UUID.randomUUID().toString()).also {
-            inFlightCodes[it] = AuthorizationCodeDetails(
-                authRequest.client,
-                authRequest.redirectUri,
-                clock.instant().plus(1, DAYS),
-                null, false,
+            inFlightCodes[it] = AuthorizationCodeDetails(authRequest.client, authRequest.redirectUri, clock.instant().plus(1, DAYS), null, false,
                 authRequest.responseType
             )
         })
