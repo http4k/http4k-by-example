@@ -1,6 +1,6 @@
 package verysecuresystems.external
 
-import org.http4k.cloudnative.UpstreamRequestFailed
+import org.http4k.cloudnative.RemoteRequestFailed
 import org.http4k.core.Body
 import org.http4k.core.ContentType.Companion.APPLICATION_FORM_URLENCODED
 import org.http4k.core.HttpHandler
@@ -15,7 +15,7 @@ import org.http4k.core.body.form
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.ClientFilters
-import org.http4k.filter.HandleUpstreamRequestFailed
+import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.format.Jackson.auto
 import org.http4k.lens.Header.CONTENT_TYPE
 import verysecuresystems.EmailAddress
@@ -30,7 +30,7 @@ import verysecuresystems.Username
 class UserDirectory(http: HttpHandler) {
 
     // this filter will handle and rethrow non-successful HTTP responses
-    private val http = ClientFilters.HandleUpstreamRequestFailed({ status.successful || status == NOT_FOUND }).then(http)
+    private val http = ClientFilters.HandleRemoteRequestFailed({ status.successful || status == NOT_FOUND }).then(http)
 
     private val users = Body.auto<List<User>>().toLens()
     private val user = Body.auto<User>().toLens()
@@ -45,7 +45,7 @@ class UserDirectory(http: HttpHandler) {
 
     fun delete(idToDelete: Id) =
         with(http(Request(DELETE, "/user/${idToDelete.value}"))) {
-            if (status != ACCEPTED) throw UpstreamRequestFailed(status, "user directory")
+            if (status != ACCEPTED) throw RemoteRequestFailed(status, "user directory")
         }
 
     fun list(): List<User> = users(http(Request(GET, "/user")))
@@ -55,7 +55,7 @@ class UserDirectory(http: HttpHandler) {
             when (status) {
                 NOT_FOUND -> null
                 OK -> user(this)
-                else -> throw UpstreamRequestFailed(status, "user directory")
+                else -> throw RemoteRequestFailed(status, "user directory")
             }
         }
 }
