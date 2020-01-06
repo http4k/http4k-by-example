@@ -7,7 +7,7 @@ import org.http4k.core.Request
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.ClientFilters
-import org.http4k.filter.HandleUpstreamRequestFailed
+import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.format.Jackson.auto
 import verysecuresystems.UserEntry
 import verysecuresystems.Username
@@ -20,7 +20,7 @@ import java.time.Clock
 class EntryLogger(http: HttpHandler, private val clock: Clock) {
 
     // this filter will handle and rethrow non-successful HTTP responses
-    private val http = ClientFilters.HandleUpstreamRequestFailed().then(http)
+    private val http = ClientFilters.HandleRemoteRequestFailed().then(http)
 
     private val userEntry = Body.auto<UserEntry>().toLens()
 
