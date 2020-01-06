@@ -12,6 +12,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Uri
 import org.http4k.core.with
+import org.http4k.events.Event
 import org.http4k.lens.Header
 import org.http4k.lens.Query
 import org.http4k.security.AccessToken
