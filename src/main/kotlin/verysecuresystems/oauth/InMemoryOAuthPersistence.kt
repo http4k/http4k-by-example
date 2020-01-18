@@ -9,6 +9,7 @@ import org.http4k.core.cookie.invalidateCookie
 import org.http4k.security.AccessToken
 import org.http4k.security.CrossSiteRequestForgeryToken
 import org.http4k.security.OAuthPersistence
+import org.http4k.security.openid.Nonce
 import java.time.Clock
 import java.time.Duration
 import java.time.LocalDateTime
@@ -20,16 +21,21 @@ import java.util.UUID
  */
 class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecker: TokenChecker) : OAuthPersistence {
     private val csrfName = "securityServerCsrf"
+    private val nonceName = "securityServerNonce"
     private val clientAuthCookie = "securityServerAuth"
     private val cookieSwappableTokens = mutableMapOf<String, AccessToken>()
 
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
+
+    override fun retrieveNonce(request: Request): Nonce? = null
 
     override fun retrieveToken(request: Request) = (tryBearerToken(request)
         ?: tryCookieToken(request))
         ?.takeIf(tokenChecker::check)
 
     override fun assignCsrf(redirect: Response, csrf: CrossSiteRequestForgeryToken) = redirect.cookie(expiring(csrfName, csrf.value))
+
+    override fun assignNonce(redirect: Response, nonce: Nonce): Response = redirect
 
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken) =
         UUID.randomUUID().let {
