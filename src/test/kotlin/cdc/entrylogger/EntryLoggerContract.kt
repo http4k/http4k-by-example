@@ -20,7 +20,7 @@ interface EntryLoggerContract {
     val http: HttpHandler
     val time: Instant get() = EPOCH
 
-    private fun entryLogger() = EntryLogger(http, Clock.fixed(time, ZoneId.systemDefault()))
+    fun entryLogger() = EntryLogger(http, Clock.fixed(time, ZoneId.systemDefault()))
 
     @Test
     fun `can log a user entry and it is listed`() {

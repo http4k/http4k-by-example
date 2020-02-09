@@ -1,6 +1,8 @@
 package env.entrylogger
 
-import org.http4k.chaos.withChaosEngine
+import org.http4k.chaos.ChaosBehaviours.ReturnStatus
+import org.http4k.chaos.ChaosEngine
+import org.http4k.chaos.withChaosApi
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
@@ -9,6 +11,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.I_M_A_TEAPOT
 import org.http4k.core.with
 import org.http4k.format.Jackson.auto
 import org.http4k.routing.bind
@@ -17,7 +20,13 @@ import verysecuresystems.UserEntry
 
 class FakeEntryLogger : HttpHandler {
 
+    private val engine = ChaosEngine()
+
     val entries = mutableListOf<UserEntry>()
+
+    fun blowsUp() {
+        engine.enable(ReturnStatus(I_M_A_TEAPOT))
+    }
 
     private fun list(): HttpHandler {
         val userEntry = Body.auto<UserEntry>().toLens()
@@ -50,7 +59,7 @@ class FakeEntryLogger : HttpHandler {
         "/list" bind GET to list(),
         "/entry" bind POST to entry(),
         "/exit" bind POST to exit()
-    ).withChaosEngine()
+    ).withChaosApi(engine)
 
     override fun invoke(p1: Request) = app(p1)
 }

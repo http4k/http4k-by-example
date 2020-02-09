@@ -1,6 +1,8 @@
 package env.userdirectory
 
-import org.http4k.chaos.withChaosEngine
+import org.http4k.chaos.ChaosBehaviours.ReturnStatus
+import org.http4k.chaos.ChaosEngine
+import org.http4k.chaos.withChaosApi
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.DELETE
@@ -10,6 +12,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.ACCEPTED
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.I_M_A_TEAPOT
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
@@ -29,7 +32,13 @@ import java.util.Random
 
 class FakeUserDirectory(private val idGen: () -> Int = Random()::nextInt) : HttpHandler {
 
+    private val engine = ChaosEngine()
+
     private val users = mutableMapOf<Id, User>()
+
+    fun blowsUp() {
+        engine.enable(ReturnStatus(I_M_A_TEAPOT))
+    }
 
     fun contains(newUser: User) = users.put(newUser.id, newUser)
 
@@ -40,7 +49,6 @@ class FakeUserDirectory(private val idGen: () -> Int = Random()::nextInt) : Http
         val user = Body.auto<User>().toLens()
 
         return {
-            println(it)
             val data = form(it)
             val newUser = User(Id(idGen()), username(data), email(data))
             users[newUser.id] = newUser
@@ -77,7 +85,7 @@ class FakeUserDirectory(private val idGen: () -> Int = Random()::nextInt) : Http
         "/user" bind POST to create(),
         "/user/{id}" bind DELETE to delete(),
         "/user/{username}" bind GET to lookup()
-    ).withChaosEngine()
+    ).withChaosApi(engine)
 
     override fun invoke(p1: Request) = app(p1)
 }
