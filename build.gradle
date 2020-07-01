@@ -12,7 +12,6 @@ buildscript {
     }
 
     dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.6.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
