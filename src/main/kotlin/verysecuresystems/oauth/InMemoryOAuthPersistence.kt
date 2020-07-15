@@ -13,7 +13,6 @@ import org.http4k.security.openid.Nonce
 import java.time.Clock
 import java.time.Duration
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.UUID
 
 /**
@@ -21,7 +20,6 @@ import java.util.UUID
  */
 class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecker: TokenChecker) : OAuthPersistence {
     private val csrfName = "securityServerCsrf"
-    private val nonceName = "securityServerNonce"
     private val clientAuthCookie = "securityServerAuth"
     private val cookieSwappableTokens = mutableMapOf<String, AccessToken>()
 
@@ -54,5 +52,5 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",
-        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), ZoneId.of("GMT")))
+        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), clock.zone))
 }
