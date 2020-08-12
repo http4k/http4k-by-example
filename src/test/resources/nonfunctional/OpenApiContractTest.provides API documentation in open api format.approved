@@ -35,6 +35,7 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
+                  "description": null,
                   "example": null
                 }
               }
@@ -49,6 +50,7 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
+                  "description": null,
                   "example": null
                 }
               }
@@ -98,6 +100,7 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
+                  "description": null,
                   "example": null
                 }
               }
@@ -112,6 +115,7 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
+                  "description": null,
                   "example": null
                 }
               }
@@ -126,6 +130,7 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
+                  "description": null,
                   "example": null
                 }
               }
@@ -195,6 +200,7 @@
                       }
                     }
                   ],
+                  "description": null,
                   "type": "array"
                 }
               }
@@ -218,12 +224,14 @@
         "properties": {
           "message": {
             "example": "User is not inside building",
+            "description": null,
             "type": "string"
           }
         },
         "example": {
           "message": "User is not inside building"
         },
+        "description": null,
         "type": "object",
         "required": [
           "message"
@@ -233,14 +241,17 @@
         "properties": {
           "id": {
             "$ref": "#/components/schemas/Id",
+            "description": null,
             "example": null
           },
           "name": {
             "$ref": "#/components/schemas/Username",
+            "description": null,
             "example": null
           },
           "email": {
             "$ref": "#/components/schemas/EmailAddress",
+            "description": null,
             "example": null
           }
         },
@@ -255,6 +266,7 @@
             "value": "user@bob.com"
           }
         },
+        "description": null,
         "type": "object",
         "required": [
           "email",
@@ -266,12 +278,14 @@
         "properties": {
           "value": {
             "example": 1,
+            "description": null,
             "type": "number"
           }
         },
         "example": {
           "value": 1
         },
+        "description": null,
         "type": "object",
         "required": [
           "value"
@@ -281,12 +295,14 @@
         "properties": {
           "value": {
             "example": "A user",
+            "description": null,
             "type": "string"
           }
         },
         "example": {
           "value": "A user"
         },
+        "description": null,
         "type": "object",
         "required": [
           "value"
@@ -296,12 +312,14 @@
         "properties": {
           "value": {
             "example": "user@bob.com",
+            "description": null,
             "type": "string"
           }
         },
         "example": {
           "value": "user@bob.com"
         },
+        "description": null,
         "type": "object",
         "required": [
           "value"
