@@ -14,7 +14,10 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.core.with
+import org.http4k.filter.AllowAll
+import org.http4k.filter.AnyOf
 import org.http4k.filter.CorsPolicy
+import org.http4k.filter.OriginPolicy
 import org.http4k.filter.ServerFilters.Cors
 import org.http4k.format.Jackson
 import org.http4k.lens.FormField
@@ -42,7 +45,7 @@ object SimpleOAuthServer {
         val userAuth = UserAuthentication(credentials)
 
         // this CORS filter is here to allow interactions from the OpenAPI UI (running in a browser)
-        return Cors(CorsPolicy(listOf("*"), listOf("*"), Method.values().toList()))
+        return Cors(CorsPolicy(OriginPolicy.AllowAll(), listOf("*"), Method.values().toList()))
             .then(
                 routes(
                     server.tokenRoute,

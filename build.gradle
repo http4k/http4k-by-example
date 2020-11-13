@@ -34,12 +34,13 @@ dependencies {
     implementation "org.http4k:http4k-server-undertow"
     implementation "org.http4k:http4k-template-handlebars"
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_version"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit_version"
-    testImplementation "org.http4k:http4k-testing-hamkrest:$http4k_version"
-    testImplementation "org.http4k:http4k-testing-chaos:$http4k_version"
-    testImplementation "org.http4k:http4k-testing-approval:$http4k_version"
-    testImplementation "org.http4k:http4k-testing-webdriver:$http4k_version"
+    testImplementation platform("org.junit:junit-bom:$junit_version")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.http4k:http4k-testing-hamkrest"
+    testImplementation "org.http4k:http4k-testing-chaos"
+    testImplementation "org.http4k:http4k-testing-approval"
+    testImplementation "org.http4k:http4k-testing-webdriver"
 }
 
 test {
