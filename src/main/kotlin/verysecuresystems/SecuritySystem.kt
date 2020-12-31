@@ -3,7 +3,8 @@ package verysecuresystems
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
-import org.http4k.events.EventFilters
+import org.http4k.events.EventFilters.AddTimestamp
+import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.Events
 import org.http4k.events.then
 import org.http4k.filter.ClientFilters
@@ -33,8 +34,8 @@ fun SecuritySystem(clock: Clock,
                    userDirectoryHttp: HttpHandler,
                    entryLoggerHttp: HttpHandler): HttpHandler {
 
-    val timedEvents = EventFilters.AddZipkinTraces()
-        .then(EventFilters.AddTimestamp(clock))
+    val timedEvents = AddZipkinTraces()
+        .then(AddTimestamp(clock))
         .then(events)
 
     val inhabitants = Inhabitants()
