@@ -15,8 +15,6 @@ import org.http4k.core.Status.Companion.SEE_OTHER
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.AllowAll
-import org.http4k.filter.AnyOf
-import org.http4k.filter.AnyOf
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.OriginPolicy
 import org.http4k.filter.ServerFilters.Cors
