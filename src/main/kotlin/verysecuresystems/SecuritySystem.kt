@@ -7,7 +7,7 @@ import org.http4k.events.EventFilters.AddTimestamp
 import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.Events
 import org.http4k.events.then
-import org.http4k.filter.ClientFilters
+import org.http4k.filter.ClientFilters.RequestTracing
 import org.http4k.filter.ClientFilters.SetHostFrom
 import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.filter.ServerFilters
@@ -38,8 +38,7 @@ fun SecuritySystem(clock: Clock,
         .then(AddTimestamp(clock))
         .then(events)
 
-    val timedHttp = ClientFilters.RequestTracing()
-        .then(Auditor.Outgoing(timedEvents)).then(http)
+    val timedHttp = RequestTracing().then(Auditor.Outgoing(timedEvents)).then(http)
 
     val inhabitants = Inhabitants()
     val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, SetHostFrom(oauthServerUri).then(timedHttp), clock)
@@ -57,9 +56,9 @@ fun SecuritySystem(clock: Clock,
     )
 
     // Create the application "stack", including inbound auditing
-    return ServerFilters.RequestTracing()
+    return ServerFilters.CatchAll()
+        .then(ServerFilters.RequestTracing())
         .then(Auditor.Incoming(timedEvents))
-        .then(ServerFilters.CatchAll())
         .then(ServerFilters.HandleRemoteRequestFailed())
         .then(app)
 }
