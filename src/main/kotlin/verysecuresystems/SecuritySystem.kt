@@ -8,6 +8,7 @@ import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.Events
 import org.http4k.events.then
 import org.http4k.filter.ClientFilters
+import org.http4k.filter.ClientFilters.SetHostFrom
 import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
@@ -28,31 +29,24 @@ import java.time.Clock
  */
 fun SecuritySystem(clock: Clock,
                    events: Events,
+                   http: HttpHandler,
                    oauthCallbackUri: Uri,
                    oauthServerUri: Uri,
-                   oauthServerHttp: HttpHandler,
-                   userDirectoryHttp: HttpHandler,
-                   entryLoggerHttp: HttpHandler): HttpHandler {
-
+                   userDirectoryUri: Uri,
+                   entryLoggerUri: Uri): HttpHandler {
     val timedEvents = AddZipkinTraces()
         .then(AddTimestamp(clock))
         .then(events)
 
+    val timedHttp = ClientFilters.RequestTracing()
+        .then(Auditor.Outgoing(timedEvents)).then(http)
+
     val inhabitants = Inhabitants()
-    val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, oauthServerHttp, clock)
+    val oAuthProvider = SecurityServerOAuthProvider(oauthCallbackUri, oauthServerUri, SetHostFrom(oauthServerUri).then(timedHttp), clock)
 
-    val userDirectory = UserDirectory(
-        ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(timedEvents))
-            .then(userDirectoryHttp)
-    )
+    val userDirectory = UserDirectory(SetHostFrom(userDirectoryUri).then(timedHttp))
 
-    val entryLogger = EntryLogger(
-        ClientFilters.RequestTracing()
-            .then(Auditor.Outgoing(timedEvents))
-            .then(entryLoggerHttp),
-        clock
-    )
+    val entryLogger = EntryLogger(SetHostFrom(entryLoggerUri).then(timedHttp), clock)
 
     // we compose the various route blocks together here
     val app = routes(

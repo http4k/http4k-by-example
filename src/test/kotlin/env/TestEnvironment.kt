@@ -12,13 +12,13 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Uri
 import org.http4k.core.with
-import org.http4k.events.Event
 import org.http4k.lens.Header
 import org.http4k.lens.Query
+import org.http4k.routing.reverseProxy
 import org.http4k.security.AccessToken
 import org.http4k.testing.RecordingEvents
+import org.http4k.webdriver.By
 import org.http4k.webdriver.Http4kWebDriver
-import org.openqa.selenium.By
 import verysecuresystems.SecuritySystem
 import java.time.Clock.fixed
 import java.time.Instant.ofEpochSecond
@@ -29,7 +29,6 @@ import java.time.ZoneOffset.UTC
 import java.util.Random
 
 class TestEnvironment {
-
     val clock = fixed(ofEpochSecond(LocalDate.of(3000, 1, 1).toEpochSecond(MIDNIGHT, UTC)), ZoneId.of("UTC"))!!
 
     val userDirectory = FakeUserDirectory { Random(1).nextInt() }
@@ -46,11 +45,15 @@ class TestEnvironment {
         SecuritySystem(
             clock,
             events,
+            reverseProxy(
+                "oauth" to oauthServer,
+                "userDirectory" to userDirectory,
+                "entryLogger" to entryLogger
+            ),
             Uri.of("http://security"),
             Uri.of("http://oauth"),
-            oauthServer,
-            userDirectory,
-            entryLogger
+            Uri.of("http://userDirectory"),
+            Uri.of("http://entryLogger")
         )
 
     // this HttpHandler handles switching of hosts from the security server and the oauth server

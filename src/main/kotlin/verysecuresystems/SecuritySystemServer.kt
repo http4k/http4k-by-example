@@ -3,9 +3,7 @@ package verysecuresystems
 import org.http4k.client.OkHttp
 import org.http4k.cloudnative.env.Environment
 import org.http4k.cloudnative.env.EnvironmentKey
-import org.http4k.core.then
 import org.http4k.events.AutoMarshallingEvents
-import org.http4k.filter.ClientFilters.SetHostFrom
 import org.http4k.format.Jackson
 import org.http4k.lens.int
 import org.http4k.lens.uri
@@ -23,11 +21,11 @@ import java.time.Clock
  */
 fun SecuritySystemServer(env: Environment) =
     SecuritySystem(Clock.systemUTC(), AutoMarshallingEvents(Jackson),
+        OkHttp(),
         SECURITY_SERVER_URL(env),
         OAUTH_SERVER_URL(env),
-        SetHostFrom(OAUTH_SERVER_URL(env)).then(OkHttp()),
-        SetHostFrom(USER_DIRECTORY_URL(env)).then(OkHttp()),
-        SetHostFrom(ENTRY_LOGGER_URL(env)).then(OkHttp())
+        USER_DIRECTORY_URL(env),
+        ENTRY_LOGGER_URL(env)
     ).asServer(Undertow(PORT(env)))
 
 object Settings {
