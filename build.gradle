@@ -15,7 +15,7 @@ buildscript {
 apply plugin: 'kotlin'
 apply plugin: 'jacoco'
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     jcenter()
