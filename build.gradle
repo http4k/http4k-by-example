@@ -3,7 +3,6 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
     }
 
@@ -18,7 +17,7 @@ apply plugin: 'jacoco'
 sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    jcenter()
+    mavenLocal()
     mavenCentral()
 }
 
