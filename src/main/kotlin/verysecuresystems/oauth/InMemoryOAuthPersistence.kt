@@ -44,10 +44,16 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken, idToken: IdToken?) =
         UUID.randomUUID().let {
             cookieSwappableTokens[it.toString()] = accessToken
-            redirect.cookie(expiring(clientAuthCookie, it.toString())).invalidateCookie(csrfName)
+            redirect
+                .cookie(expiring(clientAuthCookie, it.toString()))
+                .invalidateCookie(csrfName)
+                .invalidateCookie(originalUriName)
         }
 
-    override fun authFailureResponse() = Response(FORBIDDEN).invalidateCookie(csrfName).invalidateCookie(clientAuthCookie)
+    override fun authFailureResponse() = Response(FORBIDDEN)
+        .invalidateCookie(csrfName)
+        .invalidateCookie(originalUriName)
+        .invalidateCookie(clientAuthCookie)
 
     private fun tryCookieToken(request: Request) =
         request.cookie(clientAuthCookie)?.value?.let { cookieSwappableTokens[it] }
