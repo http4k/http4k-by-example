@@ -25,6 +25,7 @@ import org.http4k.lens.Validator.Strict
 import org.http4k.lens.webForm
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import org.http4k.security.oauth.server.InsecureCookieBasedAuthRequestTracking
 import org.http4k.security.oauth.server.OAuthServer
 import java.time.Clock
 
@@ -37,8 +38,8 @@ object SimpleOAuthServer {
             SimpleClientValidator(*oAuthClientData),
             InMemoryAuthorizationCodes(clock),
             SimpleAccessTokens(),
-            Jackson,
-            clock
+            clock,
+            Jackson
         )
 
         val userAuth = UserAuthentication(credentials)

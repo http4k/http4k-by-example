@@ -6,6 +6,12 @@
   },
   "tags": [
   ],
+  "servers": [
+    {
+      "url": "/",
+      "description": null
+    }
+  ],
   "paths": {
     "/api/bye": {
       "post": {
@@ -35,8 +41,8 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
-                  "description": null,
-                  "example": null
+                  "example": null,
+                  "description": null
                 }
               }
             }
@@ -50,8 +56,8 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
-                  "description": null,
-                  "example": null
+                  "example": null,
+                  "description": null
                 }
               }
             }
@@ -100,8 +106,8 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
-                  "description": null,
-                  "example": null
+                  "example": null,
+                  "description": null
                 }
               }
             }
@@ -115,8 +121,8 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
-                  "description": null,
-                  "example": null
+                  "example": null,
+                  "description": null
                 }
               }
             }
@@ -130,8 +136,8 @@
                 },
                 "schema": {
                   "$ref": "#/components/schemas/Message",
-                  "description": null,
-                  "example": null
+                  "example": null,
+                  "description": null
                 }
               }
             }
@@ -181,11 +187,7 @@
                 ],
                 "schema": {
                   "items": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/User"
-                      }
-                    ]
+                    "$ref": "#/components/schemas/User"
                   },
                   "example": [
                     {
@@ -241,18 +243,18 @@
         "properties": {
           "id": {
             "$ref": "#/components/schemas/Id",
-            "description": null,
-            "example": null
+            "example": null,
+            "description": null
           },
           "name": {
             "$ref": "#/components/schemas/Username",
-            "description": null,
-            "example": null
+            "example": null,
+            "description": null
           },
           "email": {
             "$ref": "#/components/schemas/EmailAddress",
-            "description": null,
-            "example": null
+            "example": null,
+            "description": null
           }
         },
         "example": {
