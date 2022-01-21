@@ -64,5 +64,5 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",
-        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofHours(3)), clock.zone))
+        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofDays(1)), clock.zone))
 }
