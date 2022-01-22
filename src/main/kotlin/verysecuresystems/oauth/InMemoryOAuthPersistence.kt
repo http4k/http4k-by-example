@@ -14,7 +14,6 @@ import org.http4k.security.OAuthPersistence
 import org.http4k.security.openid.IdToken
 import java.time.Clock
 import java.time.Duration
-import java.time.LocalDateTime
 import java.util.UUID
 
 /**
@@ -64,5 +63,5 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
 
     private fun expiring(name: String, value: String) = Cookie(name, value,
         path = "/",
-        expires = LocalDateTime.ofInstant(clock.instant().plus(Duration.ofDays(1)), clock.zone))
+        expires = clock.instant().plus(Duration.ofDays(1)))
 }
