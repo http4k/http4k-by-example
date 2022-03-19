@@ -5,7 +5,6 @@ import org.http4k.contract.openapi.ApiInfo
 import org.http4k.contract.openapi.v3.OpenApi3
 import org.http4k.contract.security.AuthCodeOAuthSecurity
 import org.http4k.core.Method.GET
-import org.http4k.format.Jackson
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -26,7 +25,7 @@ fun Api(userDirectory: UserDirectory,
     "/api" bind routes(
         "/oauth/callback" bind GET to oAuthProvider.callback,
         contract {
-            renderer = OpenApi3(ApiInfo("Security Server API", "v1.0", "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."), Jackson)
+            renderer = OpenApi3(ApiInfo("Security Server API", "v1.0", "This API is secured by an OAuth auth code. Simply click 'Authorize' to start the flow."))
             descriptionPath = "/api-docs"
             security = AuthCodeOAuthSecurity(oAuthProvider)
             routes += KnockKnock(userDirectory::lookup, inhabitants::add, entryLogger::enter)

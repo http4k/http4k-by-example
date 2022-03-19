@@ -8,15 +8,13 @@
   ],
   "servers": [
     {
-      "url": "/",
-      "description": null
+      "url": "/"
     }
   ],
   "paths": {
     "/api/bye": {
       "post": {
         "summary": "User exits the building",
-        "description": null,
         "tags": [
           "/api"
         ],
@@ -27,8 +25,7 @@
             },
             "in": "query",
             "name": "username",
-            "required": true,
-            "description": null
+            "required": true
           }
         ],
         "responses": {
@@ -40,9 +37,7 @@
                   "message": "processing"
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/Message",
-                  "example": null,
-                  "description": null
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -55,9 +50,7 @@
                   "message": "User is not inside building"
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/Message",
-                  "example": null,
-                  "description": null
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -81,7 +74,6 @@
     "/api/knock": {
       "post": {
         "summary": "User enters the building",
-        "description": null,
         "tags": [
           "/api"
         ],
@@ -92,8 +84,7 @@
             },
             "in": "query",
             "name": "username",
-            "required": true,
-            "description": null
+            "required": true
           }
         ],
         "responses": {
@@ -105,9 +96,7 @@
                   "message": "Access granted"
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/Message",
-                  "example": null,
-                  "description": null
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -120,9 +109,7 @@
                   "message": "Unknown user"
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/Message",
-                  "example": null,
-                  "description": null
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -135,9 +122,7 @@
                   "message": "User is already inside building"
                 },
                 "schema": {
-                  "$ref": "#/components/schemas/Message",
-                  "example": null,
-                  "description": null
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -161,7 +146,6 @@
     "/api/whoIsThere": {
       "get": {
         "summary": "List current users in the building",
-        "description": null,
         "tags": [
           "/api"
         ],
@@ -202,7 +186,6 @@
                       }
                     }
                   ],
-                  "description": null,
                   "type": "array"
                 }
               }
@@ -226,14 +209,12 @@
         "properties": {
           "message": {
             "example": "User is not inside building",
-            "description": null,
             "type": "string"
           }
         },
         "example": {
           "message": "User is not inside building"
         },
-        "description": null,
         "type": "object",
         "required": [
           "message"
@@ -242,19 +223,13 @@
       "User": {
         "properties": {
           "id": {
-            "$ref": "#/components/schemas/Id",
-            "example": null,
-            "description": null
+            "$ref": "#/components/schemas/Id"
           },
           "name": {
-            "$ref": "#/components/schemas/Username",
-            "example": null,
-            "description": null
+            "$ref": "#/components/schemas/Username"
           },
           "email": {
-            "$ref": "#/components/schemas/EmailAddress",
-            "example": null,
-            "description": null
+            "$ref": "#/components/schemas/EmailAddress"
           }
         },
         "example": {
@@ -268,7 +243,6 @@
             "value": "user@bob.com"
           }
         },
-        "description": null,
         "type": "object",
         "required": [
           "email",
@@ -280,14 +254,12 @@
         "properties": {
           "value": {
             "example": 1,
-            "description": null,
             "type": "number"
           }
         },
         "example": {
           "value": 1
         },
-        "description": null,
         "type": "object",
         "required": [
           "value"
@@ -297,14 +269,12 @@
         "properties": {
           "value": {
             "example": "A user",
-            "description": null,
             "type": "string"
           }
         },
         "example": {
           "value": "A user"
         },
-        "description": null,
         "type": "object",
         "required": [
           "value"
@@ -314,14 +284,12 @@
         "properties": {
           "value": {
             "example": "user@bob.com",
-            "description": null,
             "type": "string"
           }
         },
         "example": {
           "value": "user@bob.com"
         },
-        "description": null,
         "type": "object",
         "required": [
           "value"

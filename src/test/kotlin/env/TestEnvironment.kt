@@ -17,8 +17,8 @@ import org.http4k.lens.Query
 import org.http4k.routing.reverseProxy
 import org.http4k.security.AccessToken
 import org.http4k.testing.RecordingEvents
-import org.http4k.webdriver.By
 import org.http4k.webdriver.Http4kWebDriver
+import org.openqa.selenium.By
 import verysecuresystems.SecuritySystem
 import java.time.Clock.fixed
 import java.time.Instant.ofEpochSecond
@@ -36,7 +36,10 @@ class TestEnvironment {
 
     private val events = RecordingEvents()
 
-    private val oAuthClientData = OAuthClientData(Credentials("securityServer", "securityServerSecret"), Uri.of("http://security/api/oauth/callback"))
+    private val oAuthClientData = OAuthClientData(
+        Credentials("securityServer", "securityServerSecret"),
+        Uri.of("http://security/api/oauth/callback")
+    )
     private val credentials = Credentials("user", "password")
 
     private val oauthServer = SimpleOAuthServer(credentials, oAuthClientData)

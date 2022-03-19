@@ -8,10 +8,10 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.testing.ApprovalTest
 import org.http4k.testing.Approver
 import org.http4k.testing.assertApproved
-import org.http4k.webdriver.By
 import org.http4k.webdriver.Http4kWebDriver
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.openqa.selenium.By
 
 @ExtendWith(ApprovalTest::class)
 class ManageUsersTest {
