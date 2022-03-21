@@ -254,7 +254,7 @@
         "properties": {
           "value": {
             "example": 1,
-            "type": "number"
+            "type": "integer"
           }
         },
         "example": {
