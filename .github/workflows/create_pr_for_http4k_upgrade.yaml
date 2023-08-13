@@ -17,3 +17,9 @@ jobs:
           PR_BRANCH_NAME: ${{ github.event.client_payload.version }}
           PR_TITLE: 'Auto-upgrade to ${{ github.event.client_payload.version }}'
           GITHUB_TOKEN: ${{ secrets.TOOLBOX_REPO_TOKEN }}
+      - name: Label PR
+        uses: TimonVS/pr-labeler-action@v3
+        with:
+          configuration-path: .github/pr-labeler.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOOLBOX_REPO_TOKEN }}

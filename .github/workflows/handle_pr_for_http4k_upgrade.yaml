@@ -1,17 +1,11 @@
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [labeled]
 
 jobs:
   handle-pr-for-http4k-upgrade:
     runs-on: ubuntu-latest
     steps:
-      - name: Label PR
-        uses: TimonVS/pr-labeler-action@v3
-        with:
-          configuration-path: .github/pr-labeler.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOOLBOX_REPO_TOKEN }}
       - name: Automatically Merge
         uses: plm9606/automerge_actions@1.2.2
         with:
