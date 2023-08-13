@@ -1,6 +1,6 @@
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [ labeled ]
 
 jobs:
   handle-pr-for-http4k-upgrade:
