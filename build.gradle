@@ -12,9 +12,8 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'jacoco'
 
-sourceCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenLocal()
@@ -45,15 +44,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-jacoco {
-    toolVersion = '0.8.3'
-}
-
-jacocoTestReport {
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
 }
