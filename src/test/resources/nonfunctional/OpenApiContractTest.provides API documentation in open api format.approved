@@ -186,7 +186,8 @@
                       }
                     }
                   ],
-                  "type": "array"
+                  "type": "array",
+                  "nullable": false
                 }
               }
             }
@@ -209,7 +210,8 @@
         "properties": {
           "message": {
             "example": "User is not inside building",
-            "type": "string"
+            "type": "string",
+            "nullable": false
           }
         },
         "example": {
@@ -255,7 +257,8 @@
           "value": {
             "example": 1,
             "format": "int32",
-            "type": "integer"
+            "type": "integer",
+            "nullable": false
           }
         },
         "example": {
@@ -270,7 +273,8 @@
         "properties": {
           "value": {
             "example": "A user",
-            "type": "string"
+            "type": "string",
+            "nullable": false
           }
         },
         "example": {
@@ -285,7 +289,8 @@
         "properties": {
           "value": {
             "example": "user@bob.com",
-            "type": "string"
+            "type": "string",
+            "nullable": false
           }
         },
         "example": {
