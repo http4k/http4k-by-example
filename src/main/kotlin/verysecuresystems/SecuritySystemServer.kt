@@ -1,8 +1,8 @@
 package verysecuresystems
 
 import org.http4k.client.OkHttp
-import org.http4k.cloudnative.env.Environment
-import org.http4k.cloudnative.env.EnvironmentKey
+import org.http4k.config.Environment
+import org.http4k.config.EnvironmentKey
 import org.http4k.events.AutoMarshallingEvents
 import org.http4k.format.Jackson
 import org.http4k.lens.int

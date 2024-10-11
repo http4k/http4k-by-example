@@ -1,6 +1,6 @@
 package verysecuresystems
 
-import org.http4k.cloudnative.env.Environment
+import org.http4k.config.Environment
 
 /**
  * Main entry point. Note that this will not run without setting up the correct environmental variables
