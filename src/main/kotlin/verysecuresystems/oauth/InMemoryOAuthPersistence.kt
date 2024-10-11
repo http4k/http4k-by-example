@@ -12,6 +12,7 @@ import org.http4k.security.CrossSiteRequestForgeryToken
 import org.http4k.security.Nonce
 import org.http4k.security.OAuthCallbackError
 import org.http4k.security.OAuthPersistence
+import org.http4k.security.PkceChallengeAndVerifier
 import org.http4k.security.openid.IdToken
 import java.time.Clock
 import java.time.Duration
@@ -29,7 +30,10 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
     override fun retrieveCsrf(request: Request) = request.cookie(csrfName)?.value?.let(::CrossSiteRequestForgeryToken)
 
     override fun retrieveNonce(request: Request): Nonce? = null
+
     override fun retrieveOriginalUri(request: Request): Uri? = request.cookie(originalUriName)?.value?.let(Uri::of)
+
+    override fun retrievePkce(request: Request)  = null
 
     override fun retrieveToken(request: Request) = (tryBearerToken(request)
         ?: tryCookieToken(request))
@@ -40,6 +44,8 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
     override fun assignNonce(redirect: Response, nonce: Nonce): Response = redirect
 
     override fun assignOriginalUri(redirect: Response, originalUri: Uri): Response = redirect.cookie(expiring(originalUriName, originalUri.toString()))
+
+    override fun assignPkce(redirect: Response, pkce: PkceChallengeAndVerifier) = redirect
 
     override fun assignToken(request: Request, redirect: Response, accessToken: AccessToken, idToken: IdToken?) =
         UUID.randomUUID().let {

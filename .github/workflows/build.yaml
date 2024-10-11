@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: ./gradlew check
       - name: Tag automerge branch
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'Auto-upgrade') }}
         uses: TimonVS/pr-labeler-action@v5.0.0
         with:
           configuration-path: .github/pr-labeler.yml
