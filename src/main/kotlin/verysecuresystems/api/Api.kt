@@ -3,11 +3,11 @@ package verysecuresystems.api
 import org.http4k.contract.contract
 import org.http4k.contract.openapi.ApiInfo
 import org.http4k.contract.openapi.v3.OpenApi3
-import org.http4k.contract.security.AuthCodeOAuthSecurity
 import org.http4k.core.Method.GET
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
+import org.http4k.security.AuthCodeOAuthSecurity
 import org.http4k.security.OAuthProvider
 import verysecuresystems.Inhabitants
 import verysecuresystems.external.EntryLogger

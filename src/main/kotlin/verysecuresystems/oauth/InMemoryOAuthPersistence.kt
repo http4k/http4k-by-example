@@ -72,3 +72,8 @@ class InMemoryOAuthPersistence(private val clock: Clock, private val tokenChecke
         path = "/",
         expires = clock.instant().plus(Duration.ofDays(1)))
 }
+
+
+fun main() {
+
+}

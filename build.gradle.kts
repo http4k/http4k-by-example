@@ -47,8 +47,9 @@ dependencies {
 
     implementation("org.http4k:http4k-core")
     implementation("org.http4k:http4k-client-okhttp")
-    implementation("org.http4k:http4k-cloudnative")
-    implementation("org.http4k:http4k-contract")
+    implementation("org.http4k:http4k-platform-core")
+    implementation("org.http4k:http4k-config")
+    implementation("org.http4k:http4k-api-openapi")
     implementation("org.http4k:http4k-format-jackson")
     implementation("org.http4k:http4k-security-oauth")
     implementation("org.http4k:http4k-server-undertow")
@@ -58,6 +59,7 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.http4k:http4k-testing-hamkrest")
     testImplementation("org.http4k:http4k-testing-chaos")
     testImplementation("org.http4k:http4k-testing-approval")
