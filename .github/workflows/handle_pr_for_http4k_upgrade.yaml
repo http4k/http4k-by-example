@@ -11,7 +11,7 @@ jobs:
         with:
           configuration-path: .github/pr-labeler.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.TOOLBOX_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORG_PUBLIC_REPO_RELEASE_TRIGGERING }}
       - name: Automatically Merge
         uses: plm9606/automerge_actions@1.2.2
         with:
@@ -19,4 +19,4 @@ jobs:
           reviewers-number: 0
           merge-method: squash
           auto-delete: true
-          github-token: ${{ secrets.TOOLBOX_REPO_TOKEN }}
+          github-token: ${{ secrets.ORG_PUBLIC_REPO_RELEASE_TRIGGERING }}
