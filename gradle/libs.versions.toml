@@ -1,5 +1,5 @@
 [versions]
-http4k = "6.53.0.0"
+http4k = "6.54.0.0"
 http4k-standards = "1.14.0.0"
 junit = "6.1.0"
 kotlin = "2.4.0"
@@ -9,6 +9,7 @@ versions = "0.54.0"
 
 [libraries]
 http4k-api-openapi = { module = "org.http4k:http4k-api-openapi" }
+http4k-api-ui-swagger = { module = "org.http4k:http4k-api-ui-swagger" }
 http4k-bom = { module = "org.http4k:http4k-bom", version.ref = "http4k" }
 http4k-client-okhttp = { module = "org.http4k:http4k-client-okhttp" }
 http4k-config = { module = "org.http4k:http4k-config" }

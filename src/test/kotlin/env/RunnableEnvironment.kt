@@ -51,4 +51,6 @@ fun main() {
         OAUTH_SERVER_URL of Uri.of("http://localhost:$oauthServerPort")
     )
     SecuritySystemServer(env).start()
+
+    println("Server started on port http://localhost:$securityServerPort")
 }

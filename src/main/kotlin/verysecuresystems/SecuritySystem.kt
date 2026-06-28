@@ -1,5 +1,6 @@
 package verysecuresystems
 
+import org.http4k.contract.ui.swagger.swaggerUiWebjar
 import org.http4k.core.HttpHandler
 import org.http4k.core.Uri
 import org.http4k.core.then
@@ -12,6 +13,7 @@ import org.http4k.filter.ClientFilters.SetHostFrom
 import org.http4k.filter.HandleRemoteRequestFailed
 import org.http4k.filter.ServerFilters
 import org.http4k.routing.ResourceLoader.Companion.Classpath
+import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.routing.static
 import verysecuresystems.api.Api
@@ -52,6 +54,13 @@ fun SecuritySystem(clock: Clock,
         Api(userDirectory, entryLogger, inhabitants, oAuthProvider),
         Diagnostic(clock),
         Web(clock, oAuthProvider, userDirectory),
+        "/openapi" bind swaggerUiWebjar {
+            url = "/api/api-docs"
+            pageTitle = "Security Server API"
+            queryConfigEnabled = true
+            persistAuthorization = true
+            oauth2RedirectUrl = "\"http://localhost:9000/openapi/oauth2-redirect.html\""
+        },
         static(Classpath("public"))
     )
 

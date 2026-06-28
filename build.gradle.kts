@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.http4k.platform.core)
     implementation(libs.http4k.config)
     implementation(libs.http4k.api.openapi)
+    implementation(libs.http4k.api.ui.swagger)
     implementation(libs.http4k.format.jackson)
     implementation(libs.http4k.security.oauth)
     implementation(libs.http4k.server.undertow)
