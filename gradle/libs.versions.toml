@@ -1,0 +1,31 @@
+[versions]
+http4k = "6.53.0.0"
+junit = "6.1.0"
+kotlin = "2.4.0"
+version-catalog-update = "1.1.0"
+versions = "0.54.0"
+
+[libraries]
+http4k-api-openapi = { module = "org.http4k:http4k-api-openapi" }
+http4k-bom = { module = "org.http4k:http4k-bom", version.ref = "http4k" }
+http4k-client-okhttp = { module = "org.http4k:http4k-client-okhttp" }
+http4k-config = { module = "org.http4k:http4k-config" }
+http4k-core = { module = "org.http4k:http4k-core" }
+http4k-format-jackson = { module = "org.http4k:http4k-format-jackson" }
+http4k-platform-core = { module = "org.http4k:http4k-platform-core" }
+http4k-security-oauth = { module = "org.http4k:http4k-security-oauth" }
+http4k-server-undertow = { module = "org.http4k:http4k-server-undertow" }
+http4k-template-handlebars = { module = "org.http4k:http4k-template-handlebars" }
+http4k-testing-approval = { module = "org.http4k:http4k-testing-approval" }
+http4k-testing-chaos = { module = "org.http4k:http4k-testing-chaos" }
+http4k-testing-hamkrest = { module = "org.http4k:http4k-testing-hamkrest" }
+http4k-testing-webdriver = { module = "org.http4k:http4k-testing-webdriver" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

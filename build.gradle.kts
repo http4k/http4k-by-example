@@ -3,21 +3,14 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    kotlin("jvm") version "2.2.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.version.catalog.update)
+    alias(libs.plugins.versions)
 }
-
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
-val http4kVersion: String by project
-val junitVersion: String by project
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 apply(plugin = "kotlin")
@@ -43,25 +36,25 @@ tasks {
 
 dependencies {
 
-    implementation(platform("org.http4k:http4k-bom:$http4kVersion"))
+    implementation(platform(libs.http4k.bom))
 
-    implementation("org.http4k:http4k-core")
-    implementation("org.http4k:http4k-client-okhttp")
-    implementation("org.http4k:http4k-platform-core")
-    implementation("org.http4k:http4k-config")
-    implementation("org.http4k:http4k-api-openapi")
-    implementation("org.http4k:http4k-format-jackson")
-    implementation("org.http4k:http4k-security-oauth")
-    implementation("org.http4k:http4k-server-undertow")
-    implementation("org.http4k:http4k-template-handlebars")
+    implementation(libs.http4k.core)
+    implementation(libs.http4k.client.okhttp)
+    implementation(libs.http4k.platform.core)
+    implementation(libs.http4k.config)
+    implementation(libs.http4k.api.openapi)
+    implementation(libs.http4k.format.jackson)
+    implementation(libs.http4k.security.oauth)
+    implementation(libs.http4k.server.undertow)
+    implementation(libs.http4k.template.handlebars)
 
-    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation(platform(libs.junit.bom))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine")
-    testImplementation("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.http4k:http4k-testing-hamkrest")
-    testImplementation("org.http4k:http4k-testing-chaos")
-    testImplementation("org.http4k:http4k-testing-approval")
-    testImplementation("org.http4k:http4k-testing-webdriver")
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.platform.launcher)
+    testImplementation(libs.http4k.testing.hamkrest)
+    testImplementation(libs.http4k.testing.chaos)
+    testImplementation(libs.http4k.testing.approval)
+    testImplementation(libs.http4k.testing.webdriver)
 }
