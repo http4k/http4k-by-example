@@ -1,7 +1,9 @@
 [versions]
 http4k = "6.53.0.0"
+http4k-standards = "1.14.0.0"
 junit = "6.1.0"
 kotlin = "2.4.0"
+typeflows = "0.33.0-beta"
 version-catalog-update = "1.1.0"
 versions = "0.54.0"
 
@@ -15,6 +17,7 @@ http4k-format-jackson = { module = "org.http4k:http4k-format-jackson" }
 http4k-platform-core = { module = "org.http4k:http4k-platform-core" }
 http4k-security-oauth = { module = "org.http4k:http4k-security-oauth" }
 http4k-server-undertow = { module = "org.http4k:http4k-server-undertow" }
+http4k-standards = { module = "org.http4k.standards:typeflows", version.ref = "http4k-standards" }
 http4k-template-handlebars = { module = "org.http4k:http4k-template-handlebars" }
 http4k-testing-approval = { module = "org.http4k:http4k-testing-approval" }
 http4k-testing-chaos = { module = "org.http4k:http4k-testing-chaos" }
@@ -24,8 +27,11 @@ junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+typeflows-github = { module = "io.typeflows:typeflows-github", version.ref = "typeflows" }
+typeflows-github-marketplace = { module = "io.typeflows:typeflows-github-marketplace", version.ref = "typeflows" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+typeflows = { id = "io.typeflows", version.ref = "typeflows" }
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

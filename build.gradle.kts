@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.version.catalog.update)
     alias(libs.plugins.versions)
+    alias(libs.plugins.typeflows)
 }
 
 repositories {
@@ -57,4 +58,8 @@ dependencies {
     testImplementation(libs.http4k.testing.chaos)
     testImplementation(libs.http4k.testing.approval)
     testImplementation(libs.http4k.testing.webdriver)
+
+    typeflowsApi(libs.typeflows.github)
+    typeflowsApi(libs.typeflows.github.marketplace)
+    typeflowsApi(libs.http4k.standards)
 }
